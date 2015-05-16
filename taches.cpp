@@ -120,7 +120,3 @@ void TacheComposite::affiche()
 {
     Tache::affiche();
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/master
