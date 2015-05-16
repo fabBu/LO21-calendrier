@@ -1,4 +1,4 @@
-#include "taches.h"
+﻿#include "taches.h"
 
 
 
@@ -120,7 +120,3 @@ void TacheComposite::affiche()
 {
     Tache::affiche();
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/master
