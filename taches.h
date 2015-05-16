@@ -30,7 +30,7 @@ public:
         if (e<disp) throw CalendarException("erreur Tâche : date echéance < date disponibilité");
         disponibilite=disp; echeance=e;
     }
-    void affiche();
+    virtual void affiche();
 
     const list<Tache*> getPred() const { return predecesseurs; }
     void ajouterPredecesseur(Tache& t);
@@ -61,7 +61,7 @@ public:
     bool isPreemptive() const { return preemptive; }
     void setPreemptive() { preemptive=true; }
     void setNonPreemptive() { preemptive=false; }
-    void affiche();
+    virtual void affiche();
 };
 
 /*! \class TacheComposite
@@ -80,7 +80,7 @@ public:
     const list<Tache*> getSousTaches() const { return soustaches; }
     void ajouterSousTache(Tache& t);
     void retirerSousTache(Tache& t);
-    void affiche();
+    virtual void affiche();
 };
 
 #endif // TACHES_H
