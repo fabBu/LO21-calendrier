@@ -37,6 +37,13 @@ Tache& TacheManager::ajouterTacheComposite(const QString& t, const QString& li, 
     return *newt;
 }
 
+void TacheManager::retirerTache(const QString& id)
+{
+    Tache* t=trouverTache(id);
+    if( !t ) throw CalendarException("Retrait d'une tache inexistante");
+    taches.remove(t);
+}
+
 Tache& TacheManager::getTache(const QString& id){
     Tache* t=trouverTache(id);
     if (!t) throw CalendarException("erreur, TacheManager, tache inexistante");
