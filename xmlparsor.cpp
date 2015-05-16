@@ -1,5 +1,4 @@
 #include <QDir>
-#include <QDirIterator>
 #include <QStringList>
 #include <QXmlStreamReader>
 #include <QDebug>
@@ -12,38 +11,26 @@
 
 void XMLparsor::loadProjets(list<TacheManager*> l)
 {
-    /*
-    QDir dossier("Projets");
+/*
+    QDirIterator dossier("./Projets", QStringList() << "*.xml", QDir::Files);
+    QStringList list = dossier.entryList();
+*/
+    QDir dossier("./Projets");
 
-qDebug()<<dossier.count();
     foreach (QDir dir, dossier.entryList(QDir::AllDirs)) {
-qDebug()<<"Passage dans un dossier\n";
+
         TacheManager* projet;
         QStringList filters;
         filters << "*.xml";
 
         foreach ( QFileInfo file, dir.entryList(filters, QDir::Files) )
         {
-qDebug()<<"Passage dans un fichier\n";
             if( file.fileName().contains(QRegExp("*projet*")) ) {
                 projet = loadProjet(file.filePath());
                 l.push_back(projet);
             }
             if( file.fileName().contains(QRegExp("*contrainte*")) )
                 loadContraintes(projet, file.filePath());
-        }
-    }*/
-
-    QDirIterator dir("C:\\Users\\P.G\\SoSerious\\_UTC\\GI02\\LO21\\Projet\\Version4\\Agenda3\\Projets",QDirIterator::Subdirectories );
-
-    TacheManager* projet;
-    while(dir.hasNext())
-    {
-        qDebug()<<dir.fileName();
-        dir.next();
-        if( dir.fileName().contains(QRegExp("projet.xml")) ) {
-            projet = loadProjet(dir.filePath());
-            l.push_back(projet);
         }
     }
 }

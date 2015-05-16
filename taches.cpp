@@ -115,3 +115,9 @@ void TacheComposite::retirerSousTache(Tache& t)
 
     setDatesDisponibiliteEcheance(min, max);;
 }
+
+void TacheComposite::affiche()
+{
+    Tache::affiche();
+}
+
