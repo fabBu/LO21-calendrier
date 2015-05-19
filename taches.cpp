@@ -76,15 +76,15 @@ void TacheComposite::ajouterSousTache(Tache& t)
     if( std::find(soustaches.begin(), soustaches.end(), &t) != soustaches.end() )
         throw CalendarException(t.getTitre()+" est deja une sous-tache de "+getTitre());
 
-    soustaches.push_back(&t);
-
     // Cas où la sous-tâche se termine après la tâche composite
     if( getDateEcheance() < t.getDateEcheance() )
-        setDatesDisponibiliteEcheance(getDateDisponibilite(), t.getDateEcheance());
+        throw CalendarException(t.getTitre()+" possede une echeance superieure a "+getTitre());
 
     // Cas où la tâche débute avant la tâche composite
     if( getDateDisponibilite() > t.getDateDisponibilite() )
-        setDatesDisponibiliteEcheance(t.getDateDisponibilite(), getDateEcheance());
+        throw CalendarException(t.getTitre()+" possede une disponibilite inferieure a "+getTitre());
+
+    soustaches.push_back(&t);
 }
 
 /*!
@@ -103,6 +103,7 @@ void TacheComposite::retirerSousTache(Tache& t)
 
     soustaches.remove(&t);
 
+    /*
     // Mise à jour des dates de la tâche composite
     QDate min = (*soustaches.begin())->getDateDisponibilite();
     QDate max = (*soustaches.begin())->getDateEcheance();
@@ -114,6 +115,7 @@ void TacheComposite::retirerSousTache(Tache& t)
     }
 
     setDatesDisponibiliteEcheance(min, max);;
+    */
 }
 
 void TacheComposite::affiche()

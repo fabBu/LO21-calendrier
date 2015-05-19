@@ -2,6 +2,7 @@
 #include <QStringList>
 #include <QXmlStreamReader>
 #include <QDebug>
+#include <dirent.h>
 
 
 #include "xmlparsor.h"
@@ -11,11 +12,44 @@
 
 void XMLparsor::loadProjets(list<TacheManager*> l)
 {
+    TacheManager* projet;
+
+    QString chemin = "./Projets/";
+
+    DIR* dossier = opendir(chemin.toStdString().c_str());
+    struct dirent* courant;
+
+    if( dossier==NULL)
+        throw CalendarException("Le dossier \'Projets\' n\'existe pas");
+
+    while( courant=readdir(dossier) )
+    {
+        // Ignorer les fichiers cachés
+        if( courant->d_name[0] == '.' )
+            continue;
+
+        if( string(courant->d_name).find("chargement.xml") != std::string::npos )
+        {
+ qDebug()<<"COURANT="<<courant->d_name<<"\n";
+            projet = loadProjet(chemin+courant->d_name);
+            l.push_back(projet);
+            std::cout<<"TacheMan="<<projet->getNom().toStdString();
+        }
+
+        if( string(courant->d_name).find("contraintes.xml") != std::string::npos )
+        {
+ qDebug()<<"COURANT="<<courant->d_name<<"\n";
+            loadContraintes(projet, chemin+courant->d_name);
+        }
+    }
+
+
 /*
     QDirIterator dossier("./Projets", QStringList() << "*.xml", QDir::Files);
     QStringList list = dossier.entryList();
-*/
+
     QDir dossier("./Projets");
+
 
     foreach (QDir dir, dossier.entryList(QDir::AllDirs)) {
 
@@ -25,6 +59,7 @@ void XMLparsor::loadProjets(list<TacheManager*> l)
 
         foreach ( QFileInfo file, dir.entryList(filters, QDir::Files) )
         {
+qDebug()<<file.fileName();
             if( file.fileName().contains(QRegExp("*projet*")) ) {
                 projet = loadProjet(file.filePath());
                 l.push_back(projet);
@@ -32,7 +67,7 @@ void XMLparsor::loadProjets(list<TacheManager*> l)
             if( file.fileName().contains(QRegExp("*contrainte*")) )
                 loadContraintes(projet, file.filePath());
         }
-    }
+    }*/
 }
 
  TacheManager* XMLparsor::loadProjet(const QString& file)
@@ -44,9 +79,12 @@ void XMLparsor::loadProjets(list<TacheManager*> l)
     if (!fin.open(QIODevice::ReadOnly | QIODevice::Text)) {
         throw CalendarException("Erreur ouverture fichier tâches");
     }
+
+
+
     // QXmlStreamReader takes any QIODevice.
     QXmlStreamReader xml(&fin);
-    //qDebug()<<"debut fichier\n";
+    qDebug()<<"debut fichier\n";
     // We'll parse the XML until we reach end of it.
     while(!xml.atEnd() && !xml.hasError()) {
         // Read next element.
@@ -64,7 +102,7 @@ void XMLparsor::loadProjets(list<TacheManager*> l)
                     if(xml.tokenType() == QXmlStreamReader::StartElement) {
                         if(xml.name() == "nom") {
                             xml.readNext(); nom=xml.text().toString();
-                            //qDebug()<<"id="<<identificateur<<"\n";
+                            qDebug()<<"id="<<nom<<"\n";
                         }
                     }
                 }

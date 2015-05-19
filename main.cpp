@@ -1,11 +1,21 @@
 #include <iostream>
-#include "activite.h"
+#include "xmlparsor.h"
+#include "taches.h"
+#include "tachemanager.h"
 
 int main()
 {
-    Activite* e = new Activite("Reunion", "Chez moi", "Réunion avec Jean-Paul",Type::rendez_vous);
+    TacheManager* tm = XMLparsor::loadProjet("Projets/projet1_chargement.xml");
 
-    e->affiche();
 
-    return 1;
+    std::cout<<"MAIN projet="<<tm->getNom().toStdString()<<"\n";
+
+    /*
+    list<TacheManager*> l = list<TacheManager*>();
+    XMLparsor::loadProjets(l);
+
+    if( l.empty() )
+        std::cout<<"DEG\n";
+
+        */
 }
