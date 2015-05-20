@@ -6,7 +6,17 @@
 void Tache::affiche()
 {
     Evenement::affiche();
-    std::cout<<" dispo="<<disponibilite.toString("yyyy-MM-dd").toStdString()<<" echeance="<<echeance.toString("yyyy-MM-dd").toStdString();
+    std::cout<<"Dispo="<<disponibilite.toString("yyyy-MM-dd").toStdString()<<" | Echeance="<<echeance.toString("yyyy-MM-dd").toStdString()<<std::endl;
+
+    const list<Tache*> l = getPred();
+    if( !l.empty() )
+    {
+        std::cout<<"Predecesseurs :"<<std::endl;
+        for( list<Tache*>::const_iterator it = l.begin() ; it != l.end() ; ++it )
+        {
+            std::cout<<"\t"<<(*it)->getTitre().toStdString()<<std::endl;
+        }
+    }
 }
 
 /*!
@@ -19,15 +29,15 @@ void Tache::affiche()
  */
 void Tache::ajouterPredecesseur(Tache& t)
 {
+    // Verification que la tâche t ne fait pas déjà partie des prédécesseurs
+    if( std::find(predecesseurs.begin(), predecesseurs.end(), &t) != predecesseurs.end() )
+        throw CalendarException(t.getTitre()+" fait partie des predecesseurs de "+getTitre());
+
     // Verification de la coherence des donnees
     if( getDateDisponibilite() > t.getDateEcheance())
         predecesseurs.push_back(&t);
     else
         throw CalendarException(t.getTitre()+" se termine apres "+getTitre());
-
-    // Verification que la tâche t ne fait pas déjà partie des prédécesseurs
-    if( std::find(predecesseurs.begin(), predecesseurs.end(), &t) != predecesseurs.end() )
-        throw CalendarException(t.getTitre()+" fait partie des predecesseurs de "+getTitre());
 }
 
 /*!
@@ -53,7 +63,11 @@ void Tache::retirerPredecesseur(Tache& t)
 void TacheUnaire::affiche()
 {
     Tache::affiche();
-    std::cout<<" duree="<<duree<<" preemptive="<<preemptive;
+    std::cout<<"Duree="<<duree<<std::endl;
+    if( preemptive )
+        std::cout<<"Preemptive"<<std::endl;
+    else
+        std::cout<<"Non preemptive"<<std::endl;
 }
 
 
@@ -121,4 +135,14 @@ void TacheComposite::retirerSousTache(Tache& t)
 void TacheComposite::affiche()
 {
     Tache::affiche();
+
+    const list<Tache*> l = getSousTaches();
+    if( !l.empty() )
+    {
+        std::cout<<"Sous-taches :"<<std::endl;
+        for( list<Tache*>::const_iterator it = l.begin() ; it != l.end() ; ++it )
+        {
+            std::cout<<"\t"<<(*it)->getTitre().toStdString()<<std::endl;
+        }
+    }
 }
