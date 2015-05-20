@@ -18,7 +18,11 @@ TacheEditeur::TacheEditeur(Tache& t1, QWidget *p) :QWidget(p), t(t1){
     TacheUnaire* tu = dynamic_cast<TacheUnaire*>(&t);
     TacheComposite* tc = dynamic_cast<TacheComposite*>(&t);
 
-    setWindowTitle("Edition de la tache : " + t.getTitre());
+    if( tu )
+        setWindowTitle("Edition tache UNAIRE: " + t.getTitre());
+    if( tc )
+        setWindowTitle("Edition tache COMPOSITE: " + t.getTitre());
+
     setFixedSize(500,200);
     lv = new QVBoxLayout;
 
