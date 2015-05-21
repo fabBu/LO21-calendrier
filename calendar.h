@@ -2,6 +2,8 @@
 #define CALENDAR_H
 #include <QString>
 #include <QDate>
+#include <QTime>
+#include <QDateTime>
 #include <QTextStream>
 #include <iostream>
 #include <iomanip>
@@ -116,7 +118,8 @@ std::ostream& operator<<(std::ostream& f, const Intervalle & p);
 
 std::istream& operator>>(std::istream&, Duree&); //lecture format hhHmm
 
-Horaire& operator+(const Horaire& h, const Duree& d);
-QDate& operator+(const QDate& h, const Duree& d);
+//Horaire& operator+(const Horaire& h, const Duree& d);
+//QDate& operator+(const QDate& h, const Duree& d);
+QDateTime& operator+(const QDateTime& da, const QTime& du);
 
 #endif // CALENDAR_H

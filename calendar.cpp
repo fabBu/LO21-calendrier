@@ -64,17 +64,32 @@ std::istream& operator>>(std::istream& flot, Duree& duree){
     return flot;
 }
 
-Horaire& operator+(const Horaire& h, const Duree& d){
-    int minutes = h.getMinute() + d.getDureeEnMinutes();
-    int heures = h.getHeure();
+//Horaire& operator+(const Horaire& h, const Duree& d){
+//    int minutes = h.getMinute() + d.getDureeEnMinutes();
+//    int heures = h.getHeure();
 
-    if (minutes > 60 ) {
-        heures += minutes/60;
-    }
+//    if (minutes > 60 ) {
+//        heures += minutes/60;
+//        minutes = minutes%60;
+//        if (heures > 23) {
+//            heures = heures % 24;
+//        }
+//    }
 
-    Horaire& res = Horaire(h.getHeure() + d.getDureeEnMinutes()/60);
-}
+//    Horaire& res = Horaire(heures, minutes);
+//    return res;
+//}
 
-QDate& operator+(const QDate& h, const Duree& d){
+//QDate& operator+(const QDate& h, const Duree& d){
 
+//}
+
+QDateTime& operator+(const QDateTime& da, const QTime& du){
+    QTime t = QTime(da.time().hour() + du.hour(),da.time().minute() + du.minute());
+    QDate d = QDate(da.date().year(), da.date().month(), da.date().day());
+    int jours = 0;
+    if ((da.time().hour()+du.hour()) > 24 )
+        jours = (da.time().hour()+du.hour()) / 24;
+    QDateTime& res = QDateTime(d.addDays(jours), t);
+    return res;
 }
