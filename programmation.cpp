@@ -1,24 +1,21 @@
-#include <typeinfo>
 #include "programmation.h"
 
-void Programmation::setDate(const QDate& d){
+void Programmation::setDate(const QDateTime& d){
     this->date = d;
 }
 
-void Programmation::setHoraire(const Horaire& h){
-    this->horaire = h;
-}
-
-void Programmation::setDuree(const Duree& d){
+void Programmation::setDuree(const QTime& d){
     this->duree = d;
 }
 
-void Programmation::setEvenement(const Evenement& e){
+void Programmation::setEvenement(Evenement& e){
     this->evenement = &e;
 }
 
 Programmation::~Programmation(){
-    if (typeid(*evenement).name() == "Activite"){
+    Activite* ac = dynamic_cast<Activite*>(evenement);
+
+    if (ac){
         delete evenement;
     }
 }

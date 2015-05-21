@@ -1,38 +1,34 @@
 #ifndef PROGRAMMATION_H
 #define PROGRAMMATION_H
 
-#include <QDate>
+#include <QDateTime>
 #include "evenement.h"
+#include "activite.h"
 #include "calendar.h"
 
 class Programmation
 {
 private:
-    QDate date;
-    Horaire horaire;
-    Duree duree;
-    const Evenement* evenement;
+    QDateTime date;
+    QTime duree;
+    Evenement* evenement;
 
 public:
-    Programmation(const QDate& da, const Horaire& h, const Duree& du, const Evenement& e):date(da), horaire(h), duree(du), evenement(&e){}
+    Programmation(const QDateTime& da, const QTime& du, Evenement& e):date(da), duree(du), evenement(&e){}
 
     ~Programmation();
 
-    const QDate& getDate(){ return date;}
+    const QDateTime& getDate(){ return date;}
 
-    void setDate(const QDate& d);
+    void setDate(const QDateTime& d);
 
-    const Horaire& getHoraire(){return horaire;}
+    const QTime& getDuree(){return duree;}
 
-    void setHoraire(const Horaire& h);
+    void setDuree(const QTime& d);
 
-    const Duree& getDuree(){return duree;}
+    Evenement& getEvenement(){return *evenement;}
 
-    void setDuree(const Duree& d);
-
-    const Evenement& getEvenement(){return *evenement;}
-
-    void setEvenement(const Evenement& e);
+    void setEvenement(Evenement& e);
 };
 
 #endif // PROGRAMMATION_H
