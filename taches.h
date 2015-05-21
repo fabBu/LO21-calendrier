@@ -33,6 +33,7 @@ public:
     virtual void affiche();
 
     const list<Tache*> getPred() const { return predecesseurs; }
+    bool estPredecesseur(Tache& t);
     void ajouterPredecesseur(Tache& t);
     void retirerPredecesseur(Tache& t);
 };

@@ -19,6 +19,15 @@ void Tache::affiche()
     }
 }
 
+
+bool Tache::estPredecesseur(Tache& t)
+{
+    // Verification que la tâche t ne fait pas déjà partie des prédécesseurs
+    if( std::find(predecesseurs.begin(), predecesseurs.end(), &t) != predecesseurs.end() )
+        return true;
+    else return false;
+}
+
 /*!
  *\brief Ajout d'une précédence
  *
@@ -30,7 +39,7 @@ void Tache::affiche()
 void Tache::ajouterPredecesseur(Tache& t)
 {
     // Verification que la tâche t ne fait pas déjà partie des prédécesseurs
-    if( std::find(predecesseurs.begin(), predecesseurs.end(), &t) != predecesseurs.end() )
+    if( estPredecesseur(t) )
         throw CalendarException(t.getTitre()+" fait partie des predecesseurs de "+getTitre());
 
     // Verification de la coherence des donnees
@@ -50,7 +59,7 @@ void Tache::ajouterPredecesseur(Tache& t)
 void Tache::retirerPredecesseur(Tache& t)
 {
     // Verification que la tâche t fait bien partie des prédécesseurs
-    if( std::find(predecesseurs.begin(), predecesseurs.end(), &t) == predecesseurs.end() )
+    if( !estPredecesseur(t) )
         throw CalendarException(t.getTitre()+" ne fait pas partie des predecesseurs de "+getTitre());
 
     // Suppression de la tâche parmis les prédécesseurs

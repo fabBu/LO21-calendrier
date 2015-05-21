@@ -11,14 +11,17 @@
 #include<QSpinBox>
 #include<QHBoxLayout>
 #include <QComboBox>
-#include "tacheediteur.h"
-#include "tachemanager.h"
+#include <QMessageBox>
+
+
 #include "taches.h"
+#include "tachemanager.h"
+
 
 class TacheEditeur : public QWidget {
 private:
     Q_OBJECT
-    QLabel *lid, *ltitre, *ldispo, *lduree, *lecheance, *lpred, *lsoust;
+    QLabel *lid, *ltitre, *ldispo, *lduree, *lecheance, *lpred, *lsoust, *laucun, *laucune;
     QLineEdit *id;
     QTextEdit *titre;
     QCheckBox *preemp;
@@ -26,13 +29,19 @@ private:
     QSpinBox *h, *m;
     QHBoxLayout *lh1, *lh2, *lh3, *lh4, *lh5, *lh6;
     QVBoxLayout *lv;
-    QPushButton *cancel, *save;
-    QComboBox *pred, *soust;
+    QPushButton *cancel, *save, *ajouterpred, *retirerpred, *ajoutersoust, *retirersoust;
+    QComboBox *pred, *soust, *tachespred, *tachessoust;
+    TacheManager& tm;
     Tache& t;
 public:
-    TacheEditeur(Tache& t1, QWidget* parent=0);
+    TacheEditeur(TacheManager& tm, Tache& t1, QWidget* parent=0);
 public slots:
+
 private slots:
+    void retirerPredecesseur();
+    void ajouterPredecesseur();
+    void modifListePred();
+
 };
 
 
