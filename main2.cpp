@@ -5,6 +5,7 @@
 
 int main(int argc, char* argv[])
 {
+
     QApplication app(argc, argv);
 
     TacheManager tm = TacheManager("Projet1");
@@ -45,6 +46,7 @@ int main(int argc, char* argv[])
         p.ajouterSousTache( tm.getTache("Tache1") );
         p.ajouterSousTache( tm.getTache("Tache2") );
         // p.retirerSousTache( tm.getTache("Tache2") );      // OK : fonctionne
+        p.ajouterPredecesseur( tm.getTache("Tache0"));
 
         tm.ajouterTacheUnaire("Tache3",
                               "Bureau",
@@ -54,23 +56,23 @@ int main(int argc, char* argv[])
                               Duree(48,0));
 
         tm.getTache("Tache3").ajouterPredecesseur( tm.getTache("Phase1") );
-        p.ajouterPredecesseur( tm.getTache("Tache0"));
+        tm.getTache("Tache3").ajouterPredecesseur( tm.getTache("Tache0") );
 
 
         Tache& t1 = tm.getTache("Tache2");
-        TacheEditeur* fenetre1 = new TacheEditeur(t1);
+        TacheEditeur* fenetre1 = new TacheEditeur(tm, t1);
         fenetre1->show();
 
         Tache& t2 = tm.getTache("Phase1");
-        TacheEditeur* fenetre2 = new TacheEditeur(t2);
+        TacheEditeur* fenetre2 = new TacheEditeur(tm, t2);
         fenetre2->show();
 
         Tache& t3 = tm.getTache("Tache3");
-        TacheEditeur* fenetre3 = new TacheEditeur(t3);
+        TacheEditeur* fenetre3 = new TacheEditeur(tm, t3);
         fenetre3->show();
 
         Tache& t4 = tm.getTache("Tache0");
-        TacheEditeur* fenetre4 = new TacheEditeur(t4);
+        TacheEditeur* fenetre4 = new TacheEditeur(tm, t4);
         fenetre4->show();
 
     }
@@ -84,4 +86,5 @@ int main(int argc, char* argv[])
     }
 
     return app.exec();
+
 }

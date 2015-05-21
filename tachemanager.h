@@ -3,11 +3,13 @@
 #include <QString>
 #include <QDate>
 #include <QTextStream>
-#include <taches.h>
+#include "taches.h"
+
 using namespace std;
 
 class TacheManager {
 private:
+    friend class TacheEditeur;
     QString nom;
     list<Tache*> taches;
     void addItem(Tache* t);
