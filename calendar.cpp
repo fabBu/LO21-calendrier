@@ -63,3 +63,18 @@ std::istream& operator>>(std::istream& flot, Duree& duree){
     if (ok) duree=Duree(h,m); else flot.clear(std::ios::failbit);
     return flot;
 }
+
+Horaire& operator+(const Horaire& h, const Duree& d){
+    int minutes = h.getMinute() + d.getDureeEnMinutes();
+    int heures = h.getHeure();
+
+    if (minutes > 60 ) {
+        heures += minutes/60;
+    }
+
+    Horaire& res = Horaire(h.getHeure() + d.getDureeEnMinutes()/60);
+}
+
+QDate& operator+(const QDate& h, const Duree& d){
+
+}
