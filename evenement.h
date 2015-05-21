@@ -22,7 +22,6 @@ class Evenement
 {
 protected:
     QString titre; /*!< Nom de l'événement*/
-    QString lieu; /*!< Lieu de l'événement*/
     QString description; /*!< Description de l'événement*/
 public:
     /*!
@@ -31,16 +30,15 @@ public:
      * Constructeur de la classe Evenement
      *
      * \param t : titre
-     * \param l : lieu
      * \param d : description
      */
-    Evenement(const QString& t, const QString& l, const QString& d):titre(t), lieu(l), description(d) {}
+    Evenement(const QString& t, const QString& d):titre(t), description(d) {}
 
     /*!
      * \brief Getter sur titre
      * \return titre
      */
-    const QString& getTitre() const { return titre;}
+    const QString& getTitre() { return titre;}
 
     /*!
      * \brief Setter sur titre
@@ -49,22 +47,10 @@ public:
     void setTitre(const QString& t);
 
     /*!
-     * \brief Getter sur lieu
-     * \return lieu
-     */
-    const QString& getLieu() const { return lieu;}
-
-    /*!
-     * \brief Setter sur lieu
-     * \param l : lieu
-     */
-    void setLieu(const QString& l);
-
-    /*!
      * \brief Getter sur description
      * \return description
      */
-    const QString& getDescription() const{ return description;}
+    const QString& getDescription() { return description;}
 
     /*!
      * \brief Setter sur description

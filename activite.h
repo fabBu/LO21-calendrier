@@ -2,7 +2,6 @@
 #define ACTIVITE_H
 
 #include "evenement.h"
-#include <QDate>
 #include <iostream>
 
 /*!
@@ -12,7 +11,6 @@
  * \version 0.1
  */
 
-
 /*!
  * \brief Enumeration du type de l'événement
  */
@@ -21,7 +19,6 @@ enum Type{
     reunion, /*!< Réunion */
     autre /*!< Autre */
 };
-
 
 /*!
  * \class Activite
@@ -33,6 +30,7 @@ class Activite : public Evenement
 {
 private:
     Type type; /*!< Type d'événement*/
+    QString lieu; /*!< Lieu de l'événement*/
 
 public:
     /*!
@@ -41,11 +39,11 @@ public:
      * Constructeur de la classe Activite
      *
      * \param ti : titre de l'événement
-     * \param l : lieu de l'événement
      * \param de : description de lévénement
      * \param ty : type de l'événement
+     * \param l : lieu de l'événement
      */
-    Activite(const QString& ti, const QString& l, const QString& de, const Type& ty):Evenement(ti,l,de), type(ty) {}
+    Activite(const QString& ti, const QString& de, const Type& ty, const QString& l):Evenement(ti,de), type(ty), lieu(l) {}
 
     /*!
      * \brief Getter sur type
@@ -57,6 +55,16 @@ public:
      * \param t : type
      */
     void setType(const Type& t);
+    /*!
+     * \brief Getter sur lieu
+     * \return lieu
+     */
+    const QString& getLieu() const { return lieu;}
+    /*!
+     * \brief Setter sur lieu
+     * \param l : lieu
+     */
+    void setLieu(const QString& l);
     /*!
      * \brief Affichage en mode console
      */

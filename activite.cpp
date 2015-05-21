@@ -7,4 +7,5 @@ void Activite::setType(const Type& t){
 void Activite::affiche(){
     Evenement::affiche();
     std::cout<< "type: " << type << std::endl;
+    std::cout << "lieu: " << lieu.toStdString() << std::endl;
 }
