@@ -18,8 +18,8 @@ protected:
 
     list<Tache*> predecesseurs; /*!< Liste des tâches devant être² effectuées avant la tâche */
 
-    Tache(const QString& id, const QString& li, const QString& desc, const QDate& dispo, const QDate& deadline):
-            Evenement(id, li, desc),disponibilite(dispo),echeance(deadline){}
+    Tache(const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline):
+            Evenement(id, desc),disponibilite(dispo),echeance(deadline){}
     Tache(const Tache& t);
     Tache& operator=(const Tache&);
     friend class TacheManager;
@@ -51,8 +51,8 @@ class TacheUnaire : public Tache
     Duree duree; /*!< Duree de la tâche */
     bool preemptive; /*!< Définit si la tâche peut être effectuée en plusieurs fois */
 
-    TacheUnaire(const QString& id, const QString& li, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree& dur, bool pree=false):
-            Tache(id, li, desc, dispo, deadline),duree(dur), preemptive(pree) {}
+    TacheUnaire(const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree& dur, bool pree=false):
+            Tache(id, desc, dispo, deadline),duree(dur), preemptive(pree) {}
 public:
 
     Duree getDuree() const { return duree; }
@@ -75,8 +75,8 @@ class TacheComposite : public Tache
 {friend class TacheManager;
     list<Tache*> soustaches; /*!< Ensemble des sous-tâches */
 
-    TacheComposite(const QString& id, const QString& li, const QString& desc, const QDate& dispo, const QDate& deadline):
-            Tache(id, li, desc, dispo, deadline) {}
+    TacheComposite(const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline):
+            Tache(id, desc, dispo, deadline) {}
 public:
     const list<Tache*> getSousTaches() const { return soustaches; }
     void ajouterSousTache(Tache& t);

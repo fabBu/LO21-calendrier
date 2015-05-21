@@ -18,21 +18,21 @@ void TacheManager::addItem(Tache* t){
     taches.push_back(t);
 }
 
-Tache& TacheManager::ajouterTacheUnaire(const QString& t, const QString& li, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree& dur, bool preempt){
+Tache& TacheManager::ajouterTacheUnaire(const QString& t, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree& dur, bool preempt){
     if (trouverTache(t))
         throw CalendarException("erreur, TacheManager, tache deja existante");
 
-    Tache* newt=new TacheUnaire(t,li,desc,dispo,deadline,dur,preempt);
+    Tache* newt=new TacheUnaire(t,desc,dispo,deadline,dur,preempt);
     addItem(newt);
     return *newt;
 }
 
-Tache& TacheManager::ajouterTacheComposite(const QString& t, const QString& li, const QString& desc, const QDate& dispo, const QDate& deadline)
+Tache& TacheManager::ajouterTacheComposite(const QString& t, const QString& desc, const QDate& dispo, const QDate& deadline)
 {
     if (trouverTache(t))
         throw CalendarException("erreur, TacheManager, tache deja existante");
 
-    Tache* newt=new TacheComposite(t,li,desc,dispo,deadline);
+    Tache* newt=new TacheComposite(t,desc,dispo,deadline);
     addItem(newt);
     return *newt;
 }

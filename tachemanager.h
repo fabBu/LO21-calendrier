@@ -25,8 +25,8 @@ public:
     const QString& getNom() const { return nom; }
     const list<Tache*> getTaches() const { return taches; }
     Tache& getTache(const QString& id);
-    Tache& ajouterTacheUnaire(const QString& t, const QString& li, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree& dur, bool preempt=false);
-    Tache& ajouterTacheComposite(const QString& t, const QString& li, const QString& desc, const QDate& dispo, const QDate& deadline);
+    Tache& ajouterTacheUnaire(const QString& t, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree& dur, bool preempt=false);
+    Tache& ajouterTacheComposite(const QString& t, const QString& desc, const QDate& dispo, const QDate& deadline);
     void retirerTache(const QString& id);
     bool isTacheExistante(const QString& id) const { return trouverTache(id)!=0; }
     const Tache& getTache(const QString& code) const;
