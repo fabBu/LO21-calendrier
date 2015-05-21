@@ -30,6 +30,7 @@ public:
     void retirerTache(const QString& id);
     bool isTacheExistante(const QString& id) const { return trouverTache(id)!=0; }
     const Tache& getTache(const QString& code) const;
+    void setDatesDisponibiliteEcheance(Tache& t, const QDate& disp, const QDate& e);
     void load(const QString& f);
     void save(const QString& f);
 

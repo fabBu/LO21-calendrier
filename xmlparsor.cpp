@@ -147,11 +147,7 @@ qDebug()<<file.fileName();
                             xml.readNext(); description=xml.text().toString();
                             //qDebug()<<"description="<<description<<"\n";
                         }
-                        // We've found lieu.
-                        if(xml.name() == "lieu") {
-                            xml.readNext(); lieu=xml.text().toString();
-                            //qDebug()<<"lieu="<<lieu<<"\n";
-                        }
+
                         // We've found disponibilite
                         if(xml.name() == "disponibilite") {
                             xml.readNext();
@@ -174,7 +170,7 @@ qDebug()<<file.fileName();
                     xml.readNext();
                 }
                 //qDebug()<<"ajout tache "<<identificateur<<"\n";
-                proj->ajouterTacheUnaire(titre,lieu,description,disponibilite,echeance,duree,preemptive);
+                proj->ajouterTacheUnaire(titre,description,disponibilite,echeance,duree,preemptive);
             }
         }
     }

@@ -54,6 +54,38 @@ const Tache& TacheManager::getTache(const QString& id)const{
     return const_cast<TacheManager*>(this)->getTache(id);
 }
 
+void TacheManager::setDatesDisponibiliteEcheance(Tache& t, const QDate& disp, const QDate& e)
+{
+    if (e<disp)
+        throw CalendarException("erreur Tâche : date echéance < date disponibilité");
+
+    const list<Tache*> l = this->getTaches();
+    list<Tache*>::const_iterator it;
+    for( it = l.begin() ; it != l.end() ; ++it )
+    {
+        if( (*it)->estPredecesseur(t) )
+        {
+            if( (*it)->getDateDisponibilite() > disp )
+                throw CalendarException( "Le successeur "+(*it)->getTitre()+" possede une date de dispo supérieure" );
+
+            if( (*it)->getDateEcheance() < e )
+                throw CalendarException( "Le successeur "+(*it)->getTitre()+" possede une date d'échéance inférieure" );
+        }
+
+        TacheComposite* tc = dynamic_cast<TacheComposite*>(*it);
+        if( tc && tc->estSousTache(t) )
+        {
+            if( (*it)->getDateDisponibilite() > disp )
+                throw CalendarException( "La sur-tache "+tc->getTitre()+" possede une date de dispo supérieure" );
+
+            if( (*it)->getDateEcheance() < e )
+                throw CalendarException( "Le successeur "+tc->getTitre()+" possede une date d'échéance inférieure" );
+        }
+    }
+
+    t.setDatesDisponibiliteEcheance(disp, e);
+}
+
 // TODO  a modifier
 TacheManager::~TacheManager(){
    /*

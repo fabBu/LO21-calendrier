@@ -13,21 +13,18 @@ int main(int argc, char* argv[])
     try
     {
         tm.ajouterTacheUnaire("Tache0",
-                              "Osef",
                               "Preparer l\'ensemble des tests",
                               QDate(2014,12,15),
                               QDate(2014, 12,31),
                               Duree(100,0));
 
         tm.ajouterTacheUnaire("Tache1",
-                              "Maison",
                               "Proceder au test d\'une tache unaire",
                               QDate(2015,01,01),
                               QDate(2015, 01,15),
                               Duree(48,0));
 
         tm.ajouterTacheUnaire("Tache2",
-                              "Bureau",
                               "Proceder au test d\'une deuxieme tache unaire",
                               QDate(2015,02,01),
                               QDate(2015, 02,15),
@@ -37,7 +34,6 @@ int main(int argc, char* argv[])
         tm.getTache("Tache2").ajouterPredecesseur( tm.getTache("Tache1") );
 
         tm.ajouterTacheComposite("Phase1",
-                                 "Bureau/Maison",
                                  "Phase de test",
                                  QDate(2015,01,01),
                                  QDate(2015, 02,15));
@@ -49,7 +45,6 @@ int main(int argc, char* argv[])
         p.ajouterPredecesseur( tm.getTache("Tache0"));
 
         tm.ajouterTacheUnaire("Tache3",
-                              "Bureau",
                               "Valider les tests !",
                               QDate(2015,02,16),
                               QDate(2015, 02,18),

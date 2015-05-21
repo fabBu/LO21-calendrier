@@ -96,8 +96,8 @@ TacheEditeur::TacheEditeur(TacheManager& tm1, Tache& t1, QWidget *p) :tm(tm1),QW
     ///     -------   LIGNE PRECEDENCE     ------   ///
     lh4 = new QHBoxLayout;
     lpred = new QLabel("Predecesseurs", this);
-    laucun = new QLabel("< Aucun >", this);
-    laucun->setHidden(true);
+//    laucun = new QLabel("< Aucun >", this);
+//    laucun->setHidden(true);
     pred = new QComboBox(this);
 
     // Liste déroulante des prédécesseurs
@@ -109,8 +109,8 @@ TacheEditeur::TacheEditeur(TacheManager& tm1, Tache& t1, QWidget *p) :tm(tm1),QW
     retirerpred = new QPushButton("Retirer");
 
 
-    laucune = new QLabel("< Aucune à ajouter >", this);
-    laucune->setHidden(true);
+//    laucune = new QLabel("< Aucune à ajouter >", this);
+//    laucune->setHidden(true);
 
     // Liste déroulante des autres tâches
     tachespred = new QComboBox(this);
@@ -126,7 +126,7 @@ TacheEditeur::TacheEditeur(TacheManager& tm1, Tache& t1, QWidget *p) :tm(tm1),QW
 
     lh4->addWidget(lpred);
     lh4->addWidget(pred);
-    lh4->addWidget(laucun);
+    //lh4->addWidget(laucun);
     lh4->addWidget(retirerpred);
     lh4->addWidget(tachespred);
     lh4->addWidget(ajouterpred);
@@ -141,8 +141,8 @@ TacheEditeur::TacheEditeur(TacheManager& tm1, Tache& t1, QWidget *p) :tm(tm1),QW
     if( l.empty() )
     {
         pred->setHidden(true);
-        laucun->setHidden(false);
-        retirerpred->setEnabled(false);
+        //laucun->setHidden(false);
+        retirerpred->setHidden(true);
     }
 
 
@@ -155,13 +155,43 @@ TacheEditeur::TacheEditeur(TacheManager& tm1, Tache& t1, QWidget *p) :tm(tm1),QW
         lsoust = new QLabel("Sous-tâches", this);
         soust = new QComboBox(this);
 
+        // Liste déroulante des sous-tâches
         const list<Tache*> l = tc->getSousTaches();
         for( list<Tache*>::const_iterator it = l.begin() ; it != l.end() ; ++it )
             soust->addItem( (*it)->getTitre() );
 
+        retirersoust = new QPushButton("Retirer");
+
+        // Liste déroulante des autres tâches
+        tachessoust = new QComboBox(this);
+        const list<Tache*> l2 = tm.getTaches();
+        for( it = l2.begin() ; it != l2.end() ; ++it )
+        {
+            if( &t != (*it) && !tc->estSousTache((**it)) )
+                tachessoust->addItem( (*it)->getTitre() );
+        }
+
+        ajoutersoust = new QPushButton("Ajouter");
+
         lh5->addWidget(lsoust);
         lh5->addWidget(soust);
+        lh5->addWidget(retirersoust);
+        lh5->addWidget(tachessoust);
+        lh5->addWidget(ajoutersoust);
         lv->addLayout(lh5);
+
+        connect( soust, SIGNAL(currentTextChanged(QString)), this, SLOT(modifierListeSoust()) );
+        connect( tachessoust, SIGNAL(currentTextChanged(QString)), this, SLOT(modifierListeSoust()) );
+        connect( retirersoust, SIGNAL(clicked(bool)), this, SLOT(retirerSousTache()) );
+        connect( ajoutersoust, SIGNAL(clicked(bool)), this, SLOT(ajouterSousTache()) );
+
+        // Modifier l'interface si la tache ne possède aucun prédécesseur
+        if( l.empty() )
+        {
+            pred->setHidden(true);
+            //laucun->setHidden(false);
+            retirerpred->setHidden(true);
+        }
     }
 
     lh6 = new QHBoxLayout;
@@ -170,6 +200,7 @@ TacheEditeur::TacheEditeur(TacheManager& tm1, Tache& t1, QWidget *p) :tm(tm1),QW
     lh6->addWidget(cancel);
     lh6->addWidget(save);
 
+    connect(cancel, SIGNAL(clicked(bool)), this, SLOT(close()) );
 
     lv->addLayout(lh6);
     this->setLayout(lv);
@@ -226,12 +257,12 @@ void TacheEditeur::modifListePred()
         if( pred->currentText() == "" )
         {
             pred->setHidden(true);
-            laucun->setHidden(false);
+            //laucun->setHidden(false);
             retirerpred->setHidden(true);
         }
         else
         {
-            laucun->setHidden(true);
+            //laucun->setHidden(true);
             pred->setHidden(false);
             retirerpred->setHidden(false);
         }
@@ -244,17 +275,105 @@ void TacheEditeur::modifListePred()
         if( tachespred->currentText() == "" )
         {
             tachespred->setHidden(true);
-            laucune->setHidden(false);
+            //laucune->setHidden(false);
             ajouterpred->setHidden(true);
         }
         else
         {
-            laucune->setHidden(true);
+            //laucune->setHidden(true);
             tachespred->setHidden(false);
             ajouterpred->setHidden(false);
         }
     }
-
 }
 
+
+void TacheEditeur::retirerSousTache()
+{
+    const QString& title = soust->currentText();
+
+    if( title == "")
+        throw CalendarException("Aucune tache");
+
+    Tache* p = tm.trouverTache(title);
+    dynamic_cast<TacheComposite*>(&t)->retirerSousTache(*p);
+    soust->removeItem( soust->currentIndex() );
+
+    if( soust->count() == 0)
+        soust->setCurrentText("");
+    tachessoust->addItem( title );
+}
+
+void TacheEditeur::ajouterSousTache()
+{
+    const QString& title = tachessoust->currentText();
+
+    if( title == "")
+        throw CalendarException("Aucune tache");
+
+    Tache* p = tm.trouverTache(title);
+    try
+    {
+        dynamic_cast<TacheComposite*>(&t)->ajouterSousTache(*p);
+        tachessoust->removeItem( tachessoust->currentIndex() );
+
+        if( tachessoust->count() == 0)
+            tachessoust->setCurrentText("");
+        soust->addItem( title );
+    }
+    catch(CalendarException e)
+    {
+        QMessageBox::warning(this,"Ajout precedence", e.getInfo());
+    }
+}
+
+void TacheEditeur::modifierListeSoust()
+{
+    // Le bouton "Retirer" a été solicité
+    //  la liste des sous-taches a été modifiée et envoie un signal
+    if( QObject::sender() == soust )
+    {
+        if( soust->currentText() == "" )
+        {
+            soust->setHidden(true);
+            retirersoust->setHidden(true);
+        }
+        else
+        {
+            soust->setHidden(false);
+            retirersoust->setHidden(false);
+        }
+    }
+
+    // Le bouton "Ajouter" a été solicité
+    //  la liste des tâches qui ne sont pas des sous-tâches a été modifiée et envoie un signal
+    if( QObject::sender() == tachessoust )
+    {
+        if( tachessoust->currentText() == "" )
+        {
+            tachessoust->setHidden(true);
+            ajoutersoust->setHidden(true);
+        }
+        else
+        {
+            tachessoust->setHidden(false);
+            ajoutersoust->setHidden(false);
+        }
+    }
+}
+
+
+void TacheEditeur::sauvegarder()
+{
+    try
+    {
+        t.setTitre(id->text());
+        t.setDescription(titre->toPlainText());
+    }
+    catch( CalendarException e )
+    {
+        QMessageBox::warning(this,"Sauvegarde tâche", e.getInfo());
+    }
+
+}
 

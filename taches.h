@@ -26,14 +26,11 @@ protected:
 public:
     QDate getDateDisponibilite() const {  return disponibilite; }
     QDate getDateEcheance() const {  return echeance; }
-    void setDatesDisponibiliteEcheance(const QDate& disp, const QDate& e) {
-        if (e<disp) throw CalendarException("erreur Tâche : date echéance < date disponibilité");
-        disponibilite=disp; echeance=e;
-    }
+    void setDatesDisponibiliteEcheance(const QDate& disp, const QDate& e);
     virtual void affiche();
 
     const list<Tache*> getPred() const { return predecesseurs; }
-    bool estPredecesseur(Tache& t);
+    bool estPredecesseur(const Tache& t);
     void ajouterPredecesseur(Tache& t);
     void retirerPredecesseur(Tache& t);
 };
@@ -79,6 +76,7 @@ class TacheComposite : public Tache
             Tache(id, desc, dispo, deadline) {}
 public:
     const list<Tache*> getSousTaches() const { return soustaches; }
+    bool estSousTache(const Tache& t);
     void ajouterSousTache(Tache& t);
     void retirerSousTache(Tache& t);
     virtual void affiche();

@@ -42,6 +42,11 @@ private slots:
     void ajouterPredecesseur();
     void modifListePred();
 
+    void retirerSousTache();
+    void ajouterSousTache();
+    void modifierListeSoust();
+
+    void sauvegarder();
 };
 
 

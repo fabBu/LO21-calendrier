@@ -19,8 +19,14 @@ void Tache::affiche()
     }
 }
 
+void Tache::setDatesDisponibiliteEcheance(const QDate& disp, const QDate& e) {
+    if (e<disp)
+        throw CalendarException("erreur Tâche : date echéance < date disponibilité");
 
-bool Tache::estPredecesseur(Tache& t)
+    disponibilite=disp; echeance=e;
+}
+
+bool Tache::estPredecesseur(const Tache& t)
 {
     // Verification que la tâche t ne fait pas déjà partie des prédécesseurs
     if( std::find(predecesseurs.begin(), predecesseurs.end(), &t) != predecesseurs.end() )
@@ -85,6 +91,15 @@ void TacheUnaire::affiche()
 
 
 //              ---------   TacheComposite   ---------              //
+
+bool TacheComposite::estSousTache(const Tache& t)
+{
+    if( std::find(soustaches.begin(), soustaches.end(), &t) != soustaches.end() )
+        return true;
+    else
+        return false;
+}
+
 /*!
  *\brief Ajout d'une sous-tâche
  *
@@ -96,7 +111,7 @@ void TacheUnaire::affiche()
 void TacheComposite::ajouterSousTache(Tache& t)
 {
     // Verification que la tâche t n'est pas déjà une sous-tâche
-    if( std::find(soustaches.begin(), soustaches.end(), &t) != soustaches.end() )
+    if( estSousTache(t) )
         throw CalendarException(t.getTitre()+" est deja une sous-tache de "+getTitre());
 
     // Cas où la sous-tâche se termine après la tâche composite
@@ -121,7 +136,7 @@ void TacheComposite::ajouterSousTache(Tache& t)
 void TacheComposite::retirerSousTache(Tache& t)
 {
     // Verification que la tâche t fait bien partie des sous-tâches
-    if( std::find(soustaches.begin(), soustaches.end(), &t) == soustaches.end() )
+    if( !estSousTache(t) )
         throw CalendarException(t.getTitre()+" n\'est pas une sous-tache de "+getTitre());
 
     soustaches.remove(&t);
