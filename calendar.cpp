@@ -90,6 +90,7 @@ QDateTime& operator+(const QDateTime& da, const QTime& du){
     int jours = 0;
     if ((da.time().hour()+du.hour()) > 24 )
         jours = (da.time().hour()+du.hour()) / 24;
-    QDateTime& res = QDateTime(d.addDays(jours), t);
+    QDateTime ti(d.addDays(jours), t);
+    QDateTime& res = ti;
     return res;
 }
