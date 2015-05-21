@@ -23,6 +23,30 @@ void Tache::setDatesDisponibiliteEcheance(const QDate& disp, const QDate& e) {
     if (e<disp)
         throw CalendarException("erreur Tâche : date echéance < date disponibilité");
 
+    const list<Tache*> l = this->getPred();
+    list<Tache*>::const_iterator it;
+    for( it = l.begin() ; it != l.end() ; ++it )
+    {
+        if( this->estPredecesseur((*it)) )
+        {
+            if( (*it)->getDateDisponibilite() > disp )
+                throw CalendarException( "Le prédécesseur "+(*it)->getTitre()+" possede une date de dispo supérieure" );
+
+            if( (*it)->getDateEcheance() > disp )
+                throw CalendarException( "Le prédécesseur "+(*it)->getTitre()+" possede une date d'échéance supérieur" );
+        }
+
+        TacheComposite* tc = dynamic_cast<TacheComposite*>(*it);
+        if( tc && tc->estSousTache(t) )
+        {
+            if( tc->getDateDisponibilite() < disp )
+                throw CalendarException( "La sous-tache "+tc->getTitre()+" possede une date de dispo inférieure" );
+
+            if( tc->getDateEcheance() > e )
+                throw CalendarException( "La sous-tache "+tc->getTitre()+" possede une date d'échéance supérieure" );
+        }
+    }
+
     disponibilite=disp; echeance=e;
 }
 
@@ -84,8 +108,6 @@ void TacheUnaire::affiche()
     else
         std::cout<<"Non preemptive"<<std::endl;
 }
-
-
 
 
 
