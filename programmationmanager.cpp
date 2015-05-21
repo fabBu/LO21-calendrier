@@ -1,85 +1,48 @@
 #include "programmationmanager.h"
 
 void ProgrammationManager::addItem(Programmation* p){
-    if (p)
+    if (!isFree(p->getDate(),p->getDuree()))
+        throw CalendarException("ERREUR: Un événement est déjà programmé à cette date.");
     programmations.push_back(p);
 }
 
 
-Programmation* ProgrammationManager::findProgrammation(const QDate& d, const Horaire& h) const{
-
+Programmation* ProgrammationManager::findProgrammation(const QDateTime& d) const{
     for (list<Programmation*>::const_iterator it = programmations.begin(); it != programmations.end(); it++){
-
-    }
-
-}
-
-
-//Programmation& ProgrammationManager::getProgrammation(const QDate& d, const Horaire& h) const{}
-//bool ProgrammationManager::isProgrammationExistante(const QDate& d, const Horaire& h)const{}
-//void ProgrammationManager::addProgrammation(const QDate& da, const Horaire& h, const Duree& du, const Evenement& e){}
-//void ProgrammationManager::removeProgrammation(){}
-
-
-Tache* TacheManager::trouverTache(const QString& id)const{
-
-    for (std::list<Tache*>::const_iterator it = taches.begin(); it != taches.end(); it++)
-    {
-        if( (*it)->getTitre() == id )
+        if ((*it)->getDate() == d){
             return *it;
+        }
     }
     return 0;
 }
 
-void TacheManager::addItem(Tache* t){
-    if( trouverTache(t->getTitre()) )
-        throw CalendarException("erreur : tache deja existante dans le projet");
-    taches.push_back(t);
+bool ProgrammationManager::isFree(const QDateTime& d, const QTime& h) const{
+    QDateTime fin = d + h;
+    for (list<Programmation*>::const_iterator it = programmations.begin(); it != programmations.end(); it++){
+        if ((*it)->getDate() > d && (*it)->getDate() < fin ) return false;
+    }
+    return true;
 }
 
-Tache& TacheManager::ajouterTacheUnaire(const QString& t, const QString& li, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree& dur, bool preempt){
-    if (trouverTache(t))
-        throw CalendarException("erreur, TacheManager, tache deja existante");
-
-    Tache* newt=new TacheUnaire(t,li,desc,dispo,deadline,dur,preempt);
-    addItem(newt);
-    return *newt;
+Programmation& ProgrammationManager::getProgrammation(const QDateTime& d){
+    Programmation* p = findProgrammation(d);
+    if (!p) throw CalendarException("ERREUR: Activité inexistante");
+    return *p;
 }
 
-Tache& TacheManager::ajouterTacheComposite(const QString& t, const QString& li, const QString& desc, const QDate& dispo, const QDate& deadline)
-{
-    if (trouverTache(t))
-        throw CalendarException("erreur, TacheManager, tache deja existante");
-
-    Tache* newt=new TacheComposite(t,li,desc,dispo,deadline);
-    addItem(newt);
-    return *newt;
+const Programmation& ProgrammationManager::getProgrammation(const QDateTime& d) const{
+    return const_cast<ProgrammationManager*>(this)->getProgrammation(d);
 }
 
-void TacheManager::retirerTache(const QString& id)
-{
-    Tache* t=trouverTache(id);
-    if( !t ) throw CalendarException("Retrait d'une tache inexistante");
-    taches.remove(t);
+void ProgrammationManager::addProgrammation(const QDateTime& da, const QTime& du, Evenement& e){
+    // TODO try {
+        Programmation* p = new Programmation(da,du,e);
+        addItem(p);
+//    } catch (exception e) {}
 }
 
-Tache& TacheManager::getTache(const QString& id){
-    Tache* t=trouverTache(id);
-    if (!t) throw CalendarException("erreur, TacheManager, tache inexistante");
-    return *t;
+void ProgrammationManager::removeProgrammation(const QDateTime& d){
+    Programmation* p = findProgrammation(d);
+    if (!p) throw CalendarException("ERREUR: retrait d'un événement inexistant impossible.");
+    programmations.remove(p);
 }
-
-const Tache& TacheManager::getTache(const QString& id)const{
-    return const_cast<TacheManager*>(this)->getTache(id);
-}
-
-// TODO  a modifier
-TacheManager::~TacheManager(){
-   /*
-    if (file!="") save(file);
-    for(unsigned int i=0; i<nb; i++) delete taches[i];
-    delete[] taches;
-    file="";
-    */
-}
-

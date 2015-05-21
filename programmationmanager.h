@@ -4,6 +4,7 @@
 #include <iostream>
 #include <list>
 #include "programmation.h"
+#include "calendar.h"
 
 using namespace std;
 
@@ -12,17 +13,19 @@ class ProgrammationManager
 private:
     list<Programmation*> programmations;
     void addItem(Programmation* p);
-    Programmation* findProgrammation(const QDate& d, const Horaire& h) const;
+    Programmation* findProgrammation(const QDateTime& d) const;
+
 public:
     ProgrammationManager(){}
 
     int getSize() {return programmations.size();}
+    bool isFree(const QDateTime& d, const QTime& h) const;
 
-    Programmation& getProgrammation(const QDate& d, const Horaire& h) const;
+    void addProgrammation(const QDateTime& da, const QTime& du, Evenement& e);
+    void removeProgrammation(const QDateTime& d);
 
-    bool isProgrammationExistante(const QDate& d, const Horaire& h)const;
-    void addProgrammation(const QDate& da, const Horaire& h, const Duree& du, const Evenement& e);
-    void removeProgrammation();
+    Programmation& getProgrammation(const QDateTime& d);
+    const Programmation& getProgrammation(const QDateTime& d)const;
 };
 
 #endif // PROGRMMATIONMANAGER_H
