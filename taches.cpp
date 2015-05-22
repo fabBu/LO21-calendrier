@@ -27,7 +27,7 @@ void Tache::setDatesDisponibiliteEcheance(const QDate& disp, const QDate& e) {
     list<Tache*>::const_iterator it;
     for( it = l.begin() ; it != l.end() ; ++it )
     {
-        if( this->estPredecesseur((*it)) )
+        if( this->estPredecesseur((**it)) )
         {
             if( (*it)->getDateDisponibilite() > disp )
                 throw CalendarException( "Le prédécesseur "+(*it)->getTitre()+" possede une date de dispo supérieure" );
@@ -37,7 +37,7 @@ void Tache::setDatesDisponibiliteEcheance(const QDate& disp, const QDate& e) {
         }
 
         TacheComposite* tc = dynamic_cast<TacheComposite*>(*it);
-        if( tc && tc->estSousTache(t) )
+        if( tc && tc->estSousTache(*tc) )
         {
             if( tc->getDateDisponibilite() < disp )
                 throw CalendarException( "La sous-tache "+tc->getTitre()+" possede une date de dispo inférieure" );
@@ -109,7 +109,13 @@ void TacheUnaire::affiche()
         std::cout<<"Non preemptive"<<std::endl;
 }
 
+void TacheUnaire::setPreemptive(const bool value)
+{
+    if( value == true && this->duree.getDureeEnHeures() > 12)
+        throw CalendarException("La tâche ne peut être préemptive : durée supérieure à 12H");
 
+    preemptive = value;
+}
 
 
 //              ---------   TacheComposite   ---------              //

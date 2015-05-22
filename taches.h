@@ -57,8 +57,7 @@ public:
     Statut getStatut() const { return statut; }
     void setStatut(Statut stat) { statut = stat; }
     bool isPreemptive() const { return preemptive; }
-    void setPreemptive() { preemptive=true; }
-    void setNonPreemptive() { preemptive=false; }
+    void setPreemptive(const bool value);
     virtual void affiche();
 };
 

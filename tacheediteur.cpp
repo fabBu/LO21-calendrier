@@ -201,10 +201,11 @@ TacheEditeur::TacheEditeur(TacheManager& tm1, Tache& t1, QWidget *p) :tm(tm1),QW
     lh6->addWidget(save);
 
     connect(cancel, SIGNAL(clicked(bool)), this, SLOT(close()) );
+    connect(save, SIGNAL(clicked(bool)), this, SLOT(sauvegarder()) );
 
     lv->addLayout(lh6);
     this->setLayout(lv);
-    save->setEnabled(false);
+    //save->setEnabled(false);
 }
 
 
@@ -369,6 +370,18 @@ void TacheEditeur::sauvegarder()
     {
         t.setTitre(id->text());
         t.setDescription(titre->toPlainText());
+        t.setDatesDisponibiliteEcheance(dispo->date(), echeance->date());
+
+        TacheUnaire* tu = dynamic_cast<TacheUnaire*>(&t);
+
+        if(tu)
+        {
+            tu->setPreemptive(preemp->isChecked());
+            Duree dur(h->text().toInt(), m->text().toInt());
+            tu->setDuree(dur);
+        }
+
+        close();
     }
     catch( CalendarException e )
     {
