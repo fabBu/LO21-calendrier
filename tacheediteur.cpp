@@ -13,7 +13,7 @@
 #include "tacheediteur.h"
 
 
-TacheEditeur::TacheEditeur(TacheManager &tm1, bool unaire):tm(tm1)
+TacheEditeur::TacheEditeur(TacheManager &tm1, bool unaire, QWidget* p):tm(tm1),parent(p), unaire(unaire)
 {
     t=0;
 
@@ -45,7 +45,7 @@ TacheEditeur::TacheEditeur(TacheManager &tm1, bool unaire):tm(tm1)
 }
 
 
-TacheEditeur::TacheEditeur(TacheManager& tm1, Tache* t1, QWidget *p) :tm(tm1), t(t1), QWidget(p){
+TacheEditeur::TacheEditeur(TacheManager& tm1, Tache* t1, QWidget *p) :tm(tm1), t(t1), parent(p){
 
     // tu pointera sur t si celle-ci est une TacheUnaire et tc sera nul
     //  si t est une TacheComposite, ce sera l'inverse
@@ -54,7 +54,7 @@ TacheEditeur::TacheEditeur(TacheManager& tm1, Tache* t1, QWidget *p) :tm(tm1), t
 
     if( tu )
         setWindowTitle(tm1.getNom()+" - "+t->getTitre()+" (UNAIRE)");
-    if( tc )
+    else
         setWindowTitle(tm1.getNom()+" - "+t->getTitre()+" (COMPOSITE)");
 
     setFixedSize(500,230);
@@ -112,7 +112,7 @@ void TacheEditeur::initDesc()
     l_desc = new QHBoxLayout;
     desc_label = new QLabel("Description",this);
     desc = new QTextEdit(this);
-    if(t != 0 ) titre->setText(t->getDescription());
+    if(t != 0 ) desc->setText(t->getDescription());
     desc->setFixedSize(400,50);
     l_desc->addWidget(desc_label);
     l_desc->addWidget(desc);
@@ -228,13 +228,12 @@ void TacheEditeur::initPrecedence()
     // Traiter le cas où aucune tâche ne peut être ajoutée
     if( nonpred_list->count() == 0 )
     {
-        pred_label->setHidden(true);
         nonpred_list->setHidden(true);
         //laucun->setHidden(false);
         btn_ajouterpred->setHidden(true);
     }
     // Si aucune des deux listes n'est présente (tâche seule dans le projet)
-    if( pred_list->count() == nonpred_list->count() == 0 )
+    if( pred_list->count() == 0 && nonpred_list->count() == 0 )
         pred_label->setHidden(true);
 }
 
@@ -289,7 +288,7 @@ void TacheEditeur::initSousTaches()
     }
 
     // Si aucune des deux listes n'est présente (tâche seule dans le projet)
-    if( soust_list->count() == nonsoust_list->count() == 0 )
+    if( soust_list->count() == 0 && nonsoust_list->count() == 0 )
         soust_label->setHidden(true);
 
 }
@@ -449,28 +448,63 @@ void TacheEditeur::modifierListeSoust()
 
 void TacheEditeur::sauvegarder()
 {
-    try
+    // Lors de la modification d'une tâche existante
+    if(t!=0)
     {
-        t->setTitre(titre->text());
-        t->setDescription(desc->toPlainText());
-        t->setDatesDisponibiliteEcheance(dispo->date(), echeance->date());
-
-        TacheUnaire* tu = dynamic_cast<TacheUnaire*>(t);
-
-        if(tu)
+        try
         {
-            tu->setPreemptive(preemp->isChecked());
-            Duree dur(duree_h->text().toInt(), duree_m->text().toInt());
-            tu->setDuree(dur);
+            t->setTitre(titre->text());
+            t->setDescription(desc->toPlainText());
+            t->setDatesDisponibiliteEcheance(dispo->date(), echeance->date());
+
+            if(unaire)
+            {
+                TacheUnaire* tu = dynamic_cast<TacheUnaire*>(t);
+                tu->setPreemptive(preemp->isChecked());
+                Duree dur(duree_h->text().toInt(), duree_m->text().toInt());
+                tu->setDuree(dur);
+            }
+
+            emit fermeture();
+            close();
         }
-
-        close();
+        catch( CalendarException e )
+        {
+            QMessageBox::warning(this,"Modification tâche", e.getInfo());
+        }
     }
-    catch( CalendarException e )
+    // Lors de l'ajout d'une nouvelle tâche
+    else
     {
-        QMessageBox::warning(this,"Sauvegarde tâche", e.getInfo());
-    }
+        try
+        {
+            if(unaire)
+                tm.ajouterTacheUnaire(titre->text(), desc->toPlainText(), dispo->date(), echeance->date(),  Duree(duree_h->text().toInt(), duree_m->text().toInt()), preemp->isChecked());
+            else
+                tm.ajouterTacheComposite(titre->text(), desc->toPlainText(), dispo->date(), echeance->date());
 
+            emit fermeture();
+            close();
+        }
+        catch( CalendarException e )
+        {
+            QMessageBox::warning(this,"Ajout tâche", e.getInfo());
+        }
+    }
 }
+
+
+
+TacheEditeur::~TacheEditeur()
+{
+//    delete titre_label, desc_label, dispo_label, duree_label, echeance_label, pred_label, soust_label;
+//    delete titre, desc, preemp;
+//    delete dispo, echeance, duree_h, duree_m;
+//    delete btn_cancel, btn_save, btn_ajouterpred, btn_retirerpred, btn_ajoutersoust, btn_retirersoust;
+//    delete pred_list, soust_list, nonpred_list, nonsoust_list;
+//    delete l_titre, l_desc, l_dates, l_pred, l_soust, l_cancelsave;
+//    delete main_layout, parent;
+}
+
 
 

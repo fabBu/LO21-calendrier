@@ -1,40 +1,36 @@
 #ifndef PROJETEDITEUR_H
 #define PROJETEDITEUR_H
 
-#include<QTextEdit>
-#include<QLineEdit>
-#include<QApplication>
-#include<QPushButton>
-#include<QLabel>
-#include<QCheckBox>
-#include<QDateEdit>
-#include<QSpinBox>
-#include<QHBoxLayout>
-#include <QComboBox>
-#include "tacheediteur.h"
+#include <QWidget>
+#include <QTreeWidget>
+#include <QStringListModel>
+#include <QStandardItem>
 #include "tachemanager.h"
-#include "taches.h"
+#include "tacheediteur.h"
 
 class ProjetEditeur : public QWidget {
 private:
     Q_OBJECT
-    QLabel *lid, *ltitre, *llieu, *ldispo, *lduree, *lecheance, *lpred, *lsoust;
-    QLineEdit *id, *lieu;
-    QTextEdit *titre;
-    QCheckBox *preemp;
-    QDateEdit *dispo, *echeance;
-    QSpinBox *h, *m;
-    QHBoxLayout *lh1, *lh2, *lh3, *lh4, *lh5, *lh6;
-    QVBoxLayout *lv;
-    QPushButton *cancel, *save;
-    QComboBox *pred, *soust;
-    Tache& t;
+
+    QPushButton *modifier, *ajouter_unaire, *ajouter_composite;
+    QTreeWidget *taches;
+    QGridLayout *main_layout;
+
+    QWidget* parent;
+    TacheManager& tm;
+    QString tache_courante;
+    TacheEditeur* te;
+
+    void chargerTaches();
 public:
-    ProjetEditeur(TacheManager& tm, QWidget* parent=0);
+    ProjetEditeur(TacheManager& tm1, QWidget* p=0);
 public slots:
 private slots:
+    void getTacheCourante(QTreeWidgetItem *item, int c);
+    void ajouterTache();
+    void modifierTache();
+    void refresh();
 };
-
 
 
 #endif // PROJETEDITEUR_H

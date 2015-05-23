@@ -19,7 +19,7 @@ protected:
     list<Tache*> predecesseurs; /*!< Liste des tâches devant être² effectuées avant la tâche */
 
     Tache(const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline):
-            Evenement(id, desc),disponibilite(dispo),echeance(deadline){}
+            Evenement(id, desc),disponibilite(dispo),echeance(deadline){ if(disponibilite>echeance) throw CalendarException("Echeance < Disponibilité"); }
 
     friend class TacheManager;
 public:
@@ -51,7 +51,9 @@ class TacheUnaire : public Tache
     bool preemptive; /*!< Définit si la tâche peut être effectuée en plusieurs fois */
 
     TacheUnaire(const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree& dur, bool pree=false):
-            Tache(id, desc, dispo, deadline),duree(dur), preemptive(pree) {}
+            Tache(id, desc, dispo, deadline),duree(dur), preemptive(pree) {
+        if(duree.getDureeEnHeures()>12 && preemptive) throw CalendarException("Une tâche préemptive ne peut durer plus de 12H");
+    }
 public:
 
     Duree getDuree() const { return duree; }

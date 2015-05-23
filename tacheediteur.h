@@ -27,12 +27,16 @@ private:
     QCheckBox *preemp;
     QDateEdit *dispo, *echeance;
     QSpinBox *duree_h, *duree_m;
-    QHBoxLayout *l_titre, *l_desc, *l_dates, *l_pred, *l_soust, *l_cancelsave;
-    QVBoxLayout *main_layout;
     QPushButton *btn_cancel, *btn_save, *btn_ajouterpred, *btn_retirerpred, *btn_ajoutersoust, *btn_retirersoust;
     QComboBox *pred_list, *soust_list, *nonpred_list, *nonsoust_list;
+
+    QHBoxLayout *l_titre, *l_desc, *l_dates, *l_pred, *l_soust, *l_cancelsave;
+    QVBoxLayout *main_layout;
+
+    QWidget* parent;
     TacheManager& tm;
     Tache* t;
+    bool unaire;
 
     void initTitre(bool unaire=true);
     void initDesc();
@@ -41,9 +45,9 @@ private:
     void initPrecedence();
     void initSousTaches();
 public:
-    TacheEditeur(TacheManager& tm, Tache* t1, QWidget* parent=0);
-    TacheEditeur(TacheManager &tm, bool unaire=true);
-public slots:
+    TacheEditeur(TacheManager& tm, Tache* t1, QWidget* p=0);
+    TacheEditeur(TacheManager &tm, bool unaire=true, QWidget* p=0);
+    ~TacheEditeur();
 
 private slots:
     void retirerPredecesseur();
@@ -55,6 +59,9 @@ private slots:
     void modifierListeSoust();
 
     void sauvegarder();
+
+signals:
+    void fermeture();
 };
 
 
