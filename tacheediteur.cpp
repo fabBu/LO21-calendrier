@@ -220,21 +220,22 @@ void TacheEditeur::initPrecedence()
     connect( btn_ajouterpred, SIGNAL(clicked(bool)), this, SLOT(ajouterPredecesseur()) );
 
     // Modifier l'interface si la tache ne possède aucun prédécesseur
-    if( l.empty() )
+    if( pred_list->count() == 0 )
     {
         pred_list->setHidden(true);
-        //laucun->setHidden(false);
         btn_retirerpred->setHidden(true);
     }
-
-    // Traiter le cas où la tache est seule dans le projet
-    if( tm.getTaches().size() == 1 )
+    // Traiter le cas où aucune tâche ne peut être ajoutée
+    if( nonpred_list->count() == 0 )
     {
         pred_label->setHidden(true);
         nonpred_list->setHidden(true);
         //laucun->setHidden(false);
         btn_ajouterpred->setHidden(true);
     }
+    // Si aucune des deux listes n'est présente (tâche seule dans le projet)
+    if( pred_list->count() == nonpred_list->count() == 0 )
+        pred_label->setHidden(true);
 }
 
 void TacheEditeur::initSousTaches()
@@ -273,13 +274,24 @@ void TacheEditeur::initSousTaches()
     connect( btn_retirersoust, SIGNAL(clicked(bool)), this, SLOT(retirerSousTache()) );
     connect( btn_ajoutersoust, SIGNAL(clicked(bool)), this, SLOT(ajouterSousTache()) );
 
-    // Modifier l'interface si la tache ne possède aucun prédécesseur
-    if( l.empty() )
+    // Modifier l'interface si la tache ne possède aucune sous-tâche
+    if( soust_list->count() == 0 )
     {
-        pred_list->setHidden(true);
-        //laucun->setHidden(false);
-        btn_retirerpred->setHidden(true);
+        soust_list->setHidden(true);
+        btn_retirersoust->setHidden(true);
     }
+
+    // Traiter le cas où aucune tâche ne peut être ajoutée
+    if( nonsoust_list->count() == 0 )
+    {
+        nonpred_list->setHidden(true);
+        btn_ajouterpred->setHidden(true);
+    }
+
+    // Si aucune des deux listes n'est présente (tâche seule dans le projet)
+    if( soust_list->count() == nonsoust_list->count() == 0 )
+        soust_label->setHidden(true);
+
 }
 
 void TacheEditeur::retirerPredecesseur()
