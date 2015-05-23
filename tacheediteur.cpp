@@ -12,9 +12,13 @@
 #include "tacheediteur.h"
 
 
+TacheEditeur::TacheEditeur(TacheManager &tm, bool unaire)
+{
+
+}
 
 
-TacheEditeur::TacheEditeur(TacheManager& tm1, Tache& t1, QWidget *p) :tm(tm1),QWidget(p), t(t1){
+TacheEditeur::TacheEditeur(TacheManager& tm1, Tache& t1, QWidget *p) :tm(tm1), t(t1), QWidget(p){
 
     // tu pointera sur t si celle-ci est une TacheUnaire
     //      vaudra nul sinon

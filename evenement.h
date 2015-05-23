@@ -11,6 +11,7 @@
 #include <iostream>
 #include <QString>
 #include <iostream>
+#include "calendar.h"
 
 /*!
  * \class Evenement
@@ -32,7 +33,9 @@ public:
      * \param t : titre
      * \param d : description
      */
-    Evenement(const QString& t, const QString& d):titre(t), description(d) {}
+    Evenement(const QString& t, const QString& d):titre(t), description(d) {
+        if( titre == "") throw CalendarException("Tout événement doit posséder un nom !");
+    }
 
     /*!
      * \brief Getter sur titre

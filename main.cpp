@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
 
     QApplication app(argc, argv);
 
-    TacheManager tm = TacheManager("Projet1");
+    TacheManager tm("Projet1");
 
     try
     {

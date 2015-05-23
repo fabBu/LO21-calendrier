@@ -20,8 +20,7 @@ protected:
 
     Tache(const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline):
             Evenement(id, desc),disponibilite(dispo),echeance(deadline){}
-    Tache(const Tache& t);
-    Tache& operator=(const Tache&);
+
     friend class TacheManager;
 public:
     QDate getDateDisponibilite() const {  return disponibilite; }
@@ -33,6 +32,9 @@ public:
     bool estPredecesseur(const Tache& t);
     void ajouterPredecesseur(Tache& t);
     void retirerPredecesseur(Tache& t);
+private:
+    Tache(const Tache& t);
+    Tache& operator=(const Tache&);
 };
 
 QTextStream& operator<<(QTextStream& f, const Tache& t);

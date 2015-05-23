@@ -33,8 +33,11 @@ private:
     QComboBox *pred, *soust, *tachespred, *tachessoust;
     TacheManager& tm;
     Tache& t;
+
+    QHBoxLayout* ligneTitre();
 public:
     TacheEditeur(TacheManager& tm, Tache& t1, QWidget* parent=0);
+    TacheEditeur(TacheManager &tm, bool unaire=true);
 public slots:
 
 private slots:

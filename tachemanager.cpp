@@ -1,6 +1,8 @@
 #include "tachemanager.h"
 
-TacheManager::TacheManager(const QString &name):nom(name){}
+TacheManager::TacheManager(const QString &name):nom(name){
+    if( nom == "" ) throw CalendarException("Le projet doit avoir un nom !");
+}
 
 Tache* TacheManager::trouverTache(const QString& id)const{
 
