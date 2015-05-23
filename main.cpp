@@ -55,19 +55,19 @@ int main(int argc, char* argv[])
 
 
         Tache& t1 = tm.getTache("Tache2");
-        TacheEditeur* fenetre1 = new TacheEditeur(tm, t1);
+        TacheEditeur* fenetre1 = new TacheEditeur(tm, &t1);
         fenetre1->show();
 
         Tache& t2 = tm.getTache("Phase1");
-        TacheEditeur* fenetre2 = new TacheEditeur(tm, t2);
+        TacheEditeur* fenetre2 = new TacheEditeur(tm, &t2);
         fenetre2->show();
 
         Tache& t3 = tm.getTache("Tache3");
-        TacheEditeur* fenetre3 = new TacheEditeur(tm, t3);
+        TacheEditeur* fenetre3 = new TacheEditeur(tm, &t3);
         fenetre3->show();
 
         Tache& t4 = tm.getTache("Tache0");
-        TacheEditeur* fenetre4 = new TacheEditeur(tm, t4);
+        TacheEditeur* fenetre4 = new TacheEditeur(tm, &t4);
         fenetre4->show();
 
     }

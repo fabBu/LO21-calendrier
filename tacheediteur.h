@@ -21,22 +21,27 @@
 class TacheEditeur : public QWidget {
 private:
     Q_OBJECT
-    QLabel *lid, *ltitre, *ldispo, *lduree, *lecheance, *lpred, *lsoust, *laucun, *laucune;
-    QLineEdit *id;
-    QTextEdit *titre;
+    QLabel *titre_label, *desc_label, *dispo_label, *duree_label, *echeance_label, *pred_label, *soust_label;
+    QLineEdit *titre;
+    QTextEdit *desc;
     QCheckBox *preemp;
     QDateEdit *dispo, *echeance;
-    QSpinBox *h, *m;
-    QHBoxLayout *lh1, *lh2, *lh3, *lh4, *lh5, *lh6;
-    QVBoxLayout *lv;
-    QPushButton *cancel, *save, *ajouterpred, *retirerpred, *ajoutersoust, *retirersoust;
-    QComboBox *pred, *soust, *tachespred, *tachessoust;
+    QSpinBox *duree_h, *duree_m;
+    QHBoxLayout *l_titre, *l_desc, *l_dates, *l_pred, *l_soust, *l_cancelsave;
+    QVBoxLayout *main_layout;
+    QPushButton *btn_cancel, *btn_save, *btn_ajouterpred, *btn_retirerpred, *btn_ajoutersoust, *btn_retirersoust;
+    QComboBox *pred_list, *soust_list, *nonpred_list, *nonsoust_list;
     TacheManager& tm;
-    Tache& t;
+    Tache* t;
 
-    QHBoxLayout* ligneTitre();
+    void initTitre(bool unaire=true);
+    void initDesc();
+    void initDates(bool unaire=true);
+    void initCancelSave();
+    void initPrecedence();
+    void initSousTaches();
 public:
-    TacheEditeur(TacheManager& tm, Tache& t1, QWidget* parent=0);
+    TacheEditeur(TacheManager& tm, Tache* t1, QWidget* parent=0);
     TacheEditeur(TacheManager &tm, bool unaire=true);
 public slots:
 
