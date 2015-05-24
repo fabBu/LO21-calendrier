@@ -47,7 +47,10 @@ void Tache::setDatesDisponibiliteEcheance(const QDate& disp, const QDate& e) {
         }
     }
 
-    disponibilite=disp; echeance=e;
+    delete &disponibilite;
+    disponibilite=disp;
+    delete &echeance;
+    echeance=e;
 }
 
 bool Tache::estPredecesseur(const Tache& t)
@@ -114,6 +117,7 @@ void TacheUnaire::setPreemptive(const bool value)
     if( value == true && this->duree.getDureeEnHeures() > 12)
         throw CalendarException("La tâche ne peut être préemptive : durée supérieure à 12H");
 
+    delete &preemptive;
     preemptive = value;
 }
 

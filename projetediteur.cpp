@@ -11,7 +11,8 @@ ProjetEditeur::ProjetEditeur(TacheManager &tm1, QWidget *p):tm(tm1),parent(p)
 
     taches = new QTreeWidget(this);
     taches->setFixedSize(450, 300);
-    taches->setHeaderLabel("Tâches");
+    //taches->setHeaderLabel("Tâches");
+    taches->setHeaderLabels(QStringList()<<"Tâches"<<"Prédécesseurs");
 
     chargerTaches();
     main_layout->addWidget(taches, 0, 0, 4, 1);
@@ -47,15 +48,34 @@ void ProjetEditeur::chargerTaches()
     {
         QTreeWidgetItem* item = new QTreeWidgetItem;
         item->setText(0, (*it)->getTitre());
+
+        //  Ajouter les prédécesseurs s'il y en a;
+        QString* l_pred = new QString();
+        const list<Tache*> pred = (*it)->getPred();
+        for( list<Tache*>::const_iterator it_pred = pred.begin() ; it_pred != pred.end() ; ++it_pred )
+        {
+            *l_pred+=(*it_pred)->getTitre()+" ; ";
+        }
+
+        item->setText(1, *l_pred);
         taches->addTopLevelItem(item);
 
-//        const list<Tache*> pred = (*it)->getSousTaches();
-//        for( list<Tache*>::const_iterator it2 = pred.begin() ; it2 != pred.end() ; ++it2 )
-//        {
-//            QTreeWidgetItem item();
-//            item.setText(0, (*it)->getTitre());
-//            taches->addChild(item);
-//        }
+
+        TacheComposite* tc = dynamic_cast<TacheComposite*>( (*it) );
+        if( tc )
+        {
+            const list<Tache*> soust = (tc)->getSousTaches();
+            for( list<Tache*>::const_iterator it_soust = soust.begin() ; it_soust != soust.end() ; ++it_soust )
+            {
+                QTreeWidgetItem* sous_item = new QTreeWidgetItem;
+                sous_item->setText(0, (*it_soust)->getTitre());
+                item->addChild(sous_item);
+
+                QList<QTreeWidgetItem*> list = taches->findItems((*it_soust)->getTitre(), 0); //taches->find
+                if( list.size() != 0 )
+                    taches->removeItemWidget(list.at(0),0);
+            }
+        }
     }
 }
 

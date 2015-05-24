@@ -300,13 +300,18 @@ void TacheEditeur::retirerPredecesseur()
     if( title == "")
         throw CalendarException("Aucune tache");
 
-    Tache* p = tm.trouverTache(title);
-    t->retirerPredecesseur(*p);
-    pred_list->removeItem( pred_list->currentIndex() );
+    try
+    {
+        Tache* p = tm.trouverTache(title);
+        t->retirerPredecesseur(*p);
+        pred_list->removeItem( pred_list->currentIndex() );
 
-    if( pred_list->count() == 0)
-        pred_list->setCurrentText("");
-    nonpred_list->addItem( title );
+        if( pred_list->count() == 0)
+            pred_list->setCurrentText("");
+        nonpred_list->addItem( title );
+    }
+    catch(CalendarException e)
+    {   QMessageBox::warning(this,"Ajout precedence", e.getInfo()); }
 }
 
 void TacheEditeur::ajouterPredecesseur()
@@ -315,10 +320,9 @@ void TacheEditeur::ajouterPredecesseur()
 
     if( title == "")
         throw CalendarException("Aucune tache");
-
-    Tache* p = tm.trouverTache(title);
     try
     {
+        Tache* p = tm.trouverTache(title);
         t->ajouterPredecesseur(*p);
         nonpred_list->removeItem( nonpred_list->currentIndex() );
 
@@ -406,9 +410,7 @@ void TacheEditeur::ajouterSousTache()
         soust_list->addItem( title );
     }
     catch(CalendarException e)
-    {
-        QMessageBox::warning(this,"Ajout precedence", e.getInfo());
-    }
+    {   QMessageBox::warning(this,"Ajout precedence", e.getInfo());  }
 }
 
 void TacheEditeur::modifierListeSoust()
@@ -468,10 +470,8 @@ void TacheEditeur::sauvegarder()
             emit fermeture();
             close();
         }
-        catch( CalendarException e )
-        {
-            QMessageBox::warning(this,"Modification tâche", e.getInfo());
-        }
+        catch(CalendarException e)
+        {   QMessageBox::warning(this,"Ajout precedence", e.getInfo());  }
     }
     // Lors de l'ajout d'une nouvelle tâche
     else
@@ -486,10 +486,8 @@ void TacheEditeur::sauvegarder()
             emit fermeture();
             close();
         }
-        catch( CalendarException e )
-        {
-            QMessageBox::warning(this,"Ajout tâche", e.getInfo());
-        }
+        catch(CalendarException e)
+        {   QMessageBox::warning(this,"Ajout precedence", e.getInfo());  }
     }
 }
 
@@ -497,13 +495,13 @@ void TacheEditeur::sauvegarder()
 
 TacheEditeur::~TacheEditeur()
 {
-//    delete titre_label, desc_label, dispo_label, duree_label, echeance_label, pred_label, soust_label;
-//    delete titre, desc, preemp;
-//    delete dispo, echeance, duree_h, duree_m;
-//    delete btn_cancel, btn_save, btn_ajouterpred, btn_retirerpred, btn_ajoutersoust, btn_retirersoust;
-//    delete pred_list, soust_list, nonpred_list, nonsoust_list;
-//    delete l_titre, l_desc, l_dates, l_pred, l_soust, l_cancelsave;
-//    delete main_layout, parent;
+    delete titre_label, desc_label, dispo_label, duree_label, echeance_label, pred_label, soust_label;
+    delete titre, desc, preemp;
+    delete dispo, echeance, duree_h, duree_m;
+    delete btn_cancel, btn_save, btn_ajouterpred, btn_retirerpred, btn_ajoutersoust, btn_retirersoust;
+    delete pred_list, soust_list, nonpred_list, nonsoust_list;
+    delete l_titre, l_desc, l_dates, l_pred, l_soust, l_cancelsave;
+    delete main_layout;
 }
 
 

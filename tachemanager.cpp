@@ -53,7 +53,9 @@ Tache& TacheManager::getTache(const QString& id){
 }
 
 const Tache& TacheManager::getTache(const QString& id)const{
-    return const_cast<TacheManager*>(this)->getTache(id);
+    Tache& t = const_cast<TacheManager*>(this)->getTache(id);
+    if(!&t) throw CalendarException("erreur, TacheManager, tache inexistante");
+    return t;
 }
 
 void TacheManager::setDatesDisponibiliteEcheance(Tache& t, const QDate& disp, const QDate& e)
