@@ -12,7 +12,7 @@ class ProjetEditeur : public QWidget {
 private:
     Q_OBJECT
 
-    QPushButton *modifier, *ajouter_unaire, *ajouter_composite;
+    QPushButton *modifier, *supprimer, *ajouter_unaire, *ajouter_composite;
     QTreeWidget *taches;
     QGridLayout *main_layout;
 
@@ -29,6 +29,7 @@ private slots:
     void getTacheCourante(QTreeWidgetItem *item, int c);
     void ajouterTache();
     void modifierTache();
+    void supprimerTache();
     void refresh();
 };
 

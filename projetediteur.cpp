@@ -22,6 +22,11 @@ ProjetEditeur::ProjetEditeur(TacheManager &tm1, QWidget *p):tm(tm1),parent(p)
     modifier->setEnabled(false);
     main_layout->addWidget(modifier, 0, 1);
 
+    supprimer = new QPushButton(this);
+    supprimer->setText("Supprimer");
+    supprimer->setEnabled(false);
+    main_layout->addWidget(supprimer, 1, 1);
+
     ajouter_unaire = new QPushButton(this);
     ajouter_unaire->setText("Ajout tâche unaire");
     main_layout->addWidget(ajouter_unaire, 2, 1);
@@ -31,6 +36,7 @@ ProjetEditeur::ProjetEditeur(TacheManager &tm1, QWidget *p):tm(tm1),parent(p)
     main_layout->addWidget(ajouter_composite, 3, 1);
 
     connect(modifier, SIGNAL(clicked(bool)), this, SLOT(modifierTache()));
+    connect(supprimer, SIGNAL(clicked(bool)), this, SLOT(supprimerTache()));
     connect(ajouter_unaire, SIGNAL(clicked(bool)), this, SLOT(ajouterTache()));
     connect(ajouter_composite, SIGNAL(clicked(bool)), this, SLOT(ajouterTache()));
 
@@ -96,6 +102,7 @@ void ProjetEditeur::ajouterTache()
 void ProjetEditeur::getTacheCourante(QTreeWidgetItem* item,int c)
 {
     modifier->setEnabled(true);
+    supprimer->setEnabled(true);
     tache_courante = item->text(c);
 }
 
@@ -112,6 +119,11 @@ void ProjetEditeur::modifierTache()
     }
     catch(CalendarException e)
     { QMessageBox::warning(this, "Edition de tâche", e.getInfo()); }
+}
+
+void ProjetEditeur::supprimerTache()
+{
+
 }
 
 
