@@ -459,9 +459,9 @@ void TacheEditeur::sauvegarder()
             t->setDescription(desc->toPlainText());
             t->setDatesDisponibiliteEcheance(dispo->date(), echeance->date());
 
-            if(unaire)
+            TacheUnaire* tu = dynamic_cast<TacheUnaire*>(t);
+            if( tu )
             {
-                TacheUnaire* tu = dynamic_cast<TacheUnaire*>(t);
                 tu->setPreemptive(preemp->isChecked());
                 Duree dur(duree_h->text().toInt(), duree_m->text().toInt());
                 tu->setDuree(dur);

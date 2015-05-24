@@ -54,7 +54,7 @@ void ProjetEditeur::chargerTaches()
         QTreeWidgetItem* item = new QTreeWidgetItem;
         item->setText(0, (*it)->getTitre());
         item->setText(1, (*it)->getPredString());
-        item->setText(2, (*it)->getDescription().mid(0, 250));
+        item->setText(2, (*it)->getDescription().mid(0, 250)+"...");
         taches->addTopLevelItem(item);
 
         TacheComposite* tc = dynamic_cast<TacheComposite*>( (*it) );
@@ -66,7 +66,7 @@ void ProjetEditeur::chargerTaches()
                 QTreeWidgetItem* sous_item = new QTreeWidgetItem;
                 sous_item->setText(0, (*it_soust)->getTitre());
                 sous_item->setText(1, (*it_soust)->getPredString());
-                sous_item->setText(2, (*it_soust)->getDescription().mid(0, 250));
+                sous_item->setText(2, (*it_soust)->getDescription().mid(0, 250)+"...");
                 item->addChild(sous_item);
 
                 // Retirer la sous-tâche si elle a déjà été ajoutée dans l'arbre
@@ -103,7 +103,7 @@ void ProjetEditeur::getTacheCourante(QTreeWidgetItem* item,int c)
 {
     modifier->setEnabled(true);
     supprimer->setEnabled(true);
-    tache_courante = item->text(c);
+    tache_courante = item->text(0);
 }
 
 void ProjetEditeur::modifierTache()
@@ -123,7 +123,13 @@ void ProjetEditeur::modifierTache()
 
 void ProjetEditeur::supprimerTache()
 {
-
+    try
+    {
+        tm.retirerTache(tache_courante);
+        refresh();
+    }
+    catch(CalendarException e)
+    { QMessageBox::warning(this, "Suppression tâche", e.getInfo()); }
 }
 
 

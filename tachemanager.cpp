@@ -16,13 +16,14 @@ Tache* TacheManager::trouverTache(const QString& id)const{
 
 void TacheManager::addItem(Tache* t){
     if( trouverTache(t->getTitre()) )
-        throw CalendarException("erreur : tache deja existante dans le projet");
+        throw CalendarException("Ajout tâche : déjà existante dans le projet");
     taches.push_back(t);
 }
 
+
 Tache& TacheManager::ajouterTacheUnaire(const QString& t, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree& dur, bool preempt){
     if (trouverTache(t))
-        throw CalendarException("erreur, TacheManager, tache deja existante");
+        throw CalendarException("Une tâche portant le même nom existe déjà dans le projet");
 
     Tache* newt=new TacheUnaire(t,desc,dispo,deadline,dur,preempt);
     addItem(newt);
@@ -32,7 +33,7 @@ Tache& TacheManager::ajouterTacheUnaire(const QString& t, const QString& desc, c
 Tache& TacheManager::ajouterTacheComposite(const QString& t, const QString& desc, const QDate& dispo, const QDate& deadline)
 {
     if (trouverTache(t))
-        throw CalendarException("erreur, TacheManager, tache deja existante");
+        throw CalendarException("Une tâche portant le même nom existe déjà dans le projet");
 
     Tache* newt=new TacheComposite(t,desc,dispo,deadline);
     addItem(newt);
@@ -42,13 +43,13 @@ Tache& TacheManager::ajouterTacheComposite(const QString& t, const QString& desc
 void TacheManager::retirerTache(const QString& id)
 {
     Tache* t=trouverTache(id);
-    if( !t ) throw CalendarException("Retrait d'une tache inexistante");
+    if( !t ) throw CalendarException("TM : Retrait d'une tache inexistante");
     taches.remove(t);
 }
 
 Tache& TacheManager::getTache(const QString& id){
     Tache* t=trouverTache(id);
-    if (!t) throw CalendarException("erreur, TacheManager, tache inexistante");
+    if (!t) throw CalendarException("TacheManager, tache inexistante");
     return *t;
 }
 
