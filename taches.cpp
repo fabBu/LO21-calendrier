@@ -19,6 +19,17 @@ void Tache::affiche()
     }
 }
 
+const QString Tache::getPredString() const
+{
+    QString pred = QString();
+    const list<Tache*> l_pred = getPred();
+    for( list<Tache*>::const_iterator it_pred = l_pred.begin() ; it_pred != l_pred.end() ; ++it_pred )
+    {
+        pred+=(*it_pred)->getTitre()+" ; ";
+    }
+    return pred;
+}
+
 void Tache::setDatesDisponibiliteEcheance(const QDate& disp, const QDate& e) {
     if (e<disp)
         throw CalendarException("erreur Tâche : date echéance < date disponibilité");

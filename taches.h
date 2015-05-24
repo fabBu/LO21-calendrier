@@ -29,6 +29,7 @@ public:
     virtual void affiche();
 
     const list<Tache*> getPred() const { return predecesseurs; }
+    const QString getPredString() const;
     bool estPredecesseur(const Tache& t);
     void ajouterPredecesseur(Tache& t);
     void retirerPredecesseur(Tache& t);

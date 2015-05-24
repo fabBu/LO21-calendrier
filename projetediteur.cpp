@@ -11,8 +11,7 @@ ProjetEditeur::ProjetEditeur(TacheManager &tm1, QWidget *p):tm(tm1),parent(p)
 
     taches = new QTreeWidget(this);
     taches->setFixedSize(450, 300);
-    //taches->setHeaderLabel("Tâches");
-    taches->setHeaderLabels(QStringList()<<"Tâches"<<"Prédécesseurs");
+    taches->setHeaderLabels(QStringList()<<"Tâches"<<"Prédécesseurs"<<"Description");
 
     chargerTaches();
     main_layout->addWidget(taches, 0, 0, 4, 1);
@@ -48,18 +47,9 @@ void ProjetEditeur::chargerTaches()
     {
         QTreeWidgetItem* item = new QTreeWidgetItem;
         item->setText(0, (*it)->getTitre());
-
-        //  Ajouter les prédécesseurs s'il y en a;
-        QString* l_pred = new QString();
-        const list<Tache*> pred = (*it)->getPred();
-        for( list<Tache*>::const_iterator it_pred = pred.begin() ; it_pred != pred.end() ; ++it_pred )
-        {
-            *l_pred+=(*it_pred)->getTitre()+" ; ";
-        }
-
-        item->setText(1, *l_pred);
+        item->setText(1, (*it)->getPredString());
+        item->setText(2, (*it)->getDescription().mid(0, 250));
         taches->addTopLevelItem(item);
-
 
         TacheComposite* tc = dynamic_cast<TacheComposite*>( (*it) );
         if( tc )
@@ -69,11 +59,14 @@ void ProjetEditeur::chargerTaches()
             {
                 QTreeWidgetItem* sous_item = new QTreeWidgetItem;
                 sous_item->setText(0, (*it_soust)->getTitre());
+                sous_item->setText(1, (*it_soust)->getPredString());
+                sous_item->setText(2, (*it_soust)->getDescription().mid(0, 250));
                 item->addChild(sous_item);
 
+                // Retirer la sous-tâche si elle a déjà été ajoutée dans l'arbre
                 QList<QTreeWidgetItem*> list = taches->findItems((*it_soust)->getTitre(), 0); //taches->find
                 if( list.size() != 0 )
-                    taches->removeItemWidget(list.at(0),0);
+                    delete taches->takeTopLevelItem( taches->indexOfTopLevelItem(list.at(0)) );
             }
         }
     }
@@ -108,11 +101,17 @@ void ProjetEditeur::getTacheCourante(QTreeWidgetItem* item,int c)
 
 void ProjetEditeur::modifierTache()
 {
-    Tache& t =tm.getTache(tache_courante);
-    te = new TacheEditeur(tm, &t);
-    connect(te, SIGNAL(fermeture()), this, SLOT(refresh()));
+    try
+    {
+        Tache& t =tm.getTache(tache_courante);
+        te = new TacheEditeur(tm, &t);
+        connect(te, SIGNAL(fermeture()), this, SLOT(refresh()));
+        te->show();
 
-    te->show();
+        modifier->setEnabled(false);
+    }
+    catch(CalendarException e)
+    { QMessageBox::warning(this, "Edition de tâche", e.getInfo()); }
 }
 
 
