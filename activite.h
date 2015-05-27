@@ -3,7 +3,6 @@
 
 #include "evenement.h"
 #include <iostream>
-#include <QMetaEnum>
 
 /*!
  * \file activite.h
@@ -11,20 +10,14 @@
  * \author Fabrice De Régibus
  * \version 0.1
  */
-class MetaEnum : public QObject
-{
-    Q_OBJECT
 
-    Q_ENUMS(Type)
-public:
-    enum Type{
-        rendez_vous, /*!< Rendez-vous */
-        reunion, /*!< Réunion */
-        autre /*!< Autre */
-    };
-    QString enumToString(Type t);
-    QString enumToString(int i);
-    int getNbEnum();
+/*!
+ * \brief Enumeration du type de l'événement
+ */
+enum Type{
+    rendez_vous, /*!< Rendez-vous */
+    reunion, /*!< Réunion */
+    autre /*!< Autre */
 };
 
 /*!
@@ -36,7 +29,7 @@ public:
 class Activite : public Evenement
 {
 private:
-    MetaEnum::Type type; /*!< Type d'événement*/
+    Type type; /*!< Type d'événement*/
     QString lieu; /*!< Lieu de l'événement*/
 
 public:
@@ -50,18 +43,18 @@ public:
      * \param ty : type de l'événement
      * \param l : lieu de l'événement
      */
-    Activite(const QString& ti, const QString& de, const MetaEnum::Type& ty, const QString& l):Evenement(ti,de), type(ty), lieu(l) {}
+    Activite(const QString& ti, const QString& de, const Type& ty, const QString& l):Evenement(ti,de), type(ty), lieu(l) {}
 
     /*!
      * \brief Getter sur type
      * \return type
      */
-    const MetaEnum::Type& getType() const{return type;}
+    const Type& getType() const{return type;}
     /*!
      * \brief Setter sur type
      * \param t : type
      */
-    void setType(const MetaEnum::Type& t);
+    void setType(const Type& t);
     /*!
      * \brief Getter sur lieu
      * \return lieu
