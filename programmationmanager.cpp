@@ -1,5 +1,7 @@
 #include "programmationmanager.h"
 
+ProgrammationManager::Handler ProgrammationManager::handler=ProgrammationManager::Handler();
+
 void ProgrammationManager::addItem(Programmation* p){
     if (!isFree(p->getDate(),p->getDuree()))
         throw CalendarException("ERREUR: Un événement est déjà programmé à cette date.");
@@ -45,4 +47,20 @@ void ProgrammationManager::removeProgrammation(const QDateTime& d){
     Programmation* p = findProgrammation(d);
     if (!p) throw CalendarException("ERREUR: retrait d'un événement inexistant impossible.");
     programmations.remove(p);
+}
+
+ProgrammationManager& ProgrammationManager::getInstance()
+{
+    if (!handler.instance)
+        handler.instance = new ProgrammationManager();
+
+    return *handler.instance;
+}
+
+void ProgrammationManager::libererInstance()
+{
+    if (handler.instance)
+        delete handler.instance;
+
+    handler.instance = 0;
 }
