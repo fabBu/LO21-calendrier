@@ -463,7 +463,8 @@ void TacheEditeur::sauvegarder()
             if( tu )
             {
                 tu->setPreemptive(preemp->isChecked());
-                Duree dur(duree_h->text().toInt(), duree_m->text().toInt());
+                qDebug()<<"SETDUREE:"<<duree_h->value()<<"H"<<duree_m->value();
+                Duree dur(duree_h->value(), duree_m->value());
                 tu->setDuree(dur);
             }
 

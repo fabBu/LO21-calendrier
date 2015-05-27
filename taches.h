@@ -34,7 +34,7 @@ public:
     void ajouterPredecesseur(Tache& t);
     void retirerPredecesseur(Tache& t);
 
-    //virtual ~Tache();
+    bool operator==(const Tache& t) { return titre == t.getTitre(); }
 private:
     Tache(const Tache& t);
     Tache& operator=(const Tache&);
@@ -60,7 +60,7 @@ class TacheUnaire : public Tache
 public:
 
     Duree getDuree() const { return duree; }
-    void setDuree(Duree& dur) { duree = dur; }
+    void setDuree(Duree& dur) { duree.setDuree(dur.getDureeEnHeures(), dur.getDureeEnMinutes()%60); }
     Statut getStatut() const { return statut; }
     void setStatut(Statut stat) { statut = stat; }
     bool isPreemptive() const { return preemptive; }
