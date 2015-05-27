@@ -2,7 +2,7 @@
 #include <QStringList>
 #include <QXmlStreamReader>
 #include <QDebug>
-#include <dirent.h>
+//#include <dirent.h>
 
 
 #include "xmlparsor.h"
@@ -12,15 +12,15 @@
 
 void XMLparsor::loadProjets(list<TacheManager*> l)
 {
-    TacheManager* projet;
+    /*TacheManager* projet;
 
     QString chemin = "./Projets/";
 
-    DIR* dossier = opendir(chemin.toStdString().c_str());
+    //DIR* dossier = opendir(chemin.toStdString().c_str());
     struct dirent* courant;
 
-    if( dossier==NULL)
-        throw CalendarException("Le dossier \'Projets\' n\'existe pas");
+    //if( dossier==NULL)
+    //    throw CalendarException("Le dossier \'Projets\' n\'existe pas");
 
     while( courant=readdir(dossier) )
     {
@@ -72,7 +72,7 @@ qDebug()<<file.fileName();
 
  TacheManager* XMLparsor::loadProjet(const QString& file)
 {
-    TacheManager* proj;
+ /*   TacheManager* proj;
 
     QFile fin(file);
     // If we can't open it, let's show an error message.
@@ -122,9 +122,9 @@ qDebug()<<file.fileName();
                 Duree duree;
                 bool preemptive;
 
-                QXmlStreamAttributes attributes = xml.attributes();
+                QXmlStreamAttributes attributes = xml.attributes();*/
                 /* Let's check that Task has attribute. */
-                if(attributes.hasAttribute("preemptive")) {
+                /*if(attributes.hasAttribute("preemptive")) {
                     QString val =attributes.value("preemptive").toString();
                     preemptive=(val == "true" ? true : false);
                 }
@@ -173,12 +173,12 @@ qDebug()<<file.fileName();
                 proj->ajouterTacheUnaire(titre,description,disponibilite,echeance,duree,preemptive);
             }
         }
-    }
+    }*/return 0;
 }
 
 void XMLparsor::loadContraintes(TacheManager* tm, QString chemin)
 {
-
+/*
     QFile fin(chemin);
     // If we can't open it, let's show an error message.
     if (!fin.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -202,9 +202,9 @@ void XMLparsor::loadContraintes(TacheManager* tm, QString chemin)
                 QString tache;
                 QString pred;
 
-                QXmlStreamAttributes attributes = xml.attributes();
+                QXmlStreamAttributes attributes = xml.attributes();*/
                 /* Let's check that Task has attribute. */
-                if(attributes.hasAttribute("tache")) {
+                /*if(attributes.hasAttribute("tache")) {
                     tache =attributes.value("tache").toString();
                 }
                 else
@@ -232,5 +232,5 @@ void XMLparsor::loadContraintes(TacheManager* tm, QString chemin)
                 }
             }
         }
-    }
+    }*/
 }
