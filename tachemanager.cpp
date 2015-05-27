@@ -45,6 +45,9 @@ void TacheManager::retirerTache(const QString& id)
     Tache* t=trouverTache(id);
     if( !t ) throw CalendarException("TM : Retrait d'une tache inexistante");
     taches.remove(t);
+    qDebug()<<t->getTitre();
+    free(t);
+    qDebug()<<t->getTitre();
 }
 
 Tache& TacheManager::getTache(const QString& id){

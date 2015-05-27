@@ -33,6 +33,8 @@ public:
     bool estPredecesseur(const Tache& t);
     void ajouterPredecesseur(Tache& t);
     void retirerPredecesseur(Tache& t);
+
+    //virtual ~Tache();
 private:
     Tache(const Tache& t);
     Tache& operator=(const Tache&);

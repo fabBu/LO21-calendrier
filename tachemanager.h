@@ -3,6 +3,8 @@
 #include <QString>
 #include <QDate>
 #include <QTextStream>
+#include <QMessageBox>
+#include <QDebug>
 #include "taches.h"
 
 using namespace std;

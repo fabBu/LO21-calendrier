@@ -41,7 +41,7 @@ public:
      * \brief Getter sur titre
      * \return titre
      */
-    const QString& getTitre() { return titre;}
+    const QString& getTitre() const { return titre;}
 
     /*!
      * \brief Setter sur titre
@@ -53,7 +53,7 @@ public:
      * \brief Getter sur description
      * \return description
      */
-    const QString& getDescription() { return description;}
+    const QString& getDescription() const { return description;}
 
     /*!
      * \brief Setter sur description

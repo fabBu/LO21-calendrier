@@ -3,6 +3,12 @@
 
 
 //              ---------   Tache   ---------              //
+//Tache::~Tache()
+//{
+
+//}
+
+
 void Tache::affiche()
 {
     Evenement::affiche();
