@@ -113,9 +113,9 @@ void ProgrammationEditeur::initHoraire(){
     l_horaires->addWidget(duree);
 }
 
-void ProgrammationEditeur::sauvegarder(){
+//void ProgrammationEditeur::sauvegarder(){
 
-}
+//}
 
 //void ProgrammationEditeur::fermeture(){
 
