@@ -26,7 +26,7 @@ private:
     Programmation* findProgrammation(const QDateTime& d) const;
 
     ProgrammationManager(){}
-    ~ProgrammationManager();
+    ~ProgrammationManager() {}
     ProgrammationManager(const ProgrammationManager& p);
     ProgrammationManager& operator=(const ProgrammationManager& p);
 
