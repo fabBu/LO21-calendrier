@@ -13,9 +13,9 @@ class ProgrammationManager
 public:
 
     int getSize() {return programmations.size();}
-    bool isFree(const QDateTime& d, const QTime& h) const;
+    bool isFree(const QDateTime& d, const Duree& h) const;
 
-    void addProgrammation(const QDateTime& da, const QTime& du, Evenement& e);
+    void addProgrammation(const QDateTime& da, const Duree& du, Evenement& e);
     void removeProgrammation(const QDateTime& d);
 
     Programmation& getProgrammation(const QDateTime& d);

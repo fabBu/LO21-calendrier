@@ -2,7 +2,7 @@
 
 ProgrammationEditeur::ProgrammationEditeur(ProgrammationManager& pm, QWidget *p): programmationmanager(pm), parent(p){
     setWindowTitle("Programmation d'un événement");
-    setFixedSize(800,600);
+    setFixedSize(650,300);
 
     main_layout = new QVBoxLayout;
     param_layout = new QVBoxLayout;
@@ -54,7 +54,7 @@ void ProgrammationEditeur::initDesc(){
     l_desc = new QHBoxLayout;
     desc_label = new QLabel("Description",this);
     desc = new QTextEdit(this);
-    desc->setFixedSize(400,50);
+    desc->setFixedSize(250,50);
     l_desc->addWidget(desc_label);
     l_desc->addWidget(desc);
 }
@@ -107,15 +107,21 @@ void ProgrammationEditeur::initHoraire(){
     horaire = new QTimeEdit(this);
     duree_label = new QLabel("Duree",this);
     duree = new QTimeEdit(this);
+    duree->setMaximumTime(QTime(12,0));
     l_horaires->addWidget(horaire_label);
     l_horaires->addWidget(horaire);
     l_horaires->addWidget(duree_label);
     l_horaires->addWidget(duree);
 }
 
-//void ProgrammationEditeur::sauvegarder(){
-
-//}
+void ProgrammationEditeur::sauvegarder(){
+    try {
+        programmationmanager.addProgrammation(QDateTime(calendar->selectedDate(),horaire->time()),Duree(duree->time().hour(),duree->time().minute()),Activite(titre->text(),desc->toPlainText(), static_cast<MetaEnum::Type>(type->currentIndex()),lieu->text()));
+        QString message = "La programmation suivante a été ajouté :" + programmationmanager.getProgrammation(QDateTime(calendar->selectedDate(),horaire->time())).getEvenement().getTitre();
+        QMessageBox::warning(this,"Ajout programmation", message);
+    } catch(CalendarException e)
+    {   QMessageBox::warning(this,"Ajout progrmmation", e.getInfo());  }
+}
 
 //void ProgrammationEditeur::fermeture(){
 

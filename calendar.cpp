@@ -46,13 +46,18 @@ std::istream& operator>>(std::istream& flot, Duree& duree){
 
 //}
 
-QDateTime& operator+(const QDateTime& da, const QTime& du){
-    QTime t = QTime(da.time().hour() + du.hour(),da.time().minute() + du.minute());
+QDateTime& operator+(const QDateTime& da, const Duree& du){
+    QTime t = QTime(da.time().hour(),da.time().minute());
     QDate d = QDate(da.date().year(), da.date().month(), da.date().day());
-    int jours = 0;
-    if ((da.time().hour()+du.hour()) > 24 )
-        jours = (da.time().hour()+du.hour()) / 24;
-    QDateTime ti(d.addDays(jours), t);
-    QDateTime& res = ti;
+    QDateTime ti(d.addDays(du.getNbJour()), t);
+    QDateTime& res = ti.addSecs(du.getDureeEnSeconde());
     return res;
+
+//    d.addDays(du.getNbJour());
+//    int jour = 0;
+//    if ((da.time().hour()+du.getHeure()) > 24 )
+//        jour = (da.time().hour()+du.getHeure()) / 24;
+//    QDateTime ti(d.addDays(jours), t);
+//    QDateTime& res = ti;
+//    return res;
 }

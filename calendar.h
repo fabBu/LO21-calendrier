@@ -86,6 +86,11 @@ public:
         return res;
     } //<!Retourne la duree en heures
 
+    unsigned int getDureeEnSeconde() const{
+        unsigned int secondes = time.hour()*60*60 + time.minute()*60;
+        return secondes;
+    }
+
     void afficher(std::ostream& f=std::cout) const {
         f<<std::setfill('0')<<std::setw(2)<<nb_jour*24+time.hour()<<"H"<<std::setw(2)<<time.minute()<<std::setfill(' '); } //<!Affiche la duree sous le format hhHmm
 private:
@@ -97,6 +102,6 @@ std::ostream& operator<<(std::ostream& f, const Duree & d);
 
 std::istream& operator>>(std::istream&, Duree&); //lecture format hhHmm
 
-QDateTime& operator+(const QDateTime& da, const QTime& du);
+QDateTime& operator+(const QDateTime& da, const Duree& du);
 
 #endif // CALENDAR_H

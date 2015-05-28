@@ -7,7 +7,7 @@
 #include <QDebug>
 
 #include "taches.h"
-#include "contrainte.h"
+//#include "contrainte.h"
 
 using namespace std;
 

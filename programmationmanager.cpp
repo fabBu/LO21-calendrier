@@ -18,10 +18,10 @@ Programmation* ProgrammationManager::findProgrammation(const QDateTime& d) const
     return 0;
 }
 
-bool ProgrammationManager::isFree(const QDateTime& d, const QTime& h) const{
+bool ProgrammationManager::isFree(const QDateTime& d, const Duree& h) const{
     QDateTime fin = d + h;
     for (list<Programmation*>::const_iterator it = programmations.begin(); it != programmations.end(); it++){
-        if ((*it)->getDate() > d && (*it)->getDate() < fin ) return false;
+        if ((*it)->getDate() >= d && (*it)->getDate() <= fin ) return false;
     }
     return true;
 }
@@ -36,11 +36,13 @@ const Programmation& ProgrammationManager::getProgrammation(const QDateTime& d) 
     return const_cast<ProgrammationManager*>(this)->getProgrammation(d);
 }
 
-void ProgrammationManager::addProgrammation(const QDateTime& da, const QTime& du, Evenement& e){
-    // TODO try {
+void ProgrammationManager::addProgrammation(const QDateTime& da, const Duree& du, Evenement& e){
+//    try {
         Programmation* p = new Programmation(da,du,e);
         addItem(p);
-//    } catch (exception e) {}
+//    } catch (CalendarException e) {
+//        throw CalendarException(e.getInfo());
+//    }
 }
 
 void ProgrammationManager::removeProgrammation(const QDateTime& d){

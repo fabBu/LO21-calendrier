@@ -10,6 +10,7 @@
 #include <QPushButton>
 #include <QHBoxLayout>
 #include <QComboBox>
+#include <QMessageBox>
 #include "activite.h"
 #include "programmation.h"
 #include "programmationmanager.h"
@@ -17,7 +18,7 @@
 class ProgrammationEditeur : public QWidget
 {
 private:
-    Q_ENUMS(MetaEnum::Type)
+//    Q_ENUMS(MetaEnum::Type)
 
     Q_OBJECT
     QLabel *titre_label, *desc_label, *type_label, *lieu_label, *horaire_label, *duree_label;
@@ -52,7 +53,7 @@ public:
 signals:
 //    void fermeture();
 private slots:
-//    void sauvergarder();
+    void sauvegarder();
 };
 
 #endif // ACTIVITEEDITEUR_H

@@ -4,7 +4,7 @@ void Programmation::setDate(const QDateTime& d){
     this->date = d;
 }
 
-void Programmation::setDuree(const QTime& d){
+void Programmation::setDuree(const Duree& d){
     this->duree = d;
 }
 

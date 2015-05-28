@@ -10,11 +10,11 @@ class Programmation
 {
 private:
     QDateTime date;
-    QTime duree;
+    Duree duree;
     Evenement* evenement;
 
 public:
-    Programmation(const QDateTime& da, const QTime& du, Evenement& e):date(da), duree(du), evenement(&e){}
+    Programmation(const QDateTime& da, const Duree& du, Evenement& e):date(da), duree(du), evenement(&e){}
 
     ~Programmation();
 
@@ -22,9 +22,9 @@ public:
 
     void setDate(const QDateTime& d);
 
-    const QTime& getDuree(){return duree;}
+    const Duree& getDuree(){return duree;}
 
-    void setDuree(const QTime& d);
+    void setDuree(const Duree& d);
 
     Evenement& getEvenement(){return *evenement;}
 
