@@ -19,9 +19,9 @@ class MetaEnum : public QObject
     Q_ENUMS(Type)
 public:
     enum Type{
-        rendez_vous, /*!< Rendez-vous */
-        reunion, /*!< Réunion */
-        autre /*!< Autre */
+        Rendez_vous, /*!< Rendez-vous */
+        Reunion, /*!< Réunion */
+        Autre /*!< Autre */
     };
     QString enumToString(Type t);
     QString enumToString(int i);
