@@ -14,7 +14,7 @@ private:
     Evenement* evenement;
 
 public:
-    Programmation(const QDateTime& da, const Duree& du, Evenement& e):date(da), duree(du), evenement(&e){}
+    Programmation(const QDateTime& da, const Duree& du, Evenement* e):date(da), duree(du), evenement(e){}
 
     ~Programmation();
 

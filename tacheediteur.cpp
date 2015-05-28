@@ -463,7 +463,6 @@ void TacheEditeur::sauvegarder()
             if( tu )
             {
                 tu->setPreemptive(preemp->isChecked());
-                qDebug()<<"SETDUREE:"<<duree_h->value()<<"H"<<duree_m->value();
                 Duree dur(duree_h->value(), duree_m->value());
                 tu->setDuree(dur);
             }
@@ -480,7 +479,7 @@ void TacheEditeur::sauvegarder()
         try
         {
             if(unaire)
-                tm.ajouterTacheUnaire(titre->text(), desc->toPlainText(), dispo->date(), echeance->date(),  Duree(duree_h->text().toInt(), duree_m->text().toInt()), preemp->isChecked());
+                tm.ajouterTacheUnaire(titre->text(), desc->toPlainText(), dispo->date(), echeance->date(),  Duree(duree_h->value(), duree_m->value()), preemp->isChecked());
             else
                 tm.ajouterTacheComposite(titre->text(), desc->toPlainText(), dispo->date(), echeance->date());
 

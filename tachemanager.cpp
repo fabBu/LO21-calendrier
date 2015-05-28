@@ -44,10 +44,34 @@ void TacheManager::retirerTache(const QString& id)
 {
     Tache* t=trouverTache(id);
     if( !t ) throw CalendarException("TM : Retrait d'une tache inexistante");
+
+    const list<Tache*> l = t->getSucc();
+    list<Tache*>::const_iterator it;
+    for( it = l.begin() ; it != l.end() ; ++it )
+    {
+            (*it)->retirerPredecesseur(*t);
+    }
+
+    TacheComposite* tc;
+    // Retirer la tâche de la sur-tache (composite) si elle existe
+    Tache* st = t->getSurtache();
+    if( st != 0 ) // La tache est une sous-tache d'une tacheComposite
+    {
+        tc = dynamic_cast<TacheComposite*>(st);
+        tc->retirerSousTache(*t);
+    }
+
+    // Retirer toutes les sous-taches si la tache courante est composite
+    if( tc = dynamic_cast<TacheComposite*>(t) )
+    {
+        const list<Tache*> l2 = tc->getSousTaches();
+        for( it = l2.begin() ; it != l2.end() ; ++it )
+        {
+            tc->retirerSousTache((**it));
+        }
+    }
+
     taches.remove(t);
-    qDebug()<<t->getTitre();
-    free(t);
-    qDebug()<<t->getTitre();
 }
 
 Tache& TacheManager::getTache(const QString& id){

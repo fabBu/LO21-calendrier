@@ -36,7 +36,7 @@ const Programmation& ProgrammationManager::getProgrammation(const QDateTime& d) 
     return const_cast<ProgrammationManager*>(this)->getProgrammation(d);
 }
 
-void ProgrammationManager::addProgrammation(const QDateTime& da, const Duree& du, Evenement& e){
+void ProgrammationManager::addProgrammation(const QDateTime& da, const Duree& du, Evenement* e){
 //    try {
         Programmation* p = new Programmation(da,du,e);
         addItem(p);

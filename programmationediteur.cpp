@@ -116,7 +116,7 @@ void ProgrammationEditeur::initHoraire(){
 
 void ProgrammationEditeur::sauvegarder(){
     try {
-        programmationmanager.addProgrammation(QDateTime(calendar->selectedDate(),horaire->time()),Duree(duree->time().hour(),duree->time().minute()),Activite(titre->text(),desc->toPlainText(), static_cast<MetaEnum::Type>(type->currentIndex()),lieu->text()));
+        programmationmanager.addProgrammation(QDateTime(calendar->selectedDate(),horaire->time()),Duree(duree->time().hour(),duree->time().minute()),new Activite(titre->text(),desc->toPlainText(), static_cast<MetaEnum::Type>(type->currentIndex()),lieu->text()));
         QString message = "La programmation suivante a été ajouté :" + programmationmanager.getProgrammation(QDateTime(calendar->selectedDate(),horaire->time())).getEvenement().getTitre();
         QMessageBox::warning(this,"Ajout programmation", message);
     } catch(CalendarException e)

@@ -55,7 +55,6 @@ void ProjetEditeur::chargerTaches()
         item->setText(0, (*it)->getTitre());
         item->setText(1, (*it)->getPredString());
         item->setText(2, (*it)->getDescription().mid(0, 250)+"...");
-        taches->addTopLevelItem(item);
 
         TacheComposite* tc = dynamic_cast<TacheComposite*>( (*it) );
         if( tc )
@@ -75,8 +74,34 @@ void ProjetEditeur::chargerTaches()
                     delete taches->takeTopLevelItem( taches->indexOfTopLevelItem(list.at(0)) );
             }
         }
+
+        taches->addTopLevelItem(item);
     }
 }
+
+/*
+void ProjetEditeur::chargerSousTaches(QTreeWidgetItem* item, )
+{
+    TacheComposite* tc = dynamic_cast<TacheComposite*>( (*it) );
+    if( tc )
+    {
+        const list<Tache*> soust = (tc)->getSousTaches();
+        for( list<Tache*>::const_iterator it_soust = soust.begin() ; it_soust != soust.end() ; ++it_soust )
+        {
+            QTreeWidgetItem* sous_item = new QTreeWidgetItem;
+            sous_item->setText(0, (*it_soust)->getTitre());
+            sous_item->setText(1, (*it_soust)->getPredString());
+            sous_item->setText(2, (*it_soust)->getDescription().mid(0, 250)+"...");
+            item->addChild(sous_item);
+
+            // Retirer la sous-tâche si elle a déjà été ajoutée dans l'arbre
+            QList<QTreeWidgetItem*> list = taches->findItems((*it_soust)->getTitre(), 0); //taches->find
+            if( list.size() != 0 )
+                delete taches->takeTopLevelItem( taches->indexOfTopLevelItem(list.at(0)) );
+        }
+    }
+}
+*/
 
 void ProjetEditeur::refresh()
 {

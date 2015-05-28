@@ -64,9 +64,7 @@ void Tache::setDatesDisponibiliteEcheance(const QDate& disp, const QDate& e) {
         }
     }
 
-    delete &disponibilite;
     disponibilite=disp;
-    delete &echeance;
     echeance=e;
 }
 
@@ -94,7 +92,10 @@ void Tache::ajouterPredecesseur(Tache& t)
 
     // Verification de la coherence des donnees
     if( getDateDisponibilite() > t.getDateEcheance())
+    {
         predecesseurs.push_back(&t);
+        t.successeurs.push_back(this);
+    }
     else
         throw CalendarException(t.getTitre()+" se termine apres "+getTitre());
 }
@@ -114,6 +115,7 @@ void Tache::retirerPredecesseur(Tache& t)
 
     // Suppression de la tâche parmis les prédécesseurs
     predecesseurs.remove(&t);
+    t.successeurs.remove(this);
 
 }
 
@@ -129,13 +131,30 @@ void TacheUnaire::affiche()
         std::cout<<"Non preemptive"<<std::endl;
 }
 
+bool TacheUnaire::verifCoherence(const QDate& dispo, const QDate& deadline, const Duree& dur)
+{
+    if( dispo.addDays(dur.getNbJour()) > deadline) return false;
+    return true;
+}
+
 void TacheUnaire::setPreemptive(const bool value)
 {
-    if( value == true && this->duree.getDureeEnHeures() > 12)
-        throw CalendarException("La tâche ne peut être préemptive : durée supérieure à 12H");
+    if( value == false && this->duree.getDureeEnHeures() > 12)
+        throw CalendarException("La tâche doit être préemptive : durée supérieure à 12H");
 
     delete &preemptive;
     preemptive = value;
+}
+
+
+void TacheUnaire::setDuree(Duree& dur)
+{
+    if(dur.getDureeEnHeures()>12 && !preemptive)
+        throw CalendarException("Une tâche préemptive ne peut durer plus de 12H");
+    if(!verifCoherence(disponibilite, echeance, dur))
+        throw CalendarException("La tâche dure trop longtemps par rapport à sa date d'échéance");
+
+    duree.setDuree(dur.getDureeEnHeures(), dur.getDureeEnMinutes()%60);
 }
 
 
@@ -171,6 +190,7 @@ void TacheComposite::ajouterSousTache(Tache& t)
     if( getDateDisponibilite() > t.getDateDisponibilite() )
         throw CalendarException(t.getTitre()+" possede une disponibilite inferieure a "+getTitre());
 
+    t.setSurtache(this);
     soustaches.push_back(&t);
 }
 
@@ -188,21 +208,8 @@ void TacheComposite::retirerSousTache(Tache& t)
     if( !estSousTache(t) )
         throw CalendarException(t.getTitre()+" n\'est pas une sous-tache de "+getTitre());
 
+    t.setSurtache(0);
     soustaches.remove(&t);
-
-    /*
-    // Mise à jour des dates de la tâche composite
-    QDate min = (*soustaches.begin())->getDateDisponibilite();
-    QDate max = (*soustaches.begin())->getDateEcheance();
-
-    for (std::list<Tache*>::iterator it = soustaches.begin(); it != soustaches.end(); it++)
-    {
-        if( (*it)->getDateDisponibilite() < min ) min = (*it)->getDateDisponibilite();
-        if( (*it)->getDateEcheance() > max ) max = (*it)->getDateEcheance();
-    }
-
-    setDatesDisponibiliteEcheance(min, max);;
-    */
 }
 
 void TacheComposite::affiche()

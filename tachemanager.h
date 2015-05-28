@@ -7,7 +7,6 @@
 #include <QDebug>
 
 #include "taches.h"
-//#include "contrainte.h"
 
 using namespace std;
 
@@ -17,7 +16,6 @@ private:
     friend class ContrainteManager;
     QString nom;
     list<Tache*> taches;
-    std::map<const Tache*, const Tache*> contraintes;
     void addItem(Tache* t);
     Tache* trouverTache(const QString& id) const;
     QString file;

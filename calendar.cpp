@@ -50,8 +50,9 @@ QDateTime& operator+(const QDateTime& da, const Duree& du){
     QTime t = QTime(da.time().hour(),da.time().minute());
     QDate d = QDate(da.date().year(), da.date().month(), da.date().day());
     QDateTime ti(d.addDays(du.getNbJour()), t);
-    QDateTime& res = ti.addSecs(du.getDureeEnSeconde());
-    return res;
+    QDateTime tmp = ti.addSecs(du.getDureeEnSeconde());
+
+    return tmp;
 
 //    d.addDays(du.getNbJour());
 //    int jour = 0;

@@ -2,6 +2,7 @@
 #define TACHES_H
 #include <QString>
 #include <QDate>
+#include <QDebug>
 #include <QTextStream>
 #include "calendar.h"
 #include "evenement.h"
@@ -17,9 +18,12 @@ protected:
     Statut statut; /*!< Etat de la tâche */
 
     list<Tache*> predecesseurs; /*!< Liste des tâches devant être² effectuées avant la tâche */
+    list<Tache*> successeurs;
+
+    Tache* surtache; ///    TODO : il faudrait un TacheComposite*
 
     Tache(const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline):
-            Evenement(id, desc),disponibilite(dispo),echeance(deadline){ if(disponibilite>echeance) throw CalendarException("Echeance < Disponibilité"); }
+            Evenement(id, desc),disponibilite(dispo),echeance(deadline), surtache(0){ if(disponibilite>echeance) throw CalendarException("Echeance < Disponibilité"); }
 
     friend class TacheManager;
 public:
@@ -33,6 +37,9 @@ public:
     bool estPredecesseur(const Tache& t);
     void ajouterPredecesseur(Tache& t);
     void retirerPredecesseur(Tache& t);
+    const list<Tache*> getSucc() const { return successeurs; }
+    Tache* getSurtache() const { return surtache; }
+    void setSurtache(Tache* t) { surtache=t; }   // TODO : Doit être TacheComposite*
 
     bool operator==(const Tache& t) { return titre == t.getTitre(); }
 private:
@@ -55,12 +62,15 @@ class TacheUnaire : public Tache
 
     TacheUnaire(const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree& dur, bool pree=false):
             Tache(id, desc, dispo, deadline),duree(dur), preemptive(pree) {
-        if(duree.getDureeEnHeures()>12 && preemptive) throw CalendarException("Une tâche préemptive ne peut durer plus de 12H");
+        if(duree.getDureeEnHeures()>12 && !preemptive)
+            throw CalendarException("Une tâche non préemptive ne peut durer plus de 12H");
+        if(!verifCoherence(dispo, deadline, dur))
+            throw CalendarException("La tâche dure trop longtemps par rapport à sa date d'échéance");
     }
 public:
-
+    bool verifCoherence(const QDate& dispo, const QDate& deadline, const Duree& dur);
     Duree getDuree() const { return duree; }
-    void setDuree(Duree& dur) { duree.setDuree(dur.getDureeEnHeures(), dur.getDureeEnMinutes()%60); }
+    void setDuree(Duree& dur);
     Statut getStatut() const { return statut; }
     void setStatut(Statut stat) { statut = stat; }
     bool isPreemptive() const { return preemptive; }
