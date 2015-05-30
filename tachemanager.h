@@ -25,6 +25,7 @@ public:
     ~TacheManager();
 
     const QString& getNom() const { return nom; }
+    list<Tache*> getTaches() { return taches; }
     const list<Tache*> getTaches() const { return taches; }
     Tache& getTache(const QString& id);
     const Tache& getTache(const QString& code) const;

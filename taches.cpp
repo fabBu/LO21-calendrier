@@ -157,6 +157,13 @@ void TacheUnaire::setDuree(Duree& dur)
     duree.setDuree(dur.getDureeEnHeures(), dur.getDureeEnMinutes()%60);
 }
 
+void TacheUnaire::setDureeRestante(Duree& dur)
+{
+    if(dur.getDureeEnHeures()> duree.getDureeEnHeures())
+        throw CalendarException("La tâche ne dure que "+duree.getDureeEnHeures()+"H...");
+    duree_restante.setDuree(dur.getDureeEnHeures(), dur.getDureeEnMinutes()%60);
+}
+
 
 //              ---------   TacheComposite   ---------              //
 

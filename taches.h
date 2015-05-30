@@ -15,6 +15,7 @@ class Tache : public Evenement {
 protected:
     QDate disponibilite; /*!< Date à laquelle la tâche peut commencer */
     QDate echeance; /*!< Date à laquelle la tâche doit être finie */
+    bool termine;
     Statut statut; /*!< Etat de la tâche */
 
     list<Tache*> predecesseurs; /*!< Liste des tâches devant être² effectuées avant la tâche */
@@ -31,6 +32,8 @@ public:
     QDate getDateEcheance() const {  return echeance; }
     void setDatesDisponibiliteEcheance(const QDate& disp, const QDate& e);
     virtual void affiche();
+    bool estTermine() const { return termine; }
+    void setTermine(bool val) { termine=val; }
 
     const list<Tache*> getPred() const { return predecesseurs; }
     const QString getPredString() const;
@@ -58,6 +61,7 @@ QTextStream& operator<<(QTextStream& f, const Tache& t);
 class TacheUnaire : public Tache
 {friend class TacheManager;
     Duree duree; /*!< Duree de la tâche */
+    Duree duree_restante;
     bool preemptive; /*!< Définit si la tâche peut être effectuée en plusieurs fois */
 
     TacheUnaire(const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree& dur, bool pree=false):
@@ -71,6 +75,8 @@ public:
     bool verifCoherence(const QDate& dispo, const QDate& deadline, const Duree& dur);
     Duree getDuree() const { return duree; }
     void setDuree(Duree& dur);
+    void setDureeRestante(Duree& dur);
+    Duree getDureeRestante() const { return duree_restante; }
     Statut getStatut() const { return statut; }
     void setStatut(Statut stat) { statut = stat; }
     bool isPreemptive() const { return preemptive; }

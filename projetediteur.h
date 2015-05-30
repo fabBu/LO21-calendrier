@@ -2,6 +2,7 @@
 #define PROJETEDITEUR_H
 
 #include <QWidget>
+#include <QGroupBox>
 #include <QTreeWidget>
 #include <QStringListModel>
 #include <QStandardItem>
@@ -12,9 +13,11 @@ class ProjetEditeur : public QWidget {
 private:
     Q_OBJECT
 
-    QPushButton *modifier, *supprimer, *ajouter_unaire, *ajouter_composite;
+    QGroupBox *grp_existante, *grp_nouvelle;
+    QPushButton *modifier, *supprimer, *ajouter_unaire, *ajouter_composite, *programmer;
     QTreeWidget *taches;
     QGridLayout *main_layout;
+    QVBoxLayout *l_existante, *l_nouvelle;
 
     QWidget* parent;
     TacheManager& tm;
@@ -22,7 +25,7 @@ private:
     TacheEditeur* te;
 
     void chargerTaches();
-    void chargerSousTaches(QTreeWidgetItem *item);
+    void chargerSousTaches(QTreeWidgetItem* item, TacheComposite* tc );
 public:
     ProjetEditeur(TacheManager& tm1, QWidget* p=0);
 public slots:
@@ -31,6 +34,7 @@ private slots:
     void ajouterTache();
     void modifierTache();
     void supprimerTache();
+    void programmerTache();
     void refresh();
 };
 
