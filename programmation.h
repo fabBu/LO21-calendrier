@@ -20,6 +20,8 @@ public:
 
     const QDateTime& getDate(){ return date;}
 
+    const QDateTime& getDateFin(){ return date+duree;}
+
     void setDate(const QDateTime& d);
 
     const Duree& getDuree(){return duree;}
