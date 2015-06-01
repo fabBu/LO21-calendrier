@@ -20,7 +20,7 @@ public:
 
     const QDateTime& getDate(){ return date;}
 
-    const QDateTime& getDateFin(){ return date+duree;}
+    const QDateTime getDateFin(){return date+duree;}
 
     void setDate(const QDateTime& d);
 

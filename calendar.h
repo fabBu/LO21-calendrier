@@ -103,6 +103,6 @@ std::ostream& operator<<(std::ostream& f, const Duree & d);
 
 std::istream& operator>>(std::istream&, Duree&); //lecture format hhHmm
 
-QDateTime& operator+(const QDateTime& da, const Duree& du);
+QDateTime operator+(const QDateTime& da, const Duree& du);
 
 #endif // CALENDAR_H
