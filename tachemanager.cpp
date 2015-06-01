@@ -74,14 +74,14 @@ void TacheManager::retirerTache(const QString& id)
     taches.remove(t);
 }
 
-Tache& TacheManager::getTache(const QString& id){
-    Tache* t=trouverTache(id);
+Tache& TacheManager::getTache(const QString& titre){
+    Tache* t=trouverTache(titre);
     if (!t) throw CalendarException("TacheManager, tache inexistante");
     return *t;
 }
 
-const Tache& TacheManager::getTache(const QString& id)const{
-    Tache& t = const_cast<TacheManager*>(this)->getTache(id);
+const Tache& TacheManager::getTache(const QString& titre)const{
+    Tache& t = const_cast<TacheManager*>(this)->getTache(titre);
     if(!&t) throw CalendarException("erreur, TacheManager, tache inexistante");
     return t;
 }

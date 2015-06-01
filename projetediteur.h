@@ -25,7 +25,7 @@ private:
     TacheEditeur* te;
 
     void chargerTaches();
-    void chargerSousTaches(QTreeWidgetItem* item, TacheComposite* tc );
+    void chargerSousTaches(QTreeWidgetItem* item, list<Tache *> *l, TacheComposite* tc );
 public:
     ProjetEditeur(TacheManager& tm1, QWidget* p=0);
 public slots:
