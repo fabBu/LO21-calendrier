@@ -37,11 +37,15 @@ private:
         Déclenchement d'exception dans le cas contraire
 */
 class Duree{
+    unsigned int nb_jour;
+    QTime time;
+
 public:
+    Duree(){nb_jour=0; time=QTime(0,0);}
     Duree(unsigned int h, unsigned int m=0):nb_jour(h/24), time(h%24,m) {
         if (m>59) throw TimeException("erreur: initialisation duree invalide");
     }
-
+    Duree(const Duree& d) {nb_jour=d.getNbJour(); time= QTime((int)d.getHeure(), (int)d.getMinute()); }
     void setDuree(unsigned int h, unsigned int m) {
         if (m>59)
             throw TimeException("erreur: initialisation duree invalide");
@@ -93,9 +97,6 @@ public:
 
     void afficher(std::ostream& f=std::cout) const {
         f<<std::setfill('0')<<std::setw(2)<<nb_jour*24+time.hour()<<"H"<<std::setw(2)<<time.minute()<<std::setfill(' '); } //<!Affiche la duree sous le format hhHmm
-private:
-    unsigned int nb_jour;
-    QTime time;
 };
 
 std::ostream& operator<<(std::ostream& f, const Duree & d);

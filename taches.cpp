@@ -160,7 +160,7 @@ void TacheUnaire::setDuree(Duree& dur)
 void TacheUnaire::setDureeRestante(Duree& dur)
 {
     if(dur.getDureeEnHeures()> duree.getDureeEnHeures())
-        throw CalendarException("La tâche ne dure que "+duree.getDureeEnHeures()+"H...");
+        throw CalendarException("La tâche dure moins longtemps que la durée restante souhaitée...");
     duree_restante.setDuree(dur.getDureeEnHeures(), dur.getDureeEnMinutes()%60);
 }
 
