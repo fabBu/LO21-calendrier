@@ -1,4 +1,5 @@
 #include "projetediteur.h"
+#include "programmationediteur.h"
 
 #include <QDebug>
 
@@ -75,16 +76,16 @@ void ProjetEditeur::chargerTaches()
         QTreeWidgetItem* item = new QTreeWidgetItem;
         item->setText(0, (*it)->getTitre());
         item->setText(1, (*it)->getPredString());
-        item->setText(2, (*it)->getDescription().mid(0, 250)+"...");
+        item->setText(2, (*it)->getDescription().mid(0, 100)+"...");
 
         TacheComposite* tc = dynamic_cast<TacheComposite*>( (*it) );
-        chargerSousTaches(item, tc);
+        chargerSousTaches(item, &l, tc);
 
         taches->addTopLevelItem(item);
     }
 }
 
-void ProjetEditeur::chargerSousTaches(QTreeWidgetItem* item, TacheComposite* tc )
+void ProjetEditeur::chargerSousTaches(QTreeWidgetItem* item, list<Tache*> *l, TacheComposite* tc )
 {
     if( tc )
     {
@@ -98,15 +99,17 @@ void ProjetEditeur::chargerSousTaches(QTreeWidgetItem* item, TacheComposite* tc 
             item->addChild(sous_item);
 
             TacheComposite* tc2 = dynamic_cast<TacheComposite*>( (*it_soust) );
-            chargerSousTaches(sous_item, tc2);
+            chargerSousTaches(sous_item, l, tc2);
 
             // Retirer la sous-tâche si elle a déjà été ajoutée dans l'arbre
-            QList<QTreeWidgetItem*> list = taches->findItems((*it_soust)->getTitre(), 0); //taches->find
-            if( list.size() != 0 )
+            QList<QTreeWidgetItem*> listItems = taches->findItems((*it_soust)->getTitre(), 0); //taches->find
+            if( listItems.size() != 0 )
             {
-                delete taches->takeTopLevelItem( taches->indexOfTopLevelItem(list.at(0)) );
-                //l->remove((*it_soust));
+                delete taches->takeTopLevelItem( taches->indexOfTopLevelItem(listItems.at(0)) );
             }
+            // Retirer la sous-tâche de la liste des tâches pour ne pas
+            //  la prendre en considération une deuxième fois dans le QTree
+            l->remove( &tm.getTache((*it_soust)->getTitre()) );
         }
     }
 }
@@ -150,6 +153,8 @@ void ProjetEditeur::modifierTache()
         te->show();
 
         modifier->setEnabled(false);
+        supprimer->setEnabled(false);
+        programmer->setEnabled(false);
     }
     catch(CalendarException e)
     { QMessageBox::warning(this, "Edition de tâche", e.getInfo()); }
@@ -168,6 +173,19 @@ void ProjetEditeur::supprimerTache()
 
 void ProjetEditeur::programmerTache()
 {
+    /*
+    try
+    {
+        Tache& t =tm.getTache(tache_courante);
+        pe = new ProgrammationEditeur(&t, this);
+        te->show();
 
+        modifier->setEnabled(false);
+        supprimer->setEnabled(false);
+        programmer->setEnabled(false);
+    }
+    catch(CalendarException e)
+    { QMessageBox::warning(this, "Programmation tâche", e.getInfo()); }
+*/
 }
 
