@@ -10,6 +10,8 @@
 #include <QComboBox>
 #include <QInputDialog>
 
+#include "proprieteprojetediteur.h"
+#include "projetsmanager.h"
 #include "projetediteur.h"
 
 class VueProjets : public QWidget
@@ -20,35 +22,25 @@ private:
     QWidget* parent;
 
     QGroupBox *titre;
-    QPushButton *supprimer, *ajouter;
+    QPushButton *modifier, *supprimer, *ajouter;
     QGridLayout *main_layout;
     QHBoxLayout *l_projet;
     QComboBox *choix_projet;
 
-    std::list<TacheManager*> *projets;
+    ProjetsManager* projets;
 
     ProjetEditeur *pe;
 
-    void initListe();
+    QComboBox* initListe();
 public:
-    VueProjets(std::list<TacheManager*> *p, QWidget* parent=0);
-
-    void supprimerProjet()
-    {
-          QMessageBox::StandardButton reply;
-          reply = QMessageBox::question(this, "Test", "Quit?",
-                                        QMessageBox::Yes|QMessageBox::No);
-          if (reply == QMessageBox::Yes) {
-            qDebug() << "Yes was clicked";
-            QApplication::quit();
-          } else {
-            qDebug() << "Yes was *not* clicked";
-          }
-    }
+    VueProjets(ProjetsManager *p, QWidget* parent=0);
 
 private slots:
     void chargerProjet(QString nom);
+    void modifierProjet();
+    void supprimerProjet();
     void ajouterProjet();
+    void refresh(const QString& proj);
 };
 
 #endif // VUEPROJETS_H

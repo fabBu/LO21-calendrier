@@ -283,8 +283,8 @@ void TacheEditeur::initSousTaches()
     // Traiter le cas où aucune tâche ne peut être ajoutée
     if( nonsoust_list->count() == 0 )
     {
-        nonpred_list->setHidden(true);
-        btn_ajouterpred->setHidden(true);
+        nonsoust_list->setHidden(true);
+        btn_ajoutersoust->setHidden(true);
     }
 
     // Si aucune des deux listes n'est présente (tâche seule dans le projet)

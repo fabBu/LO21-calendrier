@@ -65,7 +65,7 @@ class TacheUnaire : public Tache
     bool preemptive; /*!< Définit si la tâche peut être effectuée en plusieurs fois */
 
     TacheUnaire(const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree& dur, bool pree=false):
-            Tache(id, desc, dispo, deadline),duree(dur), preemptive(pree) {
+            Tache(id, desc, dispo, deadline),duree(dur), duree_restante(dur), preemptive(pree) {
         if(duree.getDureeEnHeures()>12 && !preemptive)
             throw CalendarException("Une tâche non préemptive ne peut durer plus de 12H");
         if(!verifCoherence(dispo, deadline, dur))

@@ -1,7 +1,27 @@
 #include "tachemanager.h"
 
-TacheManager::TacheManager(const QString &name):nom(name){
+TacheManager::TacheManager(const QString &name, const QDate& dispo, const QDate& deadline):nom(name), debut(dispo), fin(deadline){
     if( nom == "" ) throw CalendarException("Le projet doit avoir un nom !");
+    if(debut > fin) throw CalendarException("La date de début dépasse la date de fin");
+}
+
+void TacheManager::setDebut(const QDate& d)
+{
+    for (std::list<Tache*>::const_iterator it = taches.begin(); it != taches.end(); it++)
+    {
+        if( (*it)->getDateDisponibilite() < d )
+            throw CalendarException("Projet "+getNom()+": la tâche "+(*it)->getTitre()+" possède une échéance inférieure");
+    }
+    debut=d;
+}
+void TacheManager::setFin(const QDate& f)
+{
+    for (std::list<Tache*>::const_iterator it = taches.begin(); it != taches.end(); it++)
+    {
+        if( (*it)->getDateEcheance() < f )
+            throw CalendarException("Projet "+getNom()+": la tâche "+(*it)->getTitre()+" possède une deadline supérieure");
+    }
+    fin=f;
 }
 
 Tache* TacheManager::trouverTache(const QString& id)const{
@@ -22,16 +42,21 @@ void TacheManager::addItem(Tache* t){
 
 
 Tache& TacheManager::ajouterTacheUnaire(const QString& t, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree& dur, bool preempt){
+    if( dispo < debut ) throw CalendarException(t+" ne doit pas commencer avant le début du projet");
+    if( deadline > fin ) throw CalendarException(t+" ne doit pas terminer après la fin du projet");
     if (trouverTache(t))
         throw CalendarException("Une tâche portant le même nom existe déjà dans le projet");
 
     Tache* newt=new TacheUnaire(t,desc,dispo,deadline,dur,preempt);
     addItem(newt);
+
     return *newt;
 }
 
 Tache& TacheManager::ajouterTacheComposite(const QString& t, const QString& desc, const QDate& dispo, const QDate& deadline)
 {
+    if( dispo < debut ) throw CalendarException(t+" ne doit pas commencer avant le début du projet");
+    if( deadline > fin ) throw CalendarException(t+" ne doit pas terminer après la fin du projet");
     if (trouverTache(t))
         throw CalendarException("Une tâche portant le même nom existe déjà dans le projet");
 
