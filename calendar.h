@@ -46,11 +46,16 @@ public:
         if (m>59) throw TimeException("erreur: initialisation duree invalide");
     }
     Duree(const Duree& d) {nb_jour=d.getNbJour(); time= QTime((int)d.getHeure(), (int)d.getMinute()); }
+
     void setDuree(unsigned int h, unsigned int m) {
         if (m>59)
             throw TimeException("erreur: initialisation duree invalide");
         nb_jour=h/24;
         time = QTime(h%24,m);
+    }
+
+    const QTime& getTime() const{
+        return time;
     }
 
     unsigned int getHeure() const{
