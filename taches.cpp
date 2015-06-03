@@ -133,7 +133,7 @@ void TacheUnaire::affiche()
 
 bool TacheUnaire::verifCoherence(const QDate& dispo, const QDate& deadline, const Duree& dur)
 {
-    //if( (QDateTime(dispo)+dur) > deadline ) return false;
+    if( (QDateTime(dispo)+dur).date() > deadline ) return false;
     return true;
 }
 
@@ -145,7 +145,6 @@ void TacheUnaire::setPreemptive(const bool value)
     delete &preemptive;
     preemptive = value;
 }
-
 
 void TacheUnaire::setDuree(Duree& dur)
 {

@@ -14,16 +14,24 @@ class TacheManager {
 private:
     friend class TacheEditeur;
     QString nom;
+    QDate debut;
+    QDate fin;
+
     list<Tache*> taches;
     void addItem(Tache* t);
     Tache* trouverTache(const QString& id) const;
     QString file;
 
 public:
-    TacheManager(const QString& name);
+    TacheManager(const QString& name, const QDate& dispo, const QDate& deadline);
     ~TacheManager();
 
     const QString& getNom() const { return nom; }
+    void setNom(const QString& name) { nom=name; }
+    QDate getDebut() const {  return debut; }
+    QDate getFin() const {  return fin; }
+    void setDebut(const QDate& d);
+    void setFin(const QDate& f);
     list<Tache*> getTaches() { return taches; }
     const list<Tache*> getTaches() const { return taches; }
     Tache& getTache(const QString& titre);
