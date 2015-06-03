@@ -13,7 +13,9 @@
 #include <QMessageBox>
 #include <QDateEdit>
 #include <QCheckBox>
+#include <QSpinBox>
 #include "activite.h"
+#include "calendar.h"
 #include "evenement.h"
 #include "programmation.h"
 #include "programmationmanager.h"
@@ -30,10 +32,11 @@ private:
     QCheckBox *termine;
     QDateEdit *disponibilite, *echeance;
     QCalendarWidget *calendar;
-    QTimeEdit *horaire, *duree, *dureeTotal, *dureeRestante;
+    QSpinBox *dureeTotal_h, *dureeTotal_m, *dureeRestante_h, *dureeRestante_m, *duree_h, *duree_m;
+    QTimeEdit *horaire;
     QPushButton *btn_cancel, *btn_save;
 
-    QHBoxLayout *l_main, *l_titre, *l_desc, *l_type, *l_lieu, *l_horaires, *l_cancelsave, *attributs_layout, *l_calendar, *l_dates, *l_programButtons, *l_durees;
+    QHBoxLayout *l_main, *l_titre, *l_desc, *l_type, *l_lieu, *l_horaires, *l_cancelsave, *attributs_layout, *l_calendar, *l_dates, *l_programButtons, *l_dureeTotale, *l_dureeRestante;
     QVBoxLayout *calendar_layout, *main_layout, *param_layout;
 
     QWidget* parent;
@@ -47,8 +50,8 @@ private:
     void initLieu();
     void initType();
     void initCancelSave();
-    void initProgramButtons();
-    void initDureeTache();
+    void initDureeTotale();
+    void initDureeRestante();
     void initCalendar(Programmation* pr = 0);
     void initProgrammation(Programmation* pr = 0);
 
@@ -61,6 +64,8 @@ signals:
 //    void fermeture();
 private slots:
     void sauvegarder();
+    void modifier();
+    void modifDureeRestante();
 };
 
 #endif // ACTIVITEEDITEUR_H
