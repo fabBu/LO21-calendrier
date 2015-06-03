@@ -6,10 +6,9 @@
 
 class System
 {
-    ProjetsManager* projets;
+
 public:
     System();
-    ProjetsManager* getProjets() { return projets; }
 };
 
 #endif // SYSTEM_H

@@ -263,20 +263,18 @@ void ProjetEditeur::supprimerTache()
 
 void ProjetEditeur::programmerTache()
 {
-    /*
     try
     {
         Tache& t =tm.getTache(tache_courante);
-        pe = new ProgrammationEditeur(&t, this);
-        te->show();
+        ProgrammationEditeur* pe = new ProgrammationEditeur(&t, this);
+        pe->show();
 
-        modifier->setEnabled(false);
-        supprimer->setEnabled(false);
-        programmer->setEnabled(false);
+        modifier_tache->setEnabled(false);
+        supprimer_tache->setEnabled(false);
+        programmer->setHidden(true);
     }
     catch(CalendarException e)
     { QMessageBox::warning(this, "Programmation tâche", e.getInfo()); }
-*/
 }
 
 void ProjetEditeur::fermeture(const QString)

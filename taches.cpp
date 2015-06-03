@@ -25,6 +25,37 @@ void Tache::affiche()
     }
 }
 
+const Tache* Tache::getLastPredecesseur() const
+{
+    if( predecesseurs.size() == 0 )
+        return 0;
+    else
+    {
+        const Tache* t = predecesseurs.front();
+        for( list<Tache*>::const_iterator it_pred = predecesseurs.begin() ; it_pred != predecesseurs.end() ; ++it_pred )
+        {
+            if( (*it_pred)->getDateEcheance() > t->getDateEcheance() )
+                t = *it_pred;
+        }
+        return t;
+    }
+}
+const Tache* Tache::getFirstSuccesseur() const
+{
+    if( successeurs.size() == 0 )
+        return 0;
+    else
+    {
+        const Tache* t = successeurs.front();
+        for( list<Tache*>::const_iterator it_pred = successeurs.begin() ; it_pred != successeurs.end() ; ++it_pred )
+        {
+            if( (*it_pred)->getDateDisponibilite() > t->getDateDisponibilite() )
+                t = *it_pred;
+        }
+        return t;
+    }
+}
+
 const QString Tache::getPredString() const
 {
     QString pred = QString();
@@ -146,7 +177,7 @@ void TacheUnaire::setPreemptive(const bool value)
     preemptive = value;
 }
 
-void TacheUnaire::setDuree(Duree& dur)
+void TacheUnaire::setDuree(const Duree& dur)
 {
     if(dur.getDureeEnHeures()>12 && !preemptive)
         throw CalendarException("Une tâche préemptive ne peut durer plus de 12H");
@@ -156,8 +187,11 @@ void TacheUnaire::setDuree(Duree& dur)
     duree.setDuree(dur.getDureeEnHeures(), dur.getDureeEnMinutes()%60);
 }
 
-void TacheUnaire::setDureeRestante(Duree& dur)
+void TacheUnaire::setDureeRestante(const Duree& dur)
 {
+    if( dur.getDureeEnHeures() > duree.getDureeEnHeures() )
+        throw CalendarException("Durée restante supérieure à la durée actuelle");
+
     if(dur.getDureeEnHeures()> duree.getDureeEnHeures())
         throw CalendarException("La tâche dure moins longtemps que la durée restante souhaitée...");
     duree_restante.setDuree(dur.getDureeEnHeures(), dur.getDureeEnMinutes()%60);
