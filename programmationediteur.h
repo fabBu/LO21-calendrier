@@ -36,7 +36,7 @@ private:
     QTimeEdit *horaire;
     QPushButton *btn_cancel, *btn_save;
 
-    QHBoxLayout *l_main, *l_titre, *l_desc, *l_type, *l_lieu, *l_horaires, *l_cancelsave, *attributs_layout, *l_calendar, *l_dates, *l_programButtons, *l_dureeTotale, *l_dureeRestante;
+    QHBoxLayout *l_main, *l_titre, *l_desc, *l_type, *l_lieu, *l_horaires, *l_cancelsave, *attributs_layout, *l_calendar, *l_dates, *l_dureeTotale, *l_dureeRestante;
     QVBoxLayout *calendar_layout, *main_layout, *param_layout;
 
     QWidget* parent;

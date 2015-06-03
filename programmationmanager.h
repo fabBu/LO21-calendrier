@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <list>
+#include "taches.h"
 #include "programmation.h"
 #include "calendar.h"
 

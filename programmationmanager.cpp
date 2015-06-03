@@ -5,6 +5,20 @@ ProgrammationManager::Handler ProgrammationManager::handler=ProgrammationManager
 void ProgrammationManager::addItem(Programmation* p){
     if (!isFree(p->getDate(),p->getDuree()))
         throw CalendarException("ERREUR: Un événement est déjà programmé à cette date.");
+    TacheUnaire* tache = dynamic_cast<TacheUnaire*>(&(p->getEvenement()));
+    if (tache) {
+        if (tache->getDureeRestante().getDureeEnMinutes() == 0)
+            throw CalendarException("ERREUR: La totalité de la tâche a déjà été programmé.");
+        if (!(tache->isPreemptive()) && tache->getDuree().getDureeEnMinutes() != p->getDuree().getDureeEnMinutes())
+            throw CalendarException("ERREUR: La tache n'est pas préemptive et elle n'est pas effectuée totalement.");
+
+        int minuteRestante = tache->getDureeRestante().getDureeEnMinutes()-p->getDuree().getDureeEnMinutes();
+        if (minuteRestante>=0){
+            tache->setDureeRestante(Duree(minuteRestante/60,minuteRestante%60));
+        } else if (minuteRestante<0) {
+            throw CalendarException("ERREUR: La durée de la programmation est supérieur à la durée restante de la tache.");
+        }
+    }
     programmations.push_back(p);
 }
 

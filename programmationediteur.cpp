@@ -49,7 +49,6 @@ ProgrammationEditeur::ProgrammationEditeur(Programmation* pr, QWidget *p): progr
     initCancelSave();
     connect(btn_save, SIGNAL(clicked(bool)), this, SLOT(modifier()) );
     main_layout->addLayout(attributs_layout);
-    main_layout->addLayout(l_programButtons);
     main_layout->addLayout(l_cancelsave);
     this->setLayout(main_layout);
 }
@@ -64,8 +63,9 @@ ProgrammationEditeur::ProgrammationEditeur(Evenement* ev, QWidget *p): programma
     if (tache) {
         if (tache->estTermine())
                 throw CalendarException ("Attention: La tache est terminée.");
-        if (tache->getDureeRestante().getTime().isNull())
+        if (tache->getDureeRestante().getDureeEnMinutes() == 0)
             throw CalendarException("Attention: l'intégralité de la tache a été programmé.");
+
     }
 
     main_layout = new QVBoxLayout;
@@ -233,10 +233,10 @@ void ProgrammationEditeur::initDureeRestante(){
         dureeRestante_label = new QLabel("Duree restante",this);
         l_dureeRestante->addWidget(dureeRestante_label);
 
-        dureeRestante_h->setValue(tache->getDuree().getDureeEnHeures());
+        dureeRestante_h->setValue(tache->getDureeRestante().getDureeEnHeures());
         dureeRestante_h->setEnabled(false);
 
-        dureeRestante_m->setValue(tache->getDuree().getDureeEnMinutes() - 60*tache->getDuree().getDureeEnHeures());
+        dureeRestante_m->setValue(tache->getDureeRestante().getDureeEnMinutes() - 60*tache->getDureeRestante().getDureeEnHeures());
         dureeRestante_m->setEnabled(false);
     } else {
         dureeRestante_h->setValue(12);
@@ -308,7 +308,6 @@ void ProgrammationEditeur::sauvegarder(){
 //            if (tache->isPreemptive() && tache->getDuree().getDureeEnMinutes() == d.getDureeEnMinutes())
 //                throw CalendarException("La tache suivante est préemptive et il n'y a qu'une seule programmation.");
             programmationmanager.addProgrammation(QDateTime(calendar->selectedDate(),horaire->time()),d,tache);
-            tache->setDureeRestante(Duree(dureeRestante_h->value(),dureeRestante_m->value()));
             QString message = "La programmation suivante a été ajouté :" + programmationmanager.getProgrammation(QDateTime(calendar->selectedDate(),horaire->time())).getEvenement().getTitre();
             QMessageBox::warning(this,"Ajout programmation", message);
         } else {
@@ -383,6 +382,6 @@ ProgrammationEditeur::~ProgrammationEditeur(){
     delete disponibilite, echeance;
     delete horaire;
     delete btn_cancel, btn_save;
-    delete l_main, l_titre, l_desc, l_type, l_lieu, l_horaires, l_cancelsave, attributs_layout, l_calendar, l_dates, l_programButtons, l_dureeTotale, l_dureeRestante;
+    delete l_main, l_titre, l_desc, l_type, l_lieu, l_horaires, l_cancelsave, attributs_layout, l_calendar, l_dates, l_dureeTotale, l_dureeRestante;
     delete calendar_layout, main_layout, param_layout;
 }
