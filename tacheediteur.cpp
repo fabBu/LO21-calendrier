@@ -123,18 +123,36 @@ void TacheEditeur::initDates(bool unaire)
     l_dates = new QHBoxLayout;
     dispo_label = new QLabel("Dispo",this);
     echeance_label = new QLabel("Echeance",this);
-    if( t!=0 )
-    {
-        dispo = new QDateEdit(t->getDateDisponibilite(),this);
-        echeance = new QDateEdit(t->getDateEcheance(),this);
-    }
-    else
-    {
-        dispo = new QDateEdit(QDate::currentDate());
-        echeance = new QDateEdit(QDate::currentDate());
-    }
+
+    dispo = new QDateEdit(QDate::currentDate());
+    echeance = new QDateEdit(QDate::currentDate());
     dispo->setCalendarPopup(true);
     echeance->setCalendarPopup(true);
+
+    dispo->setMinimumDate(tm.getDebut());
+    dispo->setMaximumDate(tm.getFin());
+    echeance->setMinimumDate(tm.getDebut());
+    echeance->setMaximumDate(tm.getFin());
+
+    if( t!=0 )
+    {
+        dispo->setDate(t->getDateDisponibilite());
+        echeance->setDate(t->getDateEcheance());
+
+        const Tache* pred = t->getLastPredecesseur();
+        if( pred !=0 )
+        {
+            dispo->setMinimumDate(pred->getDateEcheance());
+            echeance->setMinimumDate(pred->getDateEcheance());
+        }
+
+        const Tache* succ = t->getFirstSuccesseur();
+        if( succ !=0 )
+        {
+            dispo->setMaximumDate(succ->getDateDisponibilite());
+            echeance->setMaximumDate(succ->getDateDisponibilite());
+        }
+    }
 
     l_dates->addWidget(dispo_label);
     l_dates->addWidget(dispo);

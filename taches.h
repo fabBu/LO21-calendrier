@@ -37,6 +37,8 @@ public:
 
     const list<Tache*> getPred() const { return predecesseurs; }
     const QString getPredString() const;
+    const Tache *getLastPredecesseur() const;
+    const Tache *getFirstSuccesseur() const;
     bool estPredecesseur(const Tache& t);
     void ajouterPredecesseur(Tache& t);
     void retirerPredecesseur(Tache& t);

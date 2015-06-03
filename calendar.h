@@ -42,16 +42,22 @@ class Duree{
 
 public:
     Duree(){nb_jour=0; time=QTime(0,0);}
-    Duree(unsigned int h, unsigned int m=0):nb_jour(h/24), time(h%24,m) {
-        if (m>59) throw TimeException("erreur: initialisation duree invalide");
+    Duree(int h, int m=0):nb_jour(h/24), time(h%24,m) {
+        verifCoherence(h,m);
     }
+
     Duree(const Duree& d) {nb_jour=d.getNbJour(); time= QTime((int)d.getHeure(), (int)d.getMinute()); }
 
-    void setDuree(unsigned int h, unsigned int m) {
-        if (m>59)
-            throw TimeException("erreur: initialisation duree invalide");
+    void setDuree(int h, int m) {
+        verifCoherence(h,m);
         nb_jour=h/24;
         time = QTime(h%24,m);
+    }
+
+    void verifCoherence(int h, int m) {
+        if (m>59) throw TimeException("ERREUR: initialisation duree invalide, m supérieur à 59");
+        if (h<0) throw TimeException("ERREUR: initialisation duree invalide, h négatif");
+        if (m<0) throw TimeException("ERREUR: initialisation duree invalide, m négatif");
     }
 
     const QTime& getTime() const{
