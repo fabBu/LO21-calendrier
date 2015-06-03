@@ -1,7 +1,6 @@
 ﻿#include "taches.h"
 
 
-
 //              ---------   Tache   ---------              //
 //Tache::~Tache()
 //{
@@ -146,7 +145,7 @@ void TacheUnaire::setPreemptive(const bool value)
     preemptive = value;
 }
 
-void TacheUnaire::setDuree(Duree& dur)
+void TacheUnaire::setDuree(const Duree& dur)
 {
     if(dur.getDureeEnHeures()>12 && !preemptive)
         throw CalendarException("Une tâche préemptive ne peut durer plus de 12H");
@@ -156,7 +155,7 @@ void TacheUnaire::setDuree(Duree& dur)
     duree.setDuree(dur.getDureeEnHeures(), dur.getDureeEnMinutes()%60);
 }
 
-void TacheUnaire::setDureeRestante(Duree& dur)
+void TacheUnaire::setDureeRestante(const Duree& dur)
 {
     if(dur.getDureeEnHeures()> duree.getDureeEnHeures())
         throw CalendarException("La tâche dure moins longtemps que la durée restante souhaitée...");

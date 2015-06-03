@@ -74,8 +74,8 @@ class TacheUnaire : public Tache
 public:
     bool verifCoherence(const QDate& dispo, const QDate& deadline, const Duree& dur);
     Duree getDuree() const { return duree; }
-    void setDuree(Duree& dur);
-    void setDureeRestante(Duree& dur);
+    void setDuree(const Duree& dur);
+    void setDureeRestante(const Duree& dur);
     Duree getDureeRestante() const { return duree_restante; }
     Statut getStatut() const { return statut; }
     void setStatut(Statut stat) { statut = stat; }
