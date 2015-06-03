@@ -24,7 +24,7 @@ protected:
     Tache* surtache; ///    TODO : il faudrait un TacheComposite*
 
     Tache(const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline):
-            Evenement(id, desc),disponibilite(dispo),echeance(deadline), surtache(0){ if(disponibilite>echeance) throw CalendarException("Echeance < Disponibilité"); }
+            Evenement(id, desc),disponibilite(dispo),echeance(deadline), surtache(0), termine(false){ if(disponibilite>echeance) throw CalendarException("Echeance < Disponibilité"); }
 
     friend class TacheManager;
 public:
@@ -65,7 +65,7 @@ class TacheUnaire : public Tache
     bool preemptive; /*!< Définit si la tâche peut être effectuée en plusieurs fois */
 
     TacheUnaire(const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree& dur, bool pree=false):
-            Tache(id, desc, dispo, deadline),duree(dur), preemptive(pree) {
+            Tache(id, desc, dispo, deadline),duree(dur), preemptive(pree), duree_restante(dur) {
         if(duree.getDureeEnHeures()>12 && !preemptive)
             throw CalendarException("Une tâche non préemptive ne peut durer plus de 12H");
         if(!verifCoherence(dispo, deadline, dur))
