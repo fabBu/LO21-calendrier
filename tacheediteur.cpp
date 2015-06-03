@@ -133,6 +133,8 @@ void TacheEditeur::initDates(bool unaire)
         dispo = new QDateEdit(QDate::currentDate());
         echeance = new QDateEdit(QDate::currentDate());
     }
+    dispo->setCalendarPopup(true);
+    echeance->setCalendarPopup(true);
 
     l_dates->addWidget(dispo_label);
     l_dates->addWidget(dispo);

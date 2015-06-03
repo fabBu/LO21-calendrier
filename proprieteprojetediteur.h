@@ -20,10 +20,10 @@ class ProprieteProjetEditeur : public QWidget
     QDateEdit *debut_date, *fin_date;
     QPushButton *sauvegarder, *annuler;
 
-    ProjetsManager* projets;
+    ProjetsManager& projets;
     TacheManager* projet;
 public:
-    ProprieteProjetEditeur(QWidget* pa, ProjetsManager* p, const QString& proj="");
+    ProprieteProjetEditeur(QWidget* pa, const QString& proj="");
 private slots:
     void creerProjet();
     void modifierProjet();

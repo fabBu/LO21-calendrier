@@ -10,8 +10,8 @@ class ProjetsManager
     std::list<TacheManager*> projets;
 
     TacheManager* trouverProjet(const QString& nom);
+
 public:
-    ProjetsManager();
     void ajouterProjet(const QString& nom, const QDate& debut, const QDate& fin);
     void retirerProjet(const QString& nom);
     TacheManager& getProjet(const QString& nom);
@@ -21,6 +21,23 @@ public:
     void setDebut(const QString& nom, const QDate& debut);
     void setFin(const QString& nom, const QDate& fin);
     void setDates(const QString& nom, const QDate& debut, const QDate& fin);
+
+    static ProjetsManager& getInstance();
+    static void libererInstance();
+private:
+    ProjetsManager(){}
+    ~ProjetsManager() {}
+    ProjetsManager(const ProjetsManager& p);
+    ProjetsManager& operator=(const ProjetsManager& p);
+
+    struct Handler
+    {
+        ProjetsManager *instance;
+
+        Handler(): instance(0) {}
+        ~Handler() {if (instance) delete instance;}
+    };
+    static Handler handler;
 };
 
 #endif // PROJETSMANAGER_H

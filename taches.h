@@ -24,7 +24,7 @@ protected:
     Tache* surtache; ///    TODO : il faudrait un TacheComposite*
 
     Tache(const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline):
-            Evenement(id, desc),disponibilite(dispo),echeance(deadline), surtache(0){ if(disponibilite>echeance) throw CalendarException("Echeance < Disponibilité"); }
+            Evenement(id, desc),disponibilite(dispo),echeance(deadline), surtache(0), termine(false){ if(disponibilite>echeance) throw CalendarException("Echeance < Disponibilité"); }
 
     friend class TacheManager;
 public:

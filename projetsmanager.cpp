@@ -1,8 +1,21 @@
 #include "projetsmanager.h"
 
-ProjetsManager::ProjetsManager()
-{
+ProjetsManager::Handler ProjetsManager::handler=ProjetsManager::Handler();
 
+ProjetsManager& ProjetsManager::getInstance()
+{
+    if (!handler.instance)
+        handler.instance = new ProjetsManager();
+
+    return *handler.instance;
+}
+
+void ProjetsManager::libererInstance()
+{
+    if (handler.instance)
+        delete handler.instance;
+
+    handler.instance = 0;
 }
 
 TacheManager* ProjetsManager::trouverProjet(const QString& nom)

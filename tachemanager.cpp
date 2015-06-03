@@ -10,7 +10,7 @@ void TacheManager::setDebut(const QDate& d)
     for (std::list<Tache*>::const_iterator it = taches.begin(); it != taches.end(); it++)
     {
         if( (*it)->getDateDisponibilite() < d )
-            throw CalendarException("Projet "+getNom()+": la tâche "+(*it)->getTitre()+" possède une échéance inférieure");
+            throw CalendarException(getNom()+": la tâche "+(*it)->getTitre()+" possède une échéance inférieure");
     }
     debut=d;
 }
@@ -18,8 +18,8 @@ void TacheManager::setFin(const QDate& f)
 {
     for (std::list<Tache*>::const_iterator it = taches.begin(); it != taches.end(); it++)
     {
-        if( (*it)->getDateEcheance() < f )
-            throw CalendarException("Projet "+getNom()+": la tâche "+(*it)->getTitre()+" possède une deadline supérieure");
+        if( (*it)->getDateEcheance() > f )
+            throw CalendarException(getNom()+": la tâche "+(*it)->getTitre()+" possède une deadline supérieure");
     }
     fin=f;
 }
