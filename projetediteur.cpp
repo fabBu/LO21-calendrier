@@ -278,7 +278,4 @@ void ProjetEditeur::programmerTache()
     { QMessageBox::warning(this, "Programmation tâche", e.getInfo()); }
 }
 
-void ProjetEditeur::fermeture(const QString)
-{
-}
 

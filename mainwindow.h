@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
+#include <QInputDialog>
 #include <QWidget>
 #include <QTabWidget>
 #include <QMenuBar>
@@ -24,15 +24,22 @@ class MainWindow : public QMainWindow
     ProjetsManager& projets;
     ProgrammationManager& agenda;
 
-    void initMenuBar();
+    std::list<ProjetEditeur*> projets_ouverts;
+    //AgendaEditeur* agenda_ouvert;
 
+    void initMenuBar();
     void chargerProjets();
+
+    ProjetEditeur* getProjetEdit(const QString nom);
+    bool estOuvert(const QString nom) { return getProjetEdit(nom)!=0;  }
 public:
     MainWindow();
 
 private slots:
+    void ouvrirAgenda();
     void creerProjet();
     void ouvrirProjet();
+    void fermerProjet(const QString nom);
     void closeTab(int index);
 };
 
