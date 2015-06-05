@@ -32,8 +32,8 @@ public:
     QDate getDateEcheance() const {  return echeance; }
     void setDatesDisponibiliteEcheance(const QDate& disp, const QDate& e);
     virtual void affiche();
-    bool estTermine() const { return termine; }
-    void setTermine(bool val) { termine=val; }
+    const bool estTermine() const { return termine; }
+    void setTermine(bool val);
 
     const list<Tache*> getPred() const { return predecesseurs; }
     const QString getPredString() const;
@@ -99,6 +99,7 @@ class TacheComposite : public Tache
     TacheComposite(const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline):
             Tache(id, desc, dispo, deadline) {}
 public:
+    void verifTermine();
     const list<Tache*> getSousTaches() const { return soustaches; }
     bool estSousTache(const Tache& t);
     void ajouterSousTache(Tache& t);

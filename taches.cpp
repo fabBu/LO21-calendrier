@@ -1,6 +1,7 @@
 ﻿#include "taches.h"
 
 
+
 //              ---------   Tache   ---------              //
 //Tache::~Tache()
 //{
@@ -22,6 +23,20 @@ void Tache::affiche()
             std::cout<<"\t"<<(*it)->getTitre().toStdString()<<std::endl;
         }
     }
+}
+
+void Tache::setTermine(bool val)
+{
+    if( !val )
+    {
+        for( list<Tache*>::const_iterator it = successeurs.begin() ; it != successeurs.end() ; ++it )
+            setTermine(false);
+    }
+
+    if(surtache)
+        dynamic_cast<TacheComposite*>(surtache)->verifTermine();
+
+    termine=val;
 }
 
 const Tache* Tache::getLastPredecesseur() const
@@ -198,6 +213,20 @@ void TacheUnaire::setDureeRestante(const Duree& dur)
 
 
 //              ---------   TacheComposite   ---------              //
+void TacheComposite::verifTermine()
+{
+    bool tmp=true;
+
+    for(std::list<Tache*>::iterator it=soustaches.begin() ; it != soustaches.end() ; ++it )
+    {
+        if( !(*it)->estTermine() )
+        {
+            tmp=false;
+            break;
+        }
+    }
+    setTermine(tmp);
+}
 
 bool TacheComposite::estSousTache(const Tache& t)
 {
@@ -249,6 +278,7 @@ void TacheComposite::retirerSousTache(Tache& t)
 
     t.setSurtache(0);
     soustaches.remove(&t);
+
 }
 
 void TacheComposite::affiche()

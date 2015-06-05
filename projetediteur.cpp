@@ -6,7 +6,7 @@
 ProjetEditeur::ProjetEditeur(TacheManager &tm1, QWidget *p):tm(tm1),parent(p)
 {
     setWindowTitle(tm.getNom());
-    setFixedSize(650,350);
+    setMinimumSize(650,350);
 
     main_layout = new QGridLayout(this);
 
@@ -80,6 +80,7 @@ ProjetEditeur::ProjetEditeur(TacheManager &tm1, QWidget *p):tm(tm1),parent(p)
 QGroupBox* ProjetEditeur::initProprietes()
 {
     QGroupBox* tmp = new QGroupBox("Propriétés de "+tm.getNom());
+    tmp->setMaximumHeight(60);
     l_proprietes = new QHBoxLayout(this);
 
     debut_label = new QLabel("Début: ");
