@@ -10,6 +10,7 @@
 #include <QString>
 #include "projetediteur.h"
 #include "programmationmanager.h"
+#include "agendaediteur.h"
 
 class MainWindow : public QMainWindow
 {
@@ -25,7 +26,7 @@ class MainWindow : public QMainWindow
     ProgrammationManager& agenda;
 
     std::list<ProjetEditeur*> projets_ouverts;
-    //AgendaEditeur* agenda_ouvert;
+    AgendaEditeur* agenda_ouvert;
 
     void initMenuBar();
     void chargerProjets();

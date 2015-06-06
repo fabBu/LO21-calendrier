@@ -27,6 +27,7 @@ public:
     static void libererInstance();
 
     void writeXML();
+    void readXML();
 private:
     ProjetsManager(){}
     ~ProjetsManager() {}

@@ -107,3 +107,78 @@ void ProjetsManager::writeXML()
         file.close();
     }
 }
+
+void ProjetsManager::readXML()
+{
+    QString fileName = "Projet1.xml";
+    QFile file(fileName);
+    //Ouverture du fichier en lecture seul et en mode texte
+    file.open(QFile::ReadOnly | QFile::Text);
+
+    QDomDocument doc;
+    //Ajoute le contenu du fichier XML dans un QDomDocument et dit au QDomDocument de ne pas tenir coompte des namspaces
+    doc.setContent(&file, false);
+
+    //ici racine pointe sur l'element <root> de notre document
+    QDomElement racine = doc.documentElement();
+
+    //ici racine pointe sur une fils de <root> c'est à dire <site>
+    racine = racine.firstChildElement();
+
+    QString nomProjet;
+    QDate debut;
+    QDate fin;
+    //Boucle permettant la navigation dans le fichier XML
+    while(!racine.isNull())
+    {
+        //Si on pointe sur un element de type <nom>
+        if(racine.tagName() == "nom")
+        {
+            //On recupère le text contenu entre les balise <nom> </nom>
+            nomProjet = racine.text();
+        }
+        //Si on pointe sur un element de type <debut>
+        if(racine.tagName() == "debut")
+        {
+            //On recupère la date depuis le texte
+            debut = QDate::fromString( racine.text(), "dd-MM-yyyy" );
+        }
+        //Si on pointe sur un element de type <fin>
+        if(racine.tagName() == "fin")
+        {
+            //On recupère la date depuis le texte
+            fin = QDate::fromString( racine.text(), "dd-MM-yyyy" );
+        }
+
+        if(racine.tagName() == "taches")
+        {
+            ajouterProjet(nomProjet, debut, fin);
+
+            QString titre;
+            //On recupere le première enfant de l'element site c'est a dire <tache>
+            QDomElement unElement = racine.firstChildElement();
+
+            //On parcours tous les enfants de l'element <tache>
+            while(!unElement.isNull())
+            {
+                //Si l'enfant de l'element tache est l'element <titre>
+                if(unElement.tagName() == "titre")
+                {
+                    //On recupère le text contenu entre les balise <nom> </nom>
+                    QString strNom = unElement.text();
+                }
+                //Si l'enfant de l'element <site> est <url>
+                else if(unElement.tagName() == "url")
+                {
+                    //On recupère le text contenu entre les balise <url> </url>
+                    QString strURL = unElement.text();
+                }
+                //Permet d'aller au prochaine enfant de <site> et de poursuivre la boucle
+                unElement = unElement.nextSiblingElement();
+            }
+        }
+
+        //On va a l'element fils de <root> suivant
+        racine = racine.nextSiblingElement();
+}
+}

@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 
 MainWindow::MainWindow()
-    :projets(ProjetsManager::getInstance()), agenda(ProgrammationManager::getInstance())//, agenda_ouvert(0)
+    :projets(ProjetsManager::getInstance()), agenda(ProgrammationManager::getInstance()), agenda_ouvert(0)
 {
     setWindowTitle("Le super logiciel");
     setMinimumHeight(700);
@@ -22,7 +22,9 @@ void MainWindow::initMenuBar()
 {
     menubar = new QMenuBar(this);
 
-    QMenu* menu_agenda = menubar->addMenu("Ouvrir Agenda");
+    QMenu* menu_agenda = menubar->addMenu("Agenda");
+    QAction *menu_agenda_ouvrir = menu_agenda->addAction("Ouvrir l'agenda");
+    connect(menu_agenda_ouvrir, SIGNAL(triggered(bool)), this, SLOT(ouvrirAgenda()));
 
     QMenu* menu_projets = menubar->addMenu("Projets");
     QAction *menu_projets_creer = menu_projets->addAction("Créer projet");
@@ -46,12 +48,17 @@ ProjetEditeur* MainWindow::getProjetEdit(const QString nom)
 
 void MainWindow::ouvrirAgenda()
 {
-    /*
+
     if(agenda_ouvert)
-        onglets->addTab(new AgendaEditeur(), "AGENDA");
-    else
         onglets->setCurrentWidget( agenda_ouvert );
-    */
+    else
+    {
+        AgendaEditeur *ae = new AgendaEditeur();
+        agenda_ouvert = ae;
+        onglets->addTab(ae, "AGENDA");
+        onglets->setCurrentWidget(ae);
+    }
+
 }
 
 void MainWindow::creerProjet()
@@ -105,6 +112,7 @@ void MainWindow::ouvrirProjet()
                 connect(pe, SIGNAL(fermeture(QString)), this,  SLOT(fermerProjet(QString)));
                 projets_ouverts.push_back(pe);
                 onglets->addTab( pe,projet);
+                onglets->setCurrentWidget(pe);
             }
         }
         catch(CalendarException e)
@@ -132,9 +140,9 @@ void MainWindow::closeTab(int index)
         projets_ouverts.erase( std::remove(projets_ouverts.begin(), projets_ouverts.end(), pe), projets_ouverts.end() );
 
     // Si l'onglet est l'agenda, passer l'attribut agenda_ouvert à faux
-//    AgendaEditeur* ae = dynamic_cast<AgendaEditeur*>( onglets->widget(index) );
-//    if( ae )
-//        agenda_ouvert=false;
+    AgendaEditeur* ae = dynamic_cast<AgendaEditeur*>( onglets->widget(index) );
+    if( ae )
+        agenda_ouvert=0;
 
     onglets->removeTab(index);
 }

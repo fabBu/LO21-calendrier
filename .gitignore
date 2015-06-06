@@ -31,5 +31,3 @@
 *.pro
 *.pro.*
 
-# Main  biatch
-main.cpp
