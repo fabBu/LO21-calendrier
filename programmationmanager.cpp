@@ -22,7 +22,6 @@ void ProgrammationManager::addItem(Programmation* p){
     programmations.push_back(p);
 }
 
-
 Programmation* ProgrammationManager::findProgrammation(const QDateTime& d) const{
     for (list<Programmation*>::const_iterator it = programmations.begin(); it != programmations.end(); it++){
         if ((*it)->getDate() == d){
@@ -77,4 +76,20 @@ void ProgrammationManager::libererInstance()
         delete handler.instance;
 
     handler.instance = 0;
+}
+
+const list<Programmation*> ProgrammationManager::getProgrammation(const QDate& debut, const QDate& fin)const{
+    list<Programmation*> res;
+    for (list<Programmation*>::const_iterator it = programmations.begin(); it != programmations.end(); it++){
+        QString toto = (*it)->getDate().date().toString("yyyy.MM.dd");
+        qDebug() << toto;
+        if ((*it)->getDate().date() >= debut && (*it)->getDate().date() <= fin){
+            res.push_back(*it);
+        } else if ((*it)->getDateFin().date() >= debut && (*it)->getDateFin().date() <= fin){
+            res.push_back(*it);
+        } else if ((*it)->getDate().date() < debut && (*it)->getDateFin().date() > fin){
+            res.push_back(*it);
+        }
+    }
+    return res;
 }

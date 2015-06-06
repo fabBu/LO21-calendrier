@@ -315,6 +315,8 @@ void ProgrammationEditeur::sauvegarder(){
             QString message = "La programmation suivante a été ajouté :" + programmationmanager.getProgrammation(QDateTime(calendar->selectedDate(),horaire->time())).getEvenement().getTitre();
             QMessageBox::warning(this,"Ajout programmation", message);
         }
+        emit fermeture();
+        close();
     } catch(CalendarException e)
     {
         QMessageBox::warning(this,"Ajout programmation", e.getInfo());

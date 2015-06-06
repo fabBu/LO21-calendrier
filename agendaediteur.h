@@ -7,29 +7,42 @@
 #include <QLabel>
 #include <QDate>
 #include <QPushButton>
+#include <QScrollArea>
+#include <QList>
+#include "programmationediteur.h"
 #include "programmationmanager.h"
 
 class AgendaEditeur : public QWidget
 {
     Q_OBJECT
 private:
-//    ProgrammationManager manager;
+    ProgrammationManager& manager;
     int jourSemaine, semaine;
-    QGridLayout *layout;
+    QGridLayout *semaine_layout, *horaire_layout;
     QDate dateJour;
-    QFrame **verticalLines, **horizontalLines;
-    QLabel *lundi_label, *mardi_label, *mercredi_label, *jeudi_label, *vendredi_label, *samedi_label, *dimanche_label, *semaine_label;
+    QFrame **verticalLinesSemaine, **horizontalLinesSemaine, **verticalLinesHoraire, **horizontalLinesHoraire;
+    QLabel *lundi_label, *mardi_label, *mercredi_label, *jeudi_label, *vendredi_label, *samedi_label, *dimanche_label, *semaine_label, **horaires;
     QDate lundi, mardi, mercredi, jeudi, vendredi, samedi, dimanche;
-    QPushButton *precedent, *suivant;
+    QPushButton *precedent, *suivant, *ajoutProgrammation;
+    QList<QPushButton*> programmations;
+
+    void setProgrammation();
     void setBouttonSemaine();
-    void setLines();
+    void setBouttonProgrammation();
+    void setLinesSemaine();
+    void setSizeColumn();
+    void setLinesHoraire();
     void setDateLabel();
+    void setHoraireLabel();
 public:
     AgendaEditeur(QWidget *parent = 0);
 
 signals:
 
 private slots:
+    void refresh();
+    void editerProgrammation();
+    void ajouterProgrammation();
     void modifDate();
     void modifDateLabel();
     void modifDateLabelSuivant();
