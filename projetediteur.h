@@ -34,7 +34,8 @@ private:
     void chargerSousTaches(QTreeWidgetItem* item, list<Tache *> *l, TacheComposite* tc );
 public:
     ProjetEditeur(TacheManager& tm1, QWidget* p=0);
-public slots:
+    const QString& getNom() const { return tm.getNom(); }
+
 private slots:
     void modifierProjet();
     void supprimerProjet();
@@ -45,6 +46,8 @@ private slots:
     void programmerTache();
     void refresh_taches();
     void refresh_projet();
+
+signals:
     void fermeture(const QString);
 };
 
