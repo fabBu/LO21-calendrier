@@ -19,6 +19,7 @@ public:
     void addProgrammation(const QDateTime& da, const Duree& du, Evenement *e);
     void removeProgrammation(const QDateTime& d);
 
+    const list<Programmation*> getProgrammation(const QDate& debut, const QDate& fin)const;
     Programmation& getProgrammation(const QDateTime& d);
     const Programmation& getProgrammation(const QDateTime& d)const;
 private:

@@ -61,7 +61,7 @@ public:
     ~ProgrammationEditeur();
 
 signals:
-//    void fermeture();
+    void fermeture();
 private slots:
     void sauvegarder();
     void modifier();

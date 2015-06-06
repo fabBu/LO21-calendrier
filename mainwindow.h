@@ -2,19 +2,19 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QInputDialog>
-#include <QWidget>
-#include <QTabWidget>
-#include <QMenuBar>
-#include <QVBoxLayout>
-#include <QString>
-#include "projetediteur.h"
-#include "programmationmanager.h"
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+<<<<<<< HEAD
+public:
+    explicit MainWindow(QWidget *parent = 0);
+    ~MainWindow();
+
+private:
+    Ui::MainWindow *ui;
+=======
     QTabWidget *onglets;
 
     QMenuBar *menubar;

@@ -1,14 +1,26 @@
 #include "agendaediteur.h"
 #include <QDebug>
 
-AgendaEditeur::AgendaEditeur(QWidget *parent) : QWidget(parent)
+AgendaEditeur::AgendaEditeur(QWidget *parent) : QWidget(parent), manager(ProgrammationManager::getInstance())
 {
-//    manager = ProgrammationManager::getInstance();
-    layout = new QGridLayout;
+    setWindowTitle("Programmation d'un événement");
+    setFixedSize(1334,800);
 
-    QLabel* clock = new QLabel("0h00",this);
-    layout->addWidget(clock,3,0);
+    semaine_layout = new QGridLayout;
 
+    QScrollArea *scroll = new QScrollArea();
+    QWidget *container = new QWidget(scroll);
+    container->setMinimumSize(1290,1500);
+
+    horaire_layout = new QGridLayout();
+    container->setLayout(horaire_layout);
+    scroll->setWidget(container);
+    semaine_layout->addWidget(scroll,3,0,1,16);
+    scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    scroll->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    setHoraireLabel();
+    setSizeColumn();
     dateJour = QDate::currentDate();
     jourSemaine = dateJour.dayOfWeek();
     semaine = 0;
@@ -22,13 +34,13 @@ AgendaEditeur::AgendaEditeur(QWidget *parent) : QWidget(parent)
     dimanche = dateJour.addDays(7-jourSemaine);
 
     setDateLabel();
-
     setBouttonSemaine();
+    setBouttonProgrammation();
+    setLinesSemaine();
+    setLinesHoraire();
+    setProgrammation();
 
-    setLines();
-
-
-    setLayout(layout);
+    setLayout(semaine_layout);
 }
 
 void AgendaEditeur::modifDateLabel(){
@@ -61,31 +73,56 @@ void AgendaEditeur::modifDateLabelSuivant(){
     semaine++;
     modifDate();
     modifDateLabel();
+    refresh();
 }
 
 void AgendaEditeur::modifDateLabelPrecedent(){
     semaine--;
     modifDate();
     modifDateLabel();
+    refresh();
 }
 
-void AgendaEditeur::setLines(){
-    verticalLines = new QFrame*[7];
+void AgendaEditeur::setLinesSemaine(){
+    verticalLinesSemaine = new QFrame*[7];
 
     for (int i=0;i<7;i++){
-        verticalLines[i] = new QFrame(this);
-        verticalLines[i]->setLineWidth(2);
-        verticalLines[i]->setFrameShape(QFrame::VLine);
-        layout->addWidget(verticalLines[i],1,(2*i)+1,10,1);
+        verticalLinesSemaine[i] = new QFrame(this);
+        verticalLinesSemaine[i]->setLineWidth(3);
+        verticalLinesSemaine[i]->setFixedWidth(3);
+//        verticalLinesSemaine[i]->setFrameShape(QFrame::VLine);
+        semaine_layout->addWidget(verticalLinesSemaine[i],1,(2*i)+1,1,1);
     }
 
-    horizontalLines = new QFrame*[1];
+    horizontalLinesSemaine = new QFrame*[1];
 
     for (int i=0;i<1;i++){
-        horizontalLines[i] = new QFrame(this);
-        horizontalLines[i]->setLineWidth(2);
-        horizontalLines[i]->setFrameShape(QFrame::HLine);
-        layout->addWidget(horizontalLines[i],2,0,1,15);
+        horizontalLinesSemaine[i] = new QFrame(this);
+        horizontalLinesSemaine[i]->setLineWidth(2);
+//        horizontalLinesSemaine[i]->setFrameShape(QFrame::HLine);
+//        semaine_layout->addWidget(horizontalLinesSemaine[i],2,0,1,15);
+    }
+
+}
+
+void AgendaEditeur::setLinesHoraire(){
+    verticalLinesHoraire = new QFrame*[7];
+
+    for (int i=0;i<7;i++){
+        verticalLinesHoraire[i] = new QFrame(this);
+        verticalLinesHoraire[i]->setLineWidth(3);
+        verticalLinesHoraire[i]->setFixedWidth(3);
+        verticalLinesHoraire[i]->setFrameShape(QFrame::VLine);
+        horaire_layout->addWidget(verticalLinesHoraire[i],0,(2*i)+1,120,1);
+    }
+
+    horizontalLinesHoraire = new QFrame*[23];
+
+    for (int i=1;i<24;i++){
+        horizontalLinesHoraire[i] = new QFrame(this);
+        horizontalLinesHoraire[i]->setLineWidth(1);
+        horizontalLinesHoraire[i]->setFrameShape(QFrame::HLine);
+        horaire_layout->addWidget(horizontalLinesHoraire[i],(5*i)-1,0,1,15);
     }
 
 }
@@ -98,7 +135,15 @@ void AgendaEditeur::setDateLabel() {
     vendredi_label = new QLabel(vendredi.toString("dddd d/M"),this);
     samedi_label = new QLabel(samedi.toString("dddd d/M"),this);
     dimanche_label = new QLabel(dimanche.toString("dddd d/M"),this);
-    int width_date_label = 180;
+
+    QLabel *tmp = new QLabel();
+    tmp->setFixedWidth(50);
+    semaine_layout->addWidget(tmp,1,0);
+    QLabel *tmp2 = new QLabel();
+    tmp2->setFixedWidth(16);
+    semaine_layout->addWidget(tmp2,1,15);
+
+    int width_date_label = 150;
     int heigh_date_label = 30;
     lundi_label->setFixedWidth(width_date_label);
     lundi_label->setFixedHeight(heigh_date_label);
@@ -116,13 +161,13 @@ void AgendaEditeur::setDateLabel() {
     dimanche_label->setFixedWidth(width_date_label);
     dimanche_label->setAlignment(Qt::AlignCenter);
 
-    layout->addWidget(lundi_label,1,2);
-    layout->addWidget(mardi_label,1,4);
-    layout->addWidget(mercredi_label,1,6);
-    layout->addWidget(jeudi_label,1,8);
-    layout->addWidget(vendredi_label,1,10);
-    layout->addWidget(samedi_label,1,12);
-    layout->addWidget(dimanche_label,1,14);
+    semaine_layout->addWidget(lundi_label,1,2);
+    semaine_layout->addWidget(mardi_label,1,4);
+    semaine_layout->addWidget(mercredi_label,1,6);
+    semaine_layout->addWidget(jeudi_label,1,8);
+    semaine_layout->addWidget(vendredi_label,1,10);
+    semaine_layout->addWidget(samedi_label,1,12);
+    semaine_layout->addWidget(dimanche_label,1,14);
 
     if (lundi.year() != dimanche.year()) {
         semaine_label = new QLabel(lundi.toString("Semaine: d MMM yyyy - ")+dimanche.toString("d MMM yyyy"));
@@ -130,7 +175,39 @@ void AgendaEditeur::setDateLabel() {
         semaine_label = new QLabel(lundi.toString("Semaine: d MMM - ")+dimanche.toString("d MMM yyyy"));
     }
     semaine_label->setAlignment(Qt::AlignCenter);
-    layout->addWidget(semaine_label,0,6,1,4);
+    semaine_layout->addWidget(semaine_label,0,6,1,4);
+}
+
+void AgendaEditeur::setHoraireLabel(){
+    horaires = new QLabel*[24];
+
+    for (int i=0;i<24;i++){
+        QString tmp = QString("%1h00").arg(i);
+        horaires[i] = new QLabel(tmp,this);
+        horaires[i]->setFixedWidth(40);
+        horaires[i]->setFixedHeight(15);
+        horaire_layout->addWidget(horaires[i],5*i,0);
+    }
+}
+
+void AgendaEditeur::setSizeColumn(){
+    QLabel** fixeSizeColumn = new QLabel*[7];
+
+    for (int i=1;i<8;i++){
+        fixeSizeColumn[i] = new QLabel("",this);
+        fixeSizeColumn[i]->setFixedWidth(176);
+        horaire_layout->addWidget(fixeSizeColumn[i],0,2*i);
+    }
+
+    QLabel** fixeSizeLine = new QLabel*[72];
+
+    for (int i=0;i<24;i++){
+        for (int c=0;c<3;c++){
+            fixeSizeLine[i] = new QLabel("",this);
+            fixeSizeLine[i]->setFixedHeight(15);
+            horaire_layout->addWidget(fixeSizeLine[i],(5*i)+1+c,2);
+        }
+    }
 }
 
 void AgendaEditeur::setBouttonSemaine(){
@@ -138,6 +215,137 @@ void AgendaEditeur::setBouttonSemaine(){
     suivant = new QPushButton(">",this);
     connect(precedent, SIGNAL(clicked(bool)), this, SLOT(modifDateLabelPrecedent()));
     connect(suivant, SIGNAL(clicked(bool)), this, SLOT(modifDateLabelSuivant()) );
-    layout->addWidget(precedent,0,4);
-    layout->addWidget(suivant,0,10);
+    semaine_layout->addWidget(precedent,0,4);
+    semaine_layout->addWidget(suivant,0,10);
+}
+
+void AgendaEditeur::setBouttonProgrammation(){
+    ajoutProgrammation = new QPushButton("Ajouter une programmation",this);
+    connect(ajoutProgrammation, SIGNAL(clicked(bool)), this, SLOT(ajouterProgrammation()));
+    semaine_layout->addWidget(ajoutProgrammation, 4,0,1,15);
+}
+
+void AgendaEditeur::setProgrammation(){
+    std::list<Programmation*> listes = manager.getProgrammation(lundi,dimanche);
+    programmations =  QList<QPushButton*>();
+    int i=0;
+    for(std::list<Programmation*>::const_iterator it = listes.begin(); it != listes.end(); ++it) {
+        int nbJours = (*it)->getDateFin().date().dayOfWeek() - (*it)->getDate().date().dayOfWeek();
+        if (((*it)->getDateFin().date().dayOfWeek() == 7 || (*it)->getDateFin().date().dayOfWeek() == 1) && nbJours != 0){
+            nbJours = 1;
+        }
+
+//        qDebug() << "nbJour :" << nbJours;
+        if (nbJours == 0) {
+            QPushButton* temp = new QPushButton((*it)->getEvenement().getTitre());
+            temp->setStyleSheet("text-align: top left");
+
+            int nbLignesHeure = (((*it)->getDateFin().time().minute() + ((*it)->getDateFin().time().hour()*60)) -
+                    ((*it)->getDate().time().minute() + ((*it)->getDate().time().hour()*60)))/15;
+//            qDebug() << nbLignesHeure;
+            int nbLignesVerticales = 0;
+            if (nbLignesHeure > 4) {
+                nbLignesVerticales = nbLignesHeure/4;
+            }
+//            qDebug() << nbLignesVerticales;
+            temp->setMinimumHeight(nbLignesHeure*15+nbLignesVerticales);
+
+            int nb = ((*it)->getDate().time().minute() + ((*it)->getDate().time().hour()*60))/15;
+//            qDebug() << nb;
+            int nb2 = 0;
+            if (nb > 4) {
+                nb2 = nb/4;
+            }
+//            qDebug() << nb2;
+            horaire_layout->addWidget(temp,nb+nb2,(*it)->getDate().date().dayOfWeek()*2,nbLignesHeure+nbLignesVerticales,1);
+            int row, col, index, col_span, row_span;
+            index = horaire_layout->indexOf(temp);
+            horaire_layout->getItemPosition(index, &row, &col, &col_span, &row_span);
+            qDebug() << "index:"<<index<<",col:"<<col<<",row:"<<row;
+            programmations.push_back(temp);
+        } else {
+
+            for (int i=0; i<nbJours+1;i++){
+                QDate t = (*it)->getDate().date().addDays(i);
+//                qDebug() << "yolo" << t.toString("yyyy.MM.dd");
+                if (!(t<lundi || t>dimanche)){
+                    QPushButton* temp = new QPushButton((*it)->getEvenement().getTitre());
+                    temp->setStyleSheet("text-align: top left");
+                    if (i==0){
+                        QDateTime ra = QDateTime((*it)->getDate());
+                        int nbLignesHeure = (ra.time().hour()*60 + ra.time().minute())/15;
+
+//                        qDebug() << "yolo" << nbLignesHeure;
+                        int nbLignesVerticales = 0;
+                        if (nbLignesHeure > 4) {
+                            nbLignesVerticales = nbLignesHeure/4;
+                        }
+//                        qDebug() << "yolo" << nbLignesVerticales;
+                        temp->setMinimumHeight(nbLignesHeure*15+nbLignesVerticales);
+
+                        int nb = ((24*60)-(ra.time().hour()*60 + ra.time().minute()))/15;
+//                        qDebug() << "yo" << nb;
+                        int nb2 = 0;
+                        if (nb > 4) {
+                            nb2 = nb/4;
+                        }
+//                        qDebug() << nb2;
+                        horaire_layout->addWidget(temp,nb+nb2,(*it)->getDate().date().dayOfWeek()*2,nbLignesHeure+nbLignesVerticales,1);
+                        int row, col, index, col_span, row_span;
+                        index = horaire_layout->indexOf(temp);
+                        horaire_layout->getItemPosition(index, &row, &col, &col_span, &row_span);
+                        qDebug() << "index:"<<index<<",col:"<<col<<",row:"<<row;
+                    } else if (i==1){
+                        QDateTime ra = QDateTime((*it)->getDateFin());
+
+                        int nbLignesHeure = (ra.time().hour()*60 + ra.time().minute())/15;
+//                        qDebug() << nbLignesHeure;
+                        int nbLignesVerticales = 0;
+                        if (nbLignesHeure > 4) {
+                            nbLignesVerticales = nbLignesHeure/4;
+                        }
+//                        qDebug() << nbLignesVerticales;
+                        temp->setMinimumHeight(nbLignesHeure*15+nbLignesVerticales);
+
+                        horaire_layout->addWidget(temp,0,(*it)->getDateFin().date().dayOfWeek()*2,nbLignesHeure+nbLignesVerticales,1);
+                        int row, col, index, col_span, row_span;
+                        index = horaire_layout->indexOf(temp);
+                        horaire_layout->getItemPosition(index, &row, &col, &col_span, &row_span);
+                        qDebug() << "index:"<<index<<",col:"<<col<<",row:"<<row;
+
+                    }
+                    programmations.push_back(temp);
+//                    connect(temp, SIGNAL(clicked(bool)), pe, SLOT(editerProgrammation()) );
+                }
+            }
+        }
+        i++;
+    }
+
+}
+
+void AgendaEditeur::refresh(){
+    qDeleteAll(programmations);
+//    qDebug() << "yolo";
+    setProgrammation();
+}
+
+void AgendaEditeur::ajouterProgrammation() {
+    try{
+        ProgrammationEditeur* pe = new ProgrammationEditeur();
+        pe->show();
+        connect(pe, SIGNAL(fermeture()), this, SLOT(refresh()));
+
+    }catch(CalendarException e)
+    { QMessageBox::warning(this, "Ajout de programmation", e.getInfo()); }
+}
+
+void AgendaEditeur::editerProgrammation() {
+    try{
+        ProgrammationEditeur* pe = new ProgrammationEditeur();
+        pe->show();
+        connect(pe, SIGNAL(fermeture()), this, SLOT(refresh()));
+
+    }catch(CalendarException e)
+    { QMessageBox::warning(this, "Ajout de programmation", e.getInfo()); }
 }
