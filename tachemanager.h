@@ -5,7 +5,7 @@
 #include <QTextStream>
 #include <QMessageBox>
 #include <QDebug>
-
+#include "xmlparsor.h"
 #include "taches.h"
 
 using namespace std;
@@ -36,7 +36,7 @@ public:
     const list<Tache*> getTaches() const { return taches; }
     Tache& getTache(const QString& titre);
     const Tache& getTache(const QString& titre) const;
-    Tache& ajouterTacheUnaire(const QString& t, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree &dur, bool preempt=false);
+    Tache& ajouterTacheUnaire(const QString& t, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree &dur, const Duree &durestante, bool preempt=false);
     Tache& ajouterTacheComposite(const QString& t, const QString& desc, const QDate& dispo, const QDate& deadline);
     void retirerTache(const QString& id);
     bool isTacheExistante(const QString& id) const { return trouverTache(id)!=0; }
@@ -44,6 +44,7 @@ public:
     void load(const QString& f);
     void save(const QString& f);
 
+    QDomDocument projetToXML();
 private:
     TacheManager(const TacheManager& um);
     TacheManager& operator=(const TacheManager& um);

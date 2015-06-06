@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QDate>
+#include "xmlparsor.h"
 #include "tachemanager.h"
 
 class ProjetsManager
@@ -24,6 +25,8 @@ public:
 
     static ProjetsManager& getInstance();
     static void libererInstance();
+
+    void writeXML();
 private:
     ProjetsManager(){}
     ~ProjetsManager() {}

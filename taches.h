@@ -4,6 +4,7 @@
 #include <QDate>
 #include <QDebug>
 #include <QTextStream>
+#include "xmlparsor.h"
 #include "calendar.h"
 #include "evenement.h"
 using namespace std;
@@ -27,6 +28,9 @@ protected:
             Evenement(id, desc),disponibilite(dispo),echeance(deadline), surtache(0), termine(false){ if(disponibilite>echeance) throw CalendarException("Echeance < Disponibilité"); }
 
     friend class TacheManager;
+
+    virtual QString TacheToXML(QDomDocument &doc, QDomElement &elem) =0;
+    virtual QString contraintesToXML(QDomDocument &doc, QDomElement &elem) =0;
 public:
     QDate getDateDisponibilite() const {  return disponibilite; }
     QDate getDateEcheance() const {  return echeance; }
@@ -61,13 +65,14 @@ QTextStream& operator<<(QTextStream& f, const Tache& t);
    *  Elle est une tâche concrète et possède une durée
    */
 class TacheUnaire : public Tache
-{friend class TacheManager;
+{
+    friend class TacheManager;
     Duree duree; /*!< Duree de la tâche */
     Duree duree_restante;
     bool preemptive; /*!< Définit si la tâche peut être effectuée en plusieurs fois */
 
-    TacheUnaire(const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree& dur, bool pree=false):
-            Tache(id, desc, dispo, deadline),duree(dur), preemptive(pree), duree_restante(dur) {
+    TacheUnaire(const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree& dur,const Duree &durestante, bool pree=false):
+            Tache(id, desc, dispo, deadline),duree(dur), preemptive(pree), duree_restante(durestante) {
         if(duree.getDureeEnHeures()>12 && !preemptive)
             throw CalendarException("Une tâche non préemptive ne peut durer plus de 12H");
         if(!verifCoherence(dispo, deadline, dur))
@@ -84,6 +89,12 @@ public:
     bool isPreemptive() const { return preemptive; }
     void setPreemptive(const bool value);
     virtual void affiche();
+private:
+    TacheUnaire(const TacheUnaire& t);
+    TacheUnaire& operator=(const TacheUnaire&);
+
+    virtual QString TacheToXML(QDomDocument& doc, QDomElement& elem);
+    virtual QString contraintesToXML(QDomDocument &doc, QDomElement &elem);
 };
 
 /*! \class TacheComposite
@@ -105,6 +116,12 @@ public:
     void ajouterSousTache(Tache& t);
     void retirerSousTache(Tache& t);
     virtual void affiche();
+private:
+    TacheComposite(const TacheComposite& t);
+    TacheComposite& operator=(const TacheComposite&);
+
+    virtual QString TacheToXML(QDomDocument& doc, QDomElement& elem);
+    virtual QString contraintesToXML(QDomDocument &doc, QDomElement &elem);
 };
 
 #endif // TACHES_H

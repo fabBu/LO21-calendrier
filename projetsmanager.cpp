@@ -90,3 +90,20 @@ void ProjetsManager::setDates(const QString& nom, const QDate &debut, const QDat
     setDebut(nom, debut);
     setFin(nom, fin);
 }
+
+
+void ProjetsManager::writeXML()
+{
+    std::list<TacheManager*>::iterator it;
+    for ( it = projets.begin(); it != projets.end(); ++it)
+    {
+        QDomDocument doc = (*it)->projetToXML();
+
+        qDebug()<<doc.toString();
+        QFile file( (*it)->getNom()+".xml" );
+        file.open(QIODevice::WriteOnly);
+        QTextStream ts(&file);
+        ts<<doc.toString();
+        file.close();
+    }
+}

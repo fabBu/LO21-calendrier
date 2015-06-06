@@ -9,7 +9,37 @@
 
 
 
+/* Helper function to generate a DOM Element for the given DOM document
 
+   and append it to the children of the given node. */
+
+QDomElement addXmlElement( QDomDocument &doc, QDomNode &node,
+                        const QString &tag,
+                        const QString &value )
+{
+
+  QDomElement el = doc.createElement( tag );
+  node.appendChild( el );
+
+  if ( !value.isNull() ) {
+    QDomText txt = doc.createTextNode( value );
+    el.appendChild( txt );
+  }
+
+  return el;
+}
+
+
+
+
+
+
+
+
+
+
+
+/*
 void XMLparsor::loadProjets(list<TacheManager*> l)
 {
     /*TacheManager* projet;
@@ -67,12 +97,14 @@ qDebug()<<file.fileName();
             if( file.fileName().contains(QRegExp("*contrainte*")) )
                 loadContraintes(projet, file.filePath());
         }
-    }*/
+    }
 }
+*/
 
+/*
  TacheManager* XMLparsor::loadProjet(const QString& file)
 {
- /*   TacheManager* proj;
+   TacheManager* proj;
 
     QFile fin(file);
     // If we can't open it, let's show an error message.
@@ -173,12 +205,14 @@ qDebug()<<file.fileName();
                 proj->ajouterTacheUnaire(titre,description,disponibilite,echeance,duree,preemptive);
             }
         }
-    }*/return 0;
+    }return 0;
 }
+*/
 
+/*
 void XMLparsor::loadContraintes(TacheManager* tm, QString chemin)
 {
-/*
+
     QFile fin(chemin);
     // If we can't open it, let's show an error message.
     if (!fin.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -232,5 +266,6 @@ void XMLparsor::loadContraintes(TacheManager* tm, QString chemin)
                 }
             }
         }
-    }*/
+    }
 }
+*/

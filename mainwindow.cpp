@@ -15,7 +15,6 @@ MainWindow::MainWindow()
     connect( onglets,SIGNAL(tabCloseRequested(int)),this,SLOT(closeTab(int)) );
     setCentralWidget(onglets);
 
-
     chargerProjets();
 }
 
@@ -160,6 +159,7 @@ qDebug()<<"Ajout projets : OK";
                               "Preparer l\'ensemble des tests",
                               QDate(2014,12,15),
                               QDate(2014, 12,31),
+                              Duree(4,0),
                               Duree(4,0));
 
         tm.ajouterTacheComposite("Phase1",
@@ -171,12 +171,14 @@ qDebug()<<"Ajout projets : OK";
                               "Proceder au test d\'une tache unaire",
                               QDate(2015,01,01),
                               QDate(2015, 01,15),
+                              Duree(8,0),
                               Duree(8,0));
 
         tm.ajouterTacheUnaire("Tache2",
                               "Proceder au test d\'une deuxieme tache unaire",
                               QDate(2015,02,01),
                               QDate(2015, 02,15),
+                              Duree(48,0),
                               Duree(48,0),
                               true);
 
@@ -197,10 +199,12 @@ qDebug()<<"Ajout projets : OK";
                               "Valider les tests !",
                               QDate(2015,02,16),
                               QDate(2015, 02,18),
+                              Duree(3,0),
                               Duree(3,0));
 
         tm.getTache("Tache3").ajouterPredecesseur( tm.getTache("Phase1") );
         p1.ajouterPredecesseur( tm.getTache("Tache0"));
+
  qDebug()<<"Projet1 : OK";
 
     }
@@ -216,6 +220,7 @@ qDebug()<<"Ajout projets : OK";
                                   "Preparer l\'ensemble des tests",
                                   QDate(2014,12,15),
                                   QDate(2014, 12,31),
+                                  Duree(4,0),
                                   Duree(4,0));
 
 
@@ -223,12 +228,14 @@ qDebug()<<"Ajout projets : OK";
                                   "Proceder au test d\'une tache unaire",
                                   QDate(2015,01,01),
                                   QDate(2015, 01,15),
+                                  Duree(8,0),
                                   Duree(8,0));
 
             tm2.ajouterTacheUnaire("Tache-2",
                                   "Proceder au test d\'une deuxieme tache unaire",
                                   QDate(2015,02,01),
                                   QDate(2015, 02,15),
+                                  Duree(48,0),
                                   Duree(48,0),
                                   true);
 
@@ -256,6 +263,7 @@ qDebug()<<"Ajout projets : OK";
                                   "Valider les tests !",
                                   QDate(2015,02,16),
                                   QDate(2015, 02,18),
+                                  Duree(3,0),
                                   Duree(3,0));
 
             tm2.getTache("Tache-3").ajouterPredecesseur( tm2.getTache("Phase-1") );
@@ -266,4 +274,6 @@ qDebug()<<"Ajout projets : OK";
         {
             qDebug()<<(e.getInfo().toStdString().c_str());
         }
+
+    projets.writeXML();
 }

@@ -295,3 +295,101 @@ void TacheComposite::affiche()
         }
     }
 }
+
+
+QString Tache::TacheToXML(QDomDocument& doc, QDomElement& elem)
+{
+    addXmlElement( doc, elem, "titre", titre );
+    addXmlElement( doc,  elem, "description", description );
+    addXmlElement( doc, elem, "disponibilite", disponibilite.toString("dd-MM-yyyy") );
+    addXmlElement( doc, elem, "echeance", echeance.toString("dd-MM-yyyy") );
+
+    return doc.toString();
+}
+
+QString Tache::contraintesToXML(QDomDocument &doc, QDomElement &elem)
+{
+    if( predecesseurs.size() == 0) return "";
+
+    QDomElement precedenceElement = addXmlElement( doc, elem, "precedence" );
+    std::list<Tache*>::iterator it;
+    for ( it = predecesseurs.begin(); it != predecesseurs.end(); ++it)
+    {
+        addXmlElement(doc, precedenceElement, "predecesseur", (*it)->getTitre() );
+    }
+
+    return doc.toString();
+}
+
+QString TacheUnaire::TacheToXML(QDomDocument& doc, QDomElement& elem)
+{
+    QDomElement tacheUnaireElement = addXmlElement( doc, elem, "tache" );
+    tacheUnaireElement.setAttribute( "type", "unaire");
+    Tache::TacheToXML(doc, tacheUnaireElement);
+
+    QString preemp;
+    (preemptive) ? preemp="oui" : preemp="non";
+    addXmlElement( doc, tacheUnaireElement, "preemptive", preemp );
+
+    QString term;
+    (termine) ? term="oui" : term="non";
+    addXmlElement( doc, tacheUnaireElement, "termine", term );
+
+    QDomElement dureeElement = addXmlElement( doc, tacheUnaireElement, "duree" );
+    duree.DureeToXML(doc, dureeElement);;
+
+    QDomElement dureeRestanteElement = addXmlElement( doc, tacheUnaireElement, "duree_restante" );
+    duree.DureeToXML(doc, dureeRestanteElement );;
+
+    return doc.toString();
+}
+
+QString TacheUnaire::contraintesToXML(QDomDocument &doc, QDomElement &elem)
+{
+    if( predecesseurs.size() != 0)
+    {
+        QDomElement contrainteElement = addXmlElement( doc, elem, "contrainte" );
+        contrainteElement.setAttribute("tache", titre);
+        Tache::contraintesToXML(doc, contrainteElement);
+    }
+
+    return doc.toString();
+}
+
+QString TacheComposite::TacheToXML(QDomDocument &doc, QDomElement &elem)
+{
+    QDomElement tacheCompositeElement = addXmlElement( doc, elem, "tache" );
+    tacheCompositeElement.setAttribute( "type", "composite");
+    Tache::TacheToXML(doc, tacheCompositeElement);
+
+    return doc.toString();
+}
+
+QString TacheComposite::contraintesToXML(QDomDocument &doc, QDomElement &elem)
+{
+    if(predecesseurs.size()!=0 || soustaches.size()!=0)
+    {
+        QDomElement contrainteElement = addXmlElement( doc, elem, "contrainte" );
+        contrainteElement.setAttribute("tache", titre);
+
+        if(predecesseurs.size() != 0)
+        {
+            Tache::contraintesToXML(doc, contrainteElement);
+        }
+
+        if(soustaches.size() != 0)
+        {
+            QDomElement compositeElement = addXmlElement( doc, contrainteElement, "composition");
+            std::list<Tache*>::iterator it;
+            for ( it = soustaches.begin(); it != soustaches.end(); ++it)
+            {
+                addXmlElement(doc, compositeElement, "sous-tache", (*it)->getTitre() );
+            }
+        }
+    }
+    else return "";
+
+
+
+    return doc.toString();
+}

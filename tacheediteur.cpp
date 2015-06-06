@@ -499,7 +499,8 @@ void TacheEditeur::sauvegarder()
         try
         {
             if(unaire)
-                tm.ajouterTacheUnaire(titre->text(), desc->toPlainText(), dispo->date(), echeance->date(),  Duree(duree_h->value(), duree_m->value()), preemp->isChecked());
+                tm.ajouterTacheUnaire(titre->text(), desc->toPlainText(), dispo->date(), echeance->date(),
+                                      Duree(duree_h->value(), duree_m->value()), Duree(duree_h->value(), duree_m->value()), preemp->isChecked());
             else
                 tm.ajouterTacheComposite(titre->text(), desc->toPlainText(), dispo->date(), echeance->date());
 

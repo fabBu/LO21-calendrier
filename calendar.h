@@ -8,6 +8,7 @@
 #include <iostream>
 #include <iomanip>
 
+#include "xmlparsor.h"
 using namespace std;
 
 class CalendarException{
@@ -60,25 +61,12 @@ public:
         if (m<0) throw TimeException("ERREUR: initialisation duree invalide, m négatif");
     }
 
-    const QTime& getTime() const{
-        return time;
-    }
+    const QTime& getTime() const{ return time; }
+    unsigned int getHeure() const{ return time.hour(); }
+    unsigned int getMinute() const{ return time.minute(); }
+    unsigned int getNbJour() const{ return nb_jour; }
 
-    unsigned int getHeure() const{
-        return time.hour();
-    }
-
-    unsigned int getMinute() const{
-        return time.minute();
-    }
-
-    unsigned int getNbJour() const{
-        return nb_jour;
-    }
-
-    void setNbJour(unsigned int j){
-        nb_jour = j;
-    }
+    void setNbJour(unsigned int j){ nb_jour = j; }
 
     void setMinute(unsigned int m){
         if (m>59)
@@ -108,6 +96,9 @@ public:
 
     void afficher(std::ostream& f=std::cout) const {
         f<<std::setfill('0')<<std::setw(2)<<nb_jour*24+time.hour()<<"H"<<std::setw(2)<<time.minute()<<std::setfill(' '); } //<!Affiche la duree sous le format hhHmm
+
+    QString DureeToXML(QDomDocument& doc, QDomElement& elem);
+    QString DureeToXML();
 };
 
 std::ostream& operator<<(std::ostream& f, const Duree & d);

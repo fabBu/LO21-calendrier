@@ -41,13 +41,13 @@ void TacheManager::addItem(Tache* t){
 }
 
 
-Tache& TacheManager::ajouterTacheUnaire(const QString& t, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree& dur, bool preempt){
+Tache& TacheManager::ajouterTacheUnaire(const QString& t, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree& dur, const Duree &durestante, bool preempt){
     if( dispo < debut ) throw CalendarException(t+" ne doit pas commencer avant le début du projet");
     if( deadline > fin ) throw CalendarException(t+" ne doit pas terminer après la fin du projet");
     if (trouverTache(t))
         throw CalendarException("Une tâche portant le même nom existe déjà dans le projet");
 
-    Tache* newt=new TacheUnaire(t,desc,dispo,deadline,dur,preempt);
+    Tache* newt=new TacheUnaire(t,desc,dispo,deadline,dur,durestante,preempt);
     addItem(newt);
 
     return *newt;
@@ -62,6 +62,7 @@ Tache& TacheManager::ajouterTacheComposite(const QString& t, const QString& desc
 
     Tache* newt=new TacheComposite(t,desc,dispo,deadline);
     addItem(newt);
+
     return *newt;
 }
 
@@ -143,12 +144,36 @@ void TacheManager::setDatesDisponibiliteEcheance(Tache& t, const QDate& disp, co
     t.setDatesDisponibiliteEcheance(disp, e);
 }
 
-// TODO  a modifier
-TacheManager::~TacheManager(){
-   /*
-    if (file!="") save(file);
-    for(unsigned int i=0; i<nb; i++) delete taches[i];
-    delete[] taches;
-    file="";
-    */
+QDomDocument TacheManager::projetToXML()
+{
+    QDomDocument doc;
+    QDomProcessingInstruction instr = doc.createProcessingInstruction( "xml", "version='1.0' encoding='UTF-8'");
+    doc.appendChild(instr);
+
+    QDomElement projetElement = addXmlElement( doc, doc, "projet" );
+
+    //   Propriétés du projet
+    addXmlElement( doc, projetElement, "nom", nom );
+    addXmlElement( doc, projetElement, "debut", debut.toString("dd-MM-yyyy") );
+    addXmlElement( doc, projetElement, "fin", fin.toString("dd-MM-yyyy") );
+
+    //   Tâches appartenant au projet
+    QDomElement tachesElement = addXmlElement(doc, projetElement, "taches");
+    std::list<Tache*>::iterator it;
+    for ( it = taches.begin(); it != taches.end(); ++it)
+    {
+        (*it)->TacheToXML(doc, tachesElement);
+    }
+
+    //   Contraintes entre les tâches du projet
+    QDomElement contraintesElement = addXmlElement(doc, projetElement, "contraintes");
+    std::list<Tache*>::iterator it2;
+    for ( it2 = taches.begin(); it2 != taches.end(); ++it2)
+    {
+        (*it2)->contraintesToXML(doc, contraintesElement);
+    }
+
+    //qDebug()<<doc.toString();
+    return doc;
 }
+
