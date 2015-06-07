@@ -100,3 +100,31 @@ const list<Programmation*> ProgrammationManager::getProgrammation(const QDate& d
     }
     return res;
 }
+
+
+void ProgrammationManager::writeXML(const QString& dossier)
+{
+    QDir dir;
+    dir.mkpath(dossier);
+    dir.setPath(dossier);
+
+    QDomDocument doc;
+    QDomProcessingInstruction instr = doc.createProcessingInstruction( "xml", "version='1.0' encoding='ISO-8859-1'");
+    doc.appendChild(instr);
+
+    QDomElement agendaElement = addXmlElement( doc, doc, "agenda" );
+
+    //   Programmations de l'agenda
+    std::list<Programmation*>::iterator it;
+    for ( it = programmations.begin(); it != programmations.end(); ++it)
+    {
+        (*it)->ProgrammationToXML(doc, agendaElement);
+    }
+
+    QFile file( dir.path()+"\\programmations.xml" );
+    file.open(QIODevice::WriteOnly);
+    QTextStream ts(&file);
+    ts<<doc.toString();
+    file.close();
+}
+

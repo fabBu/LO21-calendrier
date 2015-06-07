@@ -27,3 +27,13 @@ QString MetaEnum::enumToString(int j){
     QMetaEnum metaEnum = metaObject()->enumerator(index);
     return metaEnum.valueToKey(j);
 }
+
+QString Activite::ActiviteToXML(QDomDocument& doc, QDomElement& elem)
+{
+    addXmlElement( doc, elem, "titre", titre );
+    addXmlElement( doc, elem, "description", description );
+    //addXmlElement( doc, elem, "type", type.enumToString(type) );
+    addXmlElement( doc,  elem, "lieu", lieu );
+
+    return doc.toString();
+}

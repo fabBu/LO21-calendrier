@@ -45,6 +45,9 @@ private:
 public:
     static ProgrammationManager& getInstance();
     static void libererInstance();
+
+    void writeXML(const QString &dossier);
+    void readXML(QFile &file);
 };
 
 #endif // PROGRMMATIONMANAGER_H

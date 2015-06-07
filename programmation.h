@@ -3,6 +3,7 @@
 
 #include <QDateTime>
 #include "evenement.h"
+#include "taches.h"
 #include "activite.h"
 #include "calendar.h"
 
@@ -31,6 +32,8 @@ public:
     Evenement& getEvenement(){return *evenement;}
 
     void setEvenement(Evenement& e);
+
+    QString ProgrammationToXML(QDomDocument& doc, QDomElement& elem);
 };
 
 #endif // PROGRAMMATION_H

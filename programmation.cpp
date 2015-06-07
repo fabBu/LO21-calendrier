@@ -19,3 +19,40 @@ Programmation::~Programmation(){
         delete evenement;
     }
 }
+
+
+
+QString Programmation::ProgrammationToXML(QDomDocument& doc, QDomElement& elem)
+{
+    QDomElement programmationElement = addXmlElement( doc, elem, "programmation" );
+
+    Activite* ac = dynamic_cast<Activite*>(evenement);
+    Tache* t = dynamic_cast<Tache*>(evenement);
+
+    QDomElement sousElement;
+    if(ac)
+    {
+       sousElement = addXmlElement(doc, programmationElement, "activite");
+       ac->ActiviteToXML(doc, sousElement);
+       addXmlElement(doc, sousElement, "date", date.toString());
+       QDomElement dureeElement = addXmlElement( doc, sousElement, "duree" );
+       duree.writeXmlAttributes(dureeElement);
+    }
+    else if(t)
+    {
+        sousElement = addXmlElement(doc, programmationElement, "tache");
+        addXmlElement(doc, sousElement, "projet", t->getParent()->getNom());
+        addXmlElement(doc, sousElement, "titre", t->getTitre());
+        addXmlElement(doc, sousElement, "date", date.toString());
+        QDomElement dureeElement = addXmlElement( doc, sousElement, "duree" );
+        duree.writeXmlAttributes(dureeElement);
+    }
+    else
+    {
+        qDebug()<<"Erreur: ProgrammationToXML";
+    }
+
+
+
+    return doc.toString();
+}

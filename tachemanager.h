@@ -6,8 +6,9 @@
 #include <QMessageBox>
 #include <QDebug>
 #include "xmlparsor.h"
-#include "taches.h"
-
+#include "calendar.h"
+//#include "taches.h"
+class Tache; //Cyclic Dependency
 using namespace std;
 
 class TacheManager {

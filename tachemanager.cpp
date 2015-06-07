@@ -1,4 +1,5 @@
 #include "tachemanager.h"
+#include "taches.h"
 
 TacheManager::TacheManager(const QString &name, const QDate& dispo, const QDate& deadline):nom(name), debut(dispo), fin(deadline){
     if( nom == "" ) throw CalendarException("Le projet doit avoir un nom !");
@@ -47,7 +48,7 @@ Tache& TacheManager::ajouterTacheUnaire(const QString& t, const QString& desc, c
     if (trouverTache(t))
         throw CalendarException("Une tâche portant le même nom existe déjà dans le projet");
 
-    Tache* newt=new TacheUnaire(t,desc,dispo,deadline,dur,durestante,preempt);
+    Tache* newt=new TacheUnaire(this, t,desc,dispo,deadline,dur,durestante,preempt);
     addItem(newt);
 
     return *newt;
@@ -60,7 +61,7 @@ Tache& TacheManager::ajouterTacheComposite(const QString& t, const QString& desc
     if (trouverTache(t))
         throw CalendarException("Une tâche portant le même nom existe déjà dans le projet");
 
-    Tache* newt=new TacheComposite(t,desc,dispo,deadline);
+    Tache* newt=new TacheComposite(this, t,desc,dispo,deadline);
     addItem(newt);
 
     return *newt;

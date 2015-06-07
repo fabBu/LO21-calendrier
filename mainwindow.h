@@ -30,6 +30,7 @@ class MainWindow : public QMainWindow
 
     void initMenuBar();
     void chargerProjets(const QString &dossier);
+    void chargerAgenda(const QString& dossier);
 
     ProjetEditeur* getProjetEdit(const QString nom);
     bool estOuvert(const QString nom) { return getProjetEdit(nom)!=0;  }
