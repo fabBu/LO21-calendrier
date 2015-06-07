@@ -26,8 +26,8 @@ public:
     static ProjetsManager& getInstance();
     static void libererInstance();
 
-    void writeXML();
-    void readXML();
+    void writeXML(const QString &dossier);
+    void readXML(QFile &file);
 private:
     ProjetsManager(){}
     ~ProjetsManager() {}

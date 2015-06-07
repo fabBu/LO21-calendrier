@@ -96,9 +96,6 @@ public:
 
     void afficher(std::ostream& f=std::cout) const {
         f<<std::setfill('0')<<std::setw(2)<<nb_jour*24+time.hour()<<"H"<<std::setw(2)<<time.minute()<<std::setfill(' '); } //<!Affiche la duree sous le format hhHmm
-
-    QString DureeToXML(QDomDocument& doc, QDomElement& elem);
-    QString DureeToXML();
 };
 
 std::ostream& operator<<(std::ostream& f, const Duree & d);

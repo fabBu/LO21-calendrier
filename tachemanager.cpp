@@ -112,6 +112,26 @@ const Tache& TacheManager::getTache(const QString& titre)const{
     return t;
 }
 
+void TacheManager::ajouterSousTache(const QString& t, const QString& soust)
+{
+    TacheComposite* t1=  dynamic_cast<TacheComposite*>(trouverTache(t));
+    if (!t1) throw CalendarException(t+" n'existe pas ou n'est pas composite");
+    Tache* t2=trouverTache(soust);
+    if (!t2) throw CalendarException("TacheManager, "+soust+" inexistant");
+
+    t1->ajouterSousTache(*t2);
+}
+
+void TacheManager::ajouterPred(const QString& t, const QString& pred)
+{
+    Tache* t1=  trouverTache(t);
+    if (!t1) throw CalendarException("TacheManager, "+t+" inexistant");
+    Tache* t2=trouverTache(pred);
+    if (!t2) throw CalendarException("TacheManager, "+pred+" inexistant");
+
+    t1->ajouterPredecesseur(*t2);
+}
+
 void TacheManager::setDatesDisponibiliteEcheance(Tache& t, const QDate& disp, const QDate& e)
 {
     if (e<disp)
@@ -147,15 +167,16 @@ void TacheManager::setDatesDisponibiliteEcheance(Tache& t, const QDate& disp, co
 QDomDocument TacheManager::projetToXML()
 {
     QDomDocument doc;
-    QDomProcessingInstruction instr = doc.createProcessingInstruction( "xml", "version='1.0' encoding='UTF-8'");
+    QDomProcessingInstruction instr = doc.createProcessingInstruction( "xml", "version='1.0' encoding='ISO-8859-1'");
     doc.appendChild(instr);
 
     QDomElement projetElement = addXmlElement( doc, doc, "projet" );
 
     //   Propriétés du projet
-    addXmlElement( doc, projetElement, "nom", nom );
-    addXmlElement( doc, projetElement, "debut", debut.toString("dd-MM-yyyy") );
-    addXmlElement( doc, projetElement, "fin", fin.toString("dd-MM-yyyy") );
+    QDomElement proprietesElement = addXmlElement(doc, projetElement, "proprietes" );
+    addXmlElement( doc, proprietesElement, "nom", nom );
+    addXmlElement( doc, proprietesElement, "debut", debut.toString("dd-MM-yyyy") );
+    addXmlElement( doc, proprietesElement, "fin", fin.toString("dd-MM-yyyy") );
 
     //   Tâches appartenant au projet
     QDomElement tachesElement = addXmlElement(doc, projetElement, "taches");

@@ -336,10 +336,14 @@ QString TacheUnaire::TacheToXML(QDomDocument& doc, QDomElement& elem)
     addXmlElement( doc, tacheUnaireElement, "termine", term );
 
     QDomElement dureeElement = addXmlElement( doc, tacheUnaireElement, "duree" );
-    duree.DureeToXML(doc, dureeElement);;
+    dureeElement.setAttribute("jours", duree.getNbJour());
+    dureeElement.setAttribute("heures", duree.getHeure());
+    dureeElement.setAttribute("minutes", duree.getMinute());
 
     QDomElement dureeRestanteElement = addXmlElement( doc, tacheUnaireElement, "duree_restante" );
-    duree.DureeToXML(doc, dureeRestanteElement );;
+    dureeRestanteElement.setAttribute("jours", duree_restante.getNbJour());
+    dureeRestanteElement.setAttribute("heures", duree_restante.getHeure());
+    dureeRestanteElement.setAttribute("minutes", duree_restante.getMinute());
 
     return doc.toString();
 }

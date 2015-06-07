@@ -2,6 +2,7 @@
 #define XMLPARSOR_H
 
 #include <QDomDocument>
+#include <QDir>
 #include <QFile>
 #include <QTextStream>
 #include <QString>

@@ -3,18 +3,6 @@
 #include "calendar.h"
 
 
-QString Duree::DureeToXML(QDomDocument& doc, QDomElement& elem)
-{
-
-    addXmlElement( doc, elem, "jours", QString::number(nb_jour) );
-    addXmlElement( doc,  elem, "heures", QString::number(getHeure()) );
-    addXmlElement( doc, elem, "minutes", QString::number(getMinute()) );
-
-    return doc.toString();
-}
-
-
-
 
 std::ostream& operator<<(std::ostream& f, const Duree & d){ d.afficher(f); return f; }
 

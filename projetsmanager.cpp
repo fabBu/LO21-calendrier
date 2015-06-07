@@ -92,15 +92,19 @@ void ProjetsManager::setDates(const QString& nom, const QDate &debut, const QDat
 }
 
 
-void ProjetsManager::writeXML()
+void ProjetsManager::writeXML(const QString& dossier)
 {
+    QDir dir;
+    dir.mkpath(dossier);
+    dir.setCurrent(dossier);
+
     std::list<TacheManager*>::iterator it;
     for ( it = projets.begin(); it != projets.end(); ++it)
     {
         QDomDocument doc = (*it)->projetToXML();
 
         qDebug()<<doc.toString();
-        QFile file( (*it)->getNom()+".xml" );
+        QFile file( dir.path()+"\\"+(*it)->getNom()+".xml" );
         file.open(QIODevice::WriteOnly);
         QTextStream ts(&file);
         ts<<doc.toString();
@@ -108,7 +112,177 @@ void ProjetsManager::writeXML()
     }
 }
 
-void ProjetsManager::readXML()
+void ProjetsManager::readXML(QFile& file)
+{
+
+    //QFile file(dossier+"\\Projet1.xml");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+
+    QDomDocument doc;
+    if (!doc.setContent(&file)) {
+        file.close();
+        return;
+    }
+    file.close();
+
+    QDomElement projetElement = doc.namedItem("projet").toElement();
+    if ( projetElement.isNull() ) {
+      qWarning() << "No <projet> element found at the top-level "
+                 << "of the XML file!";
+      return;
+    }
+
+    QString nomProjet;
+    QDate debut, fin;
+
+    QDomNode nd = projetElement.firstChild();
+    for ( ; !nd.isNull(); nd = nd.nextSibling() )
+    {
+        // Charger le projet lui-même avec ses propriétés
+      if ( nd.isElement() && nd.toElement().tagName() == "proprietes" )
+      {
+        QDomNode proprietes = nd.firstChild();
+        for ( ; !proprietes.isNull(); proprietes = proprietes.nextSibling() )
+        {
+            if ( proprietes.isElement() && proprietes.toElement().tagName() == "nom" )
+                nomProjet=proprietes.toElement().text();
+            if ( proprietes.isElement() && proprietes.toElement().tagName() == "debut" )
+                debut= QDate::fromString(proprietes.toElement().text(), "dd-MM-yyyy");
+            if ( proprietes.isElement() && proprietes.toElement().tagName() == "fin" )
+                fin= QDate::fromString(proprietes.toElement().text(), "dd-MM-yyyy");
+        }
+        try
+        {
+            ajouterProjet(nomProjet,debut, fin);
+        }
+        catch(CalendarException e)
+        { qDebug()<<e.getInfo().toStdString().c_str(); }
+      }
+
+      // Charger les tâches du projet
+      if ( nd.isElement() && nd.toElement().tagName() == "taches" )
+      {
+          QString type;
+          QString titre;
+          QString description;
+          QDate dispo, echeance;
+
+          bool preemp, termine;
+          Duree dur = Duree();
+          Duree restant = Duree();
+
+        QDomNode tache = nd.firstChild();
+        for ( ; !tache.isNull(); tache = tache.nextSibling() )
+        {
+            if ( tache.isElement() && tache.toElement().tagName() == "tache" )
+            {
+                if( !tache.toElement().hasAttribute("type") ) continue;
+                type = tache.toElement().attribute("type");
+
+                QDomNode e = tache.firstChild();
+                for ( ; !e.isNull(); e = e.nextSibling() )
+                {
+                    if ( e.isElement() && e.toElement().tagName() == "titre" )
+                        titre=e.toElement().text();
+                    if ( e.isElement() && e.toElement().tagName() == "description" )
+                        description=e.toElement().text();
+                    if ( e.isElement() && e.toElement().tagName() == "disponibilite" )
+                        dispo= QDate::fromString(e.toElement().text(), "dd-MM-yyyy");
+                    if ( e.isElement() && e.toElement().tagName() == "echeance" )
+                        echeance= QDate::fromString(e.toElement().text(), "dd-MM-yyyy");
+
+                    if ( e.isElement() && e.toElement().tagName() == "preemptive" )
+                    {
+                        if(e.toElement().text()=="oui") preemp=true;
+                        else preemp=false;
+                    }
+                    if ( e.isElement() && e.toElement().tagName() == "termine" )
+                    {
+                        if(e.toElement().text()=="oui") termine=true;
+                        else termine=false;
+                    }
+                    if ( e.isElement() && e.toElement().tagName() == "duree" )
+                    {
+                        if(!e.toElement().hasAttribute("jours")
+                                || !e.toElement().hasAttribute("heures")
+                                || !e.toElement().hasAttribute("minutes"))
+                            break;
+
+                        dur.setNbJour( e.toElement().attribute("jours").toUInt() );
+                        dur.setHeure( e.toElement().attribute("heures").toUInt() );
+                        dur.setMinute( e.toElement().attribute("minutes").toUInt() );
+                    }
+                    if ( e.isElement() && e.toElement().tagName() == "duree_restante" )
+                    {
+                        if(!e.toElement().hasAttribute("jours")
+                                || !e.toElement().hasAttribute("heures")
+                                || !e.toElement().hasAttribute("minutes"))
+                            break;
+
+                        restant.setNbJour( e.toElement().attribute("jours").toUInt() );
+                        restant.setHeure( e.toElement().attribute("heures").toUInt() );
+                        restant.setMinute( e.toElement().attribute("minutes").toUInt() );
+                    }
+                }
+
+                if( type == "unaire" )
+                {qDebug()<<"Ajout Unaire";
+                    getProjet(nomProjet).ajouterTacheUnaire(titre,description,dispo, echeance,dur, restant, preemp);
+                }
+
+                if( type == "composite" )
+                {qDebug()<<"Ajout Compo";
+                    getProjet(nomProjet).ajouterTacheComposite(titre,description,dispo, echeance);
+                }
+            }
+        }
+      }
+
+      // Charger les contraintes des tâches du projet
+      if ( nd.isElement() && nd.toElement().tagName() == "contraintes" )
+      {
+          QString tache;
+
+        QDomNode contrainte = nd.firstChild();
+        for ( ; !contrainte.isNull(); contrainte = contrainte.nextSibling() )
+        {
+            if ( contrainte.isElement() && contrainte.toElement().tagName() == "contrainte" )
+            {
+                if( !contrainte.toElement().hasAttribute("tache") ) continue;
+                tache = contrainte.toElement().attribute("tache");
+
+                QDomNode e = contrainte.firstChild();
+                for ( ; !e.isNull(); e = e.nextSibling() )
+                {
+                    if ( e.isElement() && e.toElement().tagName() == "composition" )
+                    {
+                        QDomNode compo = e.firstChild();
+                        for ( ; !compo.isNull(); compo = compo.nextSibling() )
+                        {
+                            if( compo.isElement() && compo.toElement().tagName()=="sous-tache" )
+                                getProjet(nomProjet).ajouterSousTache(tache, compo.toElement().text());
+                        }
+                    }
+                    if ( e.isElement() && e.toElement().tagName() == "precedence" )
+                    {
+                        QDomNode pred = e.firstChild();
+                        for ( ; !pred.isNull(); pred = pred.nextSibling() )
+                        {
+                            if( pred.isElement() && pred.toElement().tagName()=="predecesseur" )
+                                getProjet(nomProjet).ajouterPred(tache, pred.toElement().text());
+                        }
+                    }
+                }
+            }
+        }
+      }
+    }
+}
+
+
+/*
+void ProjetsManager::readXML(const QString &dossier)
 {
     QString fileName = "Projet1.xml";
     QFile file(fileName);
@@ -181,4 +355,4 @@ void ProjetsManager::readXML()
         //On va a l'element fils de <root> suivant
         racine = racine.nextSiblingElement();
 }
-}
+}*/

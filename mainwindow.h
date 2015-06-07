@@ -29,7 +29,7 @@ class MainWindow : public QMainWindow
     AgendaEditeur* agenda_ouvert;
 
     void initMenuBar();
-    void chargerProjets();
+    void chargerProjets(const QString &dossier);
 
     ProjetEditeur* getProjetEdit(const QString nom);
     bool estOuvert(const QString nom) { return getProjetEdit(nom)!=0;  }
@@ -42,6 +42,10 @@ private slots:
     void ouvrirProjet();
     void fermerProjet(const QString nom);
     void closeTab(int index);
+    //void sauvegarder();
+
+protected:
+     void closeEvent(QCloseEvent *event);
 };
 
 #endif // MAINWINDOW_H
