@@ -21,8 +21,6 @@ int main(int argc, char* argv[])
         qDebug()<<(e.getInfo().toStdString().c_str());
     }
 
-
-
     return app.exec();
 
 }

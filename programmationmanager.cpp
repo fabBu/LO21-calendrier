@@ -7,7 +7,8 @@ void ProgrammationManager::addItem(Programmation* p){
         throw CalendarException("ERREUR: Un événement est déjà programmé à cette date.");
     TacheUnaire* tache = dynamic_cast<TacheUnaire*>(&(p->getEvenement()));
     if (tache) {
-        if (tache->getDureeRestante().getDureeEnMinutes() == 0)
+        qDebug() << tache->estTermine();
+        if (tache->estTermine() == true)
             throw CalendarException("ERREUR: La totalité de la tâche a déjà été programmé.");
         if (!(tache->isPreemptive()) && tache->getDuree().getDureeEnMinutes() != p->getDuree().getDureeEnMinutes())
             throw CalendarException("ERREUR: La tache n'est pas préemptive et elle n'est pas effectuée totalement.");
@@ -15,6 +16,9 @@ void ProgrammationManager::addItem(Programmation* p){
         int minuteRestante = tache->getDureeRestante().getDureeEnMinutes()-p->getDuree().getDureeEnMinutes();
         if (minuteRestante>=0){
             tache->setDureeRestante(Duree(minuteRestante/60,minuteRestante%60));
+            if (minuteRestante == 0) {
+//                tache->setTermine(true);
+            }
         } else if (minuteRestante<0) {
             throw CalendarException("ERREUR: La durée de la programmation est supérieur à la durée restante de la tache.");
         }
@@ -24,7 +28,7 @@ void ProgrammationManager::addItem(Programmation* p){
 
 Programmation* ProgrammationManager::findProgrammation(const QDateTime& d) const{
     for (list<Programmation*>::const_iterator it = programmations.begin(); it != programmations.end(); it++){
-        if ((*it)->getDate() == d){
+        if (d >= (*it)->getDate() && d <= (*it)->getDateFin()){
             return *it;
         }
     }
@@ -52,6 +56,9 @@ const Programmation& ProgrammationManager::getProgrammation(const QDateTime& d) 
 }
 
 void ProgrammationManager::addProgrammation(const QDateTime& da, const Duree& du, Evenement* e){
+        if (du.getDureeEnHeures() > 12) {
+            throw CalendarException("ERREUR: On ne peut pas programmer un événement d'une supérieur à 12.");
+        }
         Programmation* p = new Programmation(da,du,e);
         addItem(p);
 }

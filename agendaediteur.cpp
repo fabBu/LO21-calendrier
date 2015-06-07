@@ -263,6 +263,7 @@ void AgendaEditeur::setProgrammation(){
             horaire_layout->getItemPosition(index, &row, &col, &col_span, &row_span);
             qDebug() << "index:"<<index<<",col:"<<col<<",row:"<<row;
             programmations.push_back(temp);
+            connect(temp, SIGNAL(clicked(bool)), this, SLOT(editerProgrammation()) );
         } else {
 
             for (int i=0; i<nbJours+1;i++){
@@ -311,11 +312,11 @@ void AgendaEditeur::setProgrammation(){
                         int row, col, index, col_span, row_span;
                         index = horaire_layout->indexOf(temp);
                         horaire_layout->getItemPosition(index, &row, &col, &col_span, &row_span);
-                        qDebug() << "index:"<<index<<",col:"<<col<<",row:"<<row;
+//                        qDebug() << "index:"<<index<<",col:"<<col<<",row:"<<row;
 
                     }
                     programmations.push_back(temp);
-//                    connect(temp, SIGNAL(clicked(bool)), pe, SLOT(editerProgrammation()) );
+                    connect(temp, SIGNAL(clicked(bool)), this, SLOT(editerProgrammation()) );
                 }
             }
         }
@@ -342,7 +343,47 @@ void AgendaEditeur::ajouterProgrammation() {
 
 void AgendaEditeur::editerProgrammation() {
     try{
-        ProgrammationEditeur* pe = new ProgrammationEditeur();
+        QPushButton* button = dynamic_cast<QPushButton*>(QObject::sender());
+        int row, col, index, col_span, row_span;
+        index = horaire_layout->indexOf(button);
+        horaire_layout->getItemPosition(index, &row, &col, &col_span, &row_span);
+//        qDebug() << "yololololo";
+//        qDebug() << "index:"<<index<<",col:"<<col<<",row:"<<row;
+
+        QDate date;
+        switch (col) {
+            case 2:
+                date=lundi;
+                break;
+            case 4:
+                date=mardi;
+                break;
+            case 6:
+                date=mercredi;
+                break;
+            case 8:
+                date=jeudi;
+                break;
+            case 10:
+                date=vendredi;
+                break;
+            case 12:
+                date=samedi;
+                break;
+            case 14:
+                date=dimanche;
+                break;
+        }
+
+        int nbLignes = 0;
+        if (row > 4) {
+            nbLignes = row/5;
+        }
+
+        QDateTime dateTime = QDateTime(date,QTime(((row-nbLignes)*15)/60,((row-nbLignes)*15)%60));
+        qDebug() << "yolo date:" << dateTime.date().toString("dd.MM.yyyy") << " , yolo time:" <<dateTime.time().toString("hh:mm");
+        Programmation* pr = &(manager.getProgrammation(dateTime));
+        ProgrammationEditeur* pe = new ProgrammationEditeur(pr);
         pe->show();
         connect(pe, SIGNAL(fermeture()), this, SLOT(refresh()));
 
