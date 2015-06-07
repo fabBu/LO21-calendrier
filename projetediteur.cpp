@@ -223,13 +223,11 @@ void ProjetEditeur::getTacheCourante(QTreeWidgetItem* item,int c)
     if(dynamic_cast<TacheComposite*>(&t))
     {
         programmer->setHidden(true);
-        termine->setEnabled(false);
         termine->setChecked(estTermine);
     }
     if(dynamic_cast<TacheUnaire*>(&t))
     {
         programmer->setHidden(false);
-        termine->setEnabled(true);
         termine->setChecked(estTermine);
     }
 }
@@ -245,7 +243,7 @@ void ProjetEditeur::modifierTache()
 
         modifier_tache->setEnabled(false);
         supprimer_tache->setEnabled(false);
-        programmer->setEnabled(false);
+        programmer->setHidden(true);
     }
     catch(CalendarException e)
     { QMessageBox::warning(this, "Edition de tâche", e.getInfo()); }

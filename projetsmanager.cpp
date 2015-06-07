@@ -115,7 +115,6 @@ void ProjetsManager::writeXML(const QString& dossier)
 void ProjetsManager::readXML(QFile& file)
 {
 
-    //QFile file(dossier+"\\Projet1.xml");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
 
@@ -209,9 +208,9 @@ void ProjetsManager::readXML(QFile& file)
                                 || !e.toElement().hasAttribute("minutes"))
                             break;
 
-                        dur.setNbJour( e.toElement().attribute("jours").toUInt() );
-                        dur.setHeure( e.toElement().attribute("heures").toUInt() );
-                        dur.setMinute( e.toElement().attribute("minutes").toUInt() );
+                        dur.setNbJour( e.toElement().attribute("jours").toInt() );
+                        dur.setHeure( e.toElement().attribute("heures").toInt() );
+                        dur.setMinute( e.toElement().attribute("minutes").toInt() );
                     }
                     if ( e.isElement() && e.toElement().tagName() == "duree_restante" )
                     {
@@ -220,21 +219,17 @@ void ProjetsManager::readXML(QFile& file)
                                 || !e.toElement().hasAttribute("minutes"))
                             break;
 
-                        restant.setNbJour( e.toElement().attribute("jours").toUInt() );
-                        restant.setHeure( e.toElement().attribute("heures").toUInt() );
-                        restant.setMinute( e.toElement().attribute("minutes").toUInt() );
+                        restant.setNbJour( e.toElement().attribute("jours").toInt() );
+                        restant.setHeure( e.toElement().attribute("heures").toInt() );
+                        restant.setMinute( e.toElement().attribute("minutes").toInt() );
                     }
                 }
 
                 if( type == "unaire" )
-                {qDebug()<<"Ajout Unaire";
                     getProjet(nomProjet).ajouterTacheUnaire(titre,description,dispo, echeance,dur, restant, preemp);
-                }
 
                 if( type == "composite" )
-                {qDebug()<<"Ajout Compo";
                     getProjet(nomProjet).ajouterTacheComposite(titre,description,dispo, echeance);
-                }
             }
         }
       }
