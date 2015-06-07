@@ -17,7 +17,7 @@ void ProgrammationManager::addItem(Programmation* p){
         if (minuteRestante>=0){
             tache->setDureeRestante(Duree(minuteRestante/60,minuteRestante%60));
             if (minuteRestante == 0) {
-//                tache->setTermine(true);
+                tache->setTermine(true);
             }
         } else if (minuteRestante<0) {
             throw CalendarException("ERREUR: La durée de la programmation est supérieur à la durée restante de la tache.");
