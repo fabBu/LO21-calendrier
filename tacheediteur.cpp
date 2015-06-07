@@ -170,6 +170,7 @@ void TacheEditeur::initDates(bool unaire)
         duree_m->setMinimum(0);
         duree_h->setMaximum(1000);
         duree_m->setMaximum(59);
+        duree_m->setSingleStep(15);
 
         unsigned int heures;
         unsigned int minutes;
@@ -482,9 +483,22 @@ void TacheEditeur::sauvegarder()
             TacheUnaire* tu = dynamic_cast<TacheUnaire*>(t);
             if( tu )
             {
-                tu->setPreemptive(preemp->isChecked());
                 Duree dur(duree_h->value(), duree_m->value());
-                tu->setDuree(dur);
+                if(preemp->isChecked()!= tu->isPreemptive()
+                        || dur.getDureeEnMinutes() != tu->getDuree().getDureeEnMinutes() )
+                {
+                    QMessageBox::StandardButton reply;
+                    reply = QMessageBox::question(this, "Modification tâche",
+                                                  "La modification des dates/durée engendrera la suppression"
+                                                  "des programmations de la tâche.\nVoulez-vous continuer ?",
+                                                  QMessageBox::Yes|QMessageBox::No);
+                    if (reply == QMessageBox::Yes)
+                    {
+                        tu->setPreemptive(preemp->isChecked());
+                        tu->setDuree(dur);
+                        tu->setDureeRestante(dur);
+                    }
+                }
             }
 
             emit fermeture();

@@ -194,7 +194,6 @@ QDomDocument TacheManager::projetToXML()
         (*it2)->contraintesToXML(doc, contraintesElement);
     }
 
-    //qDebug()<<doc.toString();
     return doc;
 }
 

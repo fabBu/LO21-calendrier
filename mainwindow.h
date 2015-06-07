@@ -42,7 +42,6 @@ private slots:
     void ouvrirProjet();
     void fermerProjet(const QString nom);
     void closeTab(int index);
-    //void sauvegarder();
 
 protected:
      void closeEvent(QCloseEvent *event);
