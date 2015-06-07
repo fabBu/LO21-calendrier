@@ -47,6 +47,11 @@ ProgrammationEditeur::ProgrammationEditeur(Programmation* pr, QWidget *p): progr
     attributs_layout->addLayout(param_layout);
 
     initCancelSave();
+
+    btn_supprimer = new QPushButton("Suppression",this);
+    l_cancelsave->addWidget(btn_supprimer);
+    connect(btn_cancel, SIGNAL(clicked(bool)), this, SLOT(supprimer()) );
+
     connect(btn_save, SIGNAL(clicked(bool)), this, SLOT(modifier()) );
     main_layout->addLayout(attributs_layout);
     main_layout->addLayout(l_cancelsave);
@@ -373,6 +378,10 @@ void ProgrammationEditeur::modifDureeRestante(){
             duree_m->setValue(0);
         }
     }
+}
+
+void ProgrammationEditeur::supprimer(){
+//    programmationmanager.removeProgrammation();
 }
 
 ProgrammationEditeur::~ProgrammationEditeur(){

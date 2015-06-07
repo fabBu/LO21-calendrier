@@ -34,7 +34,7 @@ private:
     QCalendarWidget *calendar;
     QSpinBox *dureeTotal_h, *dureeTotal_m, *dureeRestante_h, *dureeRestante_m, *duree_h, *duree_m;
     QTimeEdit *horaire;
-    QPushButton *btn_cancel, *btn_save;
+    QPushButton *btn_cancel, *btn_save, *btn_supprimer;
 
     QHBoxLayout *l_main, *l_titre, *l_desc, *l_type, *l_lieu, *l_horaires, *l_cancelsave, *attributs_layout, *l_calendar, *l_dates, *l_dureeTotale, *l_dureeRestante;
     QVBoxLayout *calendar_layout, *main_layout, *param_layout;
@@ -64,6 +64,7 @@ signals:
     void fermeture();
 private slots:
     void sauvegarder();
+    void supprimer();
     void modifier();
     void modifDureeRestante();
 };
