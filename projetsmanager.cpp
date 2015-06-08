@@ -167,7 +167,7 @@ void ProjetsManager::readXML(QFile& file)
 
           bool preemp, termine;
           Duree dur = Duree();
-          Duree restant = Duree();
+         // Duree restant = Duree();
 
         QDomNode tache = nd.firstChild();
         for ( ; !tache.isNull(); tache = tache.nextSibling() )
@@ -210,21 +210,10 @@ void ProjetsManager::readXML(QFile& file)
                         dur.setHeure( e.toElement().attribute("heures").toInt() );
                         dur.setMinute( e.toElement().attribute("minutes").toInt() );
                     }
-                    if ( e.isElement() && e.toElement().tagName() == "duree_restante" )
-                    {
-                        if(!e.toElement().hasAttribute("jours")
-                                || !e.toElement().hasAttribute("heures")
-                                || !e.toElement().hasAttribute("minutes"))
-                            break;
-
-                        restant.setNbJour( e.toElement().attribute("jours").toInt() );
-                        restant.setHeure( e.toElement().attribute("heures").toInt() );
-                        restant.setMinute( e.toElement().attribute("minutes").toInt() );
-                    }
                 }
 
                 if( type == "unaire" )
-                    getProjet(nomProjet).ajouterTacheUnaire(titre,description,dispo, echeance,dur, restant, preemp);
+                    getProjet(nomProjet).ajouterTacheUnaire(titre,description,dispo, echeance,dur, preemp);
 
                 if( type == "composite" )
                     getProjet(nomProjet).ajouterTacheComposite(titre,description,dispo, echeance);

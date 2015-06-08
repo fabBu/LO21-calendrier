@@ -8,6 +8,7 @@
 #include <QMenuBar>
 #include <QVBoxLayout>
 #include <QString>
+#include <QScrollArea>
 #include "projetediteur.h"
 #include "programmationmanager.h"
 #include "agendaediteur.h"

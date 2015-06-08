@@ -76,8 +76,8 @@ class TacheUnaire : public Tache
     Duree duree_restante;
     bool preemptive; /*!< Définit si la tâche peut être effectuée en plusieurs fois */
 
-    TacheUnaire(TacheManager* p,const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree& dur,const Duree &durestante, bool pree=false):
-            Tache(p, id, desc, dispo, deadline),duree(dur), preemptive(pree), duree_restante(durestante) {
+    TacheUnaire(TacheManager* p,const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree& dur, bool pree=false):
+            Tache(p, id, desc, dispo, deadline),duree(dur), preemptive(pree), duree_restante(dur) {
         if(duree.getDureeEnHeures()>12 && !preemptive)
             throw CalendarException("Une tâche non préemptive ne peut durer plus de 12H");
         if(!verifCoherence(dispo, deadline, dur))

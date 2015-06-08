@@ -15,8 +15,11 @@ MainWindow::MainWindow()
     connect( onglets,SIGNAL(tabCloseRequested(int)),this,SLOT(closeTab(int)) );
     setCentralWidget(onglets);
 
-    chargerProjets("Projets");
-    chargerAgenda("Agenda");
+    try{
+        chargerProjets("Projets");
+        chargerAgenda("Agenda");
+    }catch(CalendarException e)
+    {QMessageBox::warning(this, "Chargement des données", e.getInfo().toStdString().c_str());}
 }
 
 void MainWindow::initMenuBar()

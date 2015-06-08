@@ -37,7 +37,7 @@ public:
     const list<Tache*> getTaches() const { return taches; }
     Tache& getTache(const QString& titre);
     const Tache& getTache(const QString& titre) const;
-    Tache& ajouterTacheUnaire(const QString& t, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree &dur, const Duree &durestante, bool preempt=false);
+    Tache& ajouterTacheUnaire(const QString& t, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree &dur, bool preempt=false);
     Tache& ajouterTacheComposite(const QString& t, const QString& desc, const QDate& dispo, const QDate& deadline);
     void ajouterSousTache(const QString& t, const QString& soust);
     void ajouterPred(const QString& t, const QString& pred);

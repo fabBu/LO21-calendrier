@@ -338,8 +338,8 @@ QString TacheUnaire::TacheToXML(QDomDocument& doc, QDomElement& elem)
     QDomElement dureeElement = addXmlElement( doc, tacheUnaireElement, "duree" );
     duree.writeXmlAttributes(dureeElement);
 
-    QDomElement dureeRestanteElement = addXmlElement( doc, tacheUnaireElement, "duree_restante" );
-    duree_restante.writeXmlAttributes(dureeRestanteElement);
+    //QDomElement dureeRestanteElement = addXmlElement( doc, tacheUnaireElement, "duree_restante" );
+    //duree_restante.writeXmlAttributes(dureeRestanteElement);
 
     return doc.toString();
 }
