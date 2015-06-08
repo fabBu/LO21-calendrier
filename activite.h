@@ -24,8 +24,9 @@ public:
         Reunion, /*!< Réunion */
         Autre /*!< Autre */
     };
-    QString enumToString(Type t);
-    QString enumToString(int i);
+    QString typeToString(Type t);
+    QString typeToString(int i);
+    Type stringToType(const QString& type);
     int getNbEnum();
 };
 

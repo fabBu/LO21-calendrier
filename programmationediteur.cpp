@@ -191,7 +191,7 @@ void ProgrammationEditeur::initType(){
     MetaEnum *m = new MetaEnum();
     int i = m->getNbEnum();
     for (int j=0;j<i;j++){
-        type->addItem(m->enumToString(j));
+        type->addItem(m->typeToString(j));
         if (activite){
             if (activite->getType() == j) {
                 type->setCurrentIndex(j);

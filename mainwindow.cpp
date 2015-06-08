@@ -202,13 +202,15 @@ void MainWindow::chargerAgenda(const QString& dossier)
         QDomNode prog = nd.firstChild();
         for ( ; !prog.isNull(); prog = prog.nextSibling() )
         {
-            /*
-            if ( nd.isElement() && nd.toElement().tagName() == "activite" )
+
+            if ( prog.isElement() && prog.toElement().tagName() == "activite" )
             {
                 QString description;
                 QString lieu;
+                MetaEnum::Type type;
+                MetaEnum *me = new MetaEnum();
 
-                QDomNode prop = nd.firstChild();
+                QDomNode prop = prog.firstChild();
                 for ( ; !prop.isNull(); prop = prop.nextSibling() )
                 {
                   if ( prop.isElement() && prop.toElement().tagName() == "titre" )
@@ -217,6 +219,8 @@ void MainWindow::chargerAgenda(const QString& dossier)
                       description= prop.toElement().text();
                   if ( prop.isElement() && prop.toElement().tagName() == "lieu" )
                       lieu= prop.toElement().text();
+                  if ( prop.isElement() && prop.toElement().tagName() == "type" )
+                      type= me->stringToType( prop.toElement().text() );
 
                   if ( prop.isElement() && prop.toElement().tagName() == "date" )
                       date= QDateTime::fromString(prop.toElement().text());
@@ -236,13 +240,13 @@ void MainWindow::chargerAgenda(const QString& dossier)
 
                 try
                 {
-                      event= new Activite(titre, description,static_cast<MetaEnum::Type>(type->currentIndex()),lieu);
+                      event= new Activite(titre, description, type, lieu);
                       agenda.addProgrammation(date, dur, event );
                 }
                 catch(CalendarException e)
                 { QMessageBox::warning(this, "Chargement programmation activité", e.getInfo()); }
             }
-    */
+
           if ( prog.isElement() && prog.toElement().tagName() == "tache" )
           {
               QString projet;
