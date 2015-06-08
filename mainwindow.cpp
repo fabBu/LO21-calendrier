@@ -200,7 +200,7 @@ void MainWindow::chargerAgenda(const QString& dossier)
     for ( ; !nd.isNull(); nd = nd.nextSibling() )
     {
         QDomNode prog = nd.firstChild();
-        for ( ; !prog.isNull(); prog = nd.nextSibling() )
+        for ( ; !prog.isNull(); prog = prog.nextSibling() )
         {
             /*
             if ( nd.isElement() && nd.toElement().tagName() == "activite" )
