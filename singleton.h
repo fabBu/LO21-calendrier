@@ -6,7 +6,7 @@ template <class T>
 struct Handler
 {
     T* instance;
-    friend class T;
+    //friend T::~T();
 
     Handler(): instance(0) {}
     ~Handler() {if (instance) delete instance;}

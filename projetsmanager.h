@@ -4,6 +4,7 @@
 #include <QString>
 #include <QDate>
 #include "xmlparsor.h"
+#include "singleton.h"
 #include "tachemanager.h"
 
 class ProjetsManager
@@ -29,19 +30,13 @@ public:
     void writeXML(const QString &dossier);
     void readXML(QFile &file);
 private:
+    static Handler<ProjetsManager> handler;
+    friend class Handler<ProjetsManager>;
+
     ProjetsManager(){}
     ~ProjetsManager() {}
     ProjetsManager(const ProjetsManager& p);
     ProjetsManager& operator=(const ProjetsManager& p);
-
-    struct Handler
-    {
-        ProjetsManager *instance;
-
-        Handler(): instance(0) {}
-        ~Handler() {if (instance) delete instance;}
-    };
-    static Handler handler;
 };
 
 #endif // PROJETSMANAGER_H

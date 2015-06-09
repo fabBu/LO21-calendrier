@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <list>
+#include "singleton.h"
 #include "taches.h"
 #include "programmation.h"
 #include "calendar.h"
@@ -23,6 +24,9 @@ public:
     Programmation& getProgrammation(const QDateTime& d);
     const Programmation& getProgrammation(const QDateTime& d)const;
 private:
+    static Handler<ProgrammationManager> handler;
+    friend class Handler<ProgrammationManager>;
+
     list<Programmation*> programmations;
     void addItem(Programmation* p);
     Programmation* findProgrammation(const QDateTime& d) const;
@@ -31,16 +35,6 @@ private:
     ~ProgrammationManager() {}
     ProgrammationManager(const ProgrammationManager& p);
     ProgrammationManager& operator=(const ProgrammationManager& p);
-
-    struct Handler
-    {
-        ProgrammationManager *instance;
-
-        Handler(): instance(0) {}
-        ~Handler() {if (instance) delete instance;}
-    };
-
-    static Handler handler;
 
 public:
     static ProgrammationManager& getInstance();
