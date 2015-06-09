@@ -39,8 +39,10 @@ void MainWindow::initMenuBar()
     QMenu* menu_projets = menubar->addMenu("Projets");
     QAction *menu_projets_creer = menu_projets->addAction("Créer projet");
     menu_projets_creer->setShortcut(QKeySequence::New);
-    QAction *menu_projets_ouvrir = menu_projets->addAction("Ouvrir projet");
     connect(menu_projets_creer, SIGNAL(triggered(bool)), this, SLOT(creerProjet()));
+
+    QAction *menu_projets_ouvrir = menu_projets->addAction("Ouvrir projet");
+    menu_projets_ouvrir->setShortcut(QKeySequence::Open);
     connect(menu_projets_ouvrir, SIGNAL(triggered(bool)), this, SLOT(ouvrirProjet()));
 
     setMenuBar(menubar);

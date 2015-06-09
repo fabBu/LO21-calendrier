@@ -6,7 +6,7 @@ AgendaEditeur::AgendaEditeur(QWidget *parent) : QWidget(parent), manager(Program
     setWindowTitle("Programmation d'un événement");
     setFixedSize(1334,800);
 
-    QShortcut* shortcut = new QShortcut(QKeySequence(QKeySequence::Open),this,SLOT(ajouterProgrammation()));
+    QShortcut* shortcut = new QShortcut(QKeySequence(QKeySequence::InsertParagraphSeparator),this,SLOT(ajouterProgrammation()));
 
     semaine_layout = new QGridLayout;
 
