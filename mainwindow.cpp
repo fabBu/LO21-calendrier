@@ -15,21 +15,34 @@ MainWindow::MainWindow()
     connect( onglets,SIGNAL(tabCloseRequested(int)),this,SLOT(closeTab(int)) );
     setCentralWidget(onglets);
 
-    chargerProjets("Projets");
+    try{
+        chargerProjets("Projets");
+        chargerAgenda("Agenda");
+    }catch(CalendarException e)
+    {QMessageBox::warning(this, "Chargement des données", e.getInfo().toStdString().c_str());}
 }
 
 void MainWindow::initMenuBar()
 {
     menubar = new QMenuBar(this);
 
+    QMenu* menu_fichier = menubar->addMenu("Fichier");
+    QAction *menu_fichier_save = menu_fichier->addAction("&Sauvegarder");
+    menu_fichier_save->setShortcut(QKeySequence::Save);
+    connect(menu_fichier_save, SIGNAL(triggered(bool)), this, SLOT(save()));
+
     QMenu* menu_agenda = menubar->addMenu("Agenda");
     QAction *menu_agenda_ouvrir = menu_agenda->addAction("Ouvrir l'agenda");
+    menu_agenda_ouvrir->setShortcut(QKeySequence::AddTab);
     connect(menu_agenda_ouvrir, SIGNAL(triggered(bool)), this, SLOT(ouvrirAgenda()));
 
     QMenu* menu_projets = menubar->addMenu("Projets");
     QAction *menu_projets_creer = menu_projets->addAction("Créer projet");
-    QAction *menu_projets_ouvrir = menu_projets->addAction("Ouvrir projet");
+    menu_projets_creer->setShortcut(QKeySequence::New);
     connect(menu_projets_creer, SIGNAL(triggered(bool)), this, SLOT(creerProjet()));
+
+    QAction *menu_projets_ouvrir = menu_projets->addAction("Ouvrir projet");
+    menu_projets_ouvrir->setShortcut(QKeySequence::Open);
     connect(menu_projets_ouvrir, SIGNAL(triggered(bool)), this, SLOT(ouvrirProjet()));
 
     setMenuBar(menubar);
@@ -147,9 +160,17 @@ void MainWindow::closeTab(int index)
     onglets->removeTab(index);
 }
 
+void MainWindow::save()
+{
+    projets.writeXML("Projets");
+    agenda.writeXML("Agenda");
+}
+
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-      projets.writeXML("Projets");
+    save();
+      //projets.writeXML("Projets");
+      //agenda.writeXML("Agenda");
 }
 
 void MainWindow::chargerProjets(const QString& dossier)
@@ -163,4 +184,120 @@ void MainWindow::chargerProjets(const QString& dossier)
         QFile file(dossier+"\\"+(*it));
         projets.readXML(file);
     }
+}
+
+void MainWindow::chargerAgenda(const QString& dossier)
+{
+    QFile file(dossier+"\\programmations.xml");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+
+    QDomDocument doc;
+    if (!doc.setContent(&file)) {
+        file.close();
+        return;
+    }
+    file.close();
+
+    QDomElement agendaElement = doc.namedItem("agenda").toElement();
+    if ( agendaElement.isNull() ) {
+      qWarning() << "No <agenda> element found at the top-level "
+                 << "of the XML file!";
+      return;
+    }
+
+    Evenement* event;
+    QString titre;
+    QDateTime date;
+    Duree dur = Duree();
+
+    // Parcourir les programmations pour les charger
+    QDomNode nd = agendaElement.firstChild();
+    for ( ; !nd.isNull(); nd = nd.nextSibling() )
+    {
+        QDomNode prog = nd.firstChild();
+        for ( ; !prog.isNull(); prog = prog.nextSibling() )
+        {
+
+            if ( prog.isElement() && prog.toElement().tagName() == "activite" )
+            {
+                QString description;
+                QString lieu;
+                MetaEnum::Type type;
+                MetaEnum *me = new MetaEnum();
+
+                QDomNode prop = prog.firstChild();
+                for ( ; !prop.isNull(); prop = prop.nextSibling() )
+                {
+                  if ( prop.isElement() && prop.toElement().tagName() == "titre" )
+                      titre= prop.toElement().text();
+                  if ( prop.isElement() && prop.toElement().tagName() == "description" )
+                      description= prop.toElement().text();
+                  if ( prop.isElement() && prop.toElement().tagName() == "lieu" )
+                      lieu= prop.toElement().text();
+                  if ( prop.isElement() && prop.toElement().tagName() == "type" )
+                      type= me->stringToType( prop.toElement().text() );
+
+                  if ( prop.isElement() && prop.toElement().tagName() == "date" )
+                      date= QDateTime::fromString(prop.toElement().text());
+
+                  if ( prop.isElement() && prop.toElement().tagName() == "duree" )
+                  {
+                      if(!prop.toElement().hasAttribute("jours")
+                              || !prop.toElement().hasAttribute("heures")
+                              || !prop.toElement().hasAttribute("minutes"))
+                          break;
+
+                      dur.setNbJour( prop.toElement().attribute("jours").toInt() );
+                      dur.setHeure( prop.toElement().attribute("heures").toInt() );
+                      dur.setMinute( prop.toElement().attribute("minutes").toInt() );
+                  }
+                }
+
+                try
+                {
+                      event= new Activite(titre, description, type, lieu);
+                      agenda.addProgrammation(date, dur, event );
+                }
+                catch(CalendarException e)
+                { QMessageBox::warning(this, "Chargement programmation activité", e.getInfo()); }
+            }
+
+          if ( prog.isElement() && prog.toElement().tagName() == "tache" )
+          {
+              QString projet;
+              QDomNode prop = prog.firstChild();
+              for ( ; !prop.isNull(); prop = prop.nextSibling() )
+              {
+                if ( prop.isElement() && prop.toElement().tagName() == "projet" )
+                    projet= prop.toElement().text();
+                if ( prop.isElement() && prop.toElement().tagName() == "titre" )
+                    titre= prop.toElement().text();
+
+                if ( prop.isElement() && prop.toElement().tagName() == "date" )
+                    date= QDateTime::fromString(prop.toElement().text());
+
+                if ( prop.isElement() && prop.toElement().tagName() == "duree" )
+                {
+                    if(!prop.toElement().hasAttribute("jours")
+                            || !prop.toElement().hasAttribute("heures")
+                            || !prop.toElement().hasAttribute("minutes"))
+                        break;
+
+                    dur.setNbJour( prop.toElement().attribute("jours").toInt() );
+                    dur.setHeure( prop.toElement().attribute("heures").toInt() );
+                    dur.setMinute( prop.toElement().attribute("minutes").toInt() );
+                }
+              }
+
+              try
+              {
+                    event= &projets.getProjet(projet).getTache(titre);
+                    agenda.addProgrammation(date, dur, event );
+              }
+              catch(CalendarException e)
+              { QMessageBox::warning(this, "Chargement programmation tâche", e.getInfo()); }
+          }
+        }
+     }
 }

@@ -1,6 +1,7 @@
 #ifndef ACTIVITE_H
 #define ACTIVITE_H
 
+#include "xmlparsor.h"
 #include "evenement.h"
 #include <iostream>
 #include <QMetaEnum>
@@ -23,8 +24,9 @@ public:
         Reunion, /*!< Réunion */
         Autre /*!< Autre */
     };
-    QString enumToString(Type t);
-    QString enumToString(int i);
+    QString typeToString(Type t);
+    QString typeToString(int i);
+    Type stringToType(const QString& type);
     int getNbEnum();
 };
 
@@ -77,6 +79,8 @@ public:
      * \brief Affichage en mode console
      */
     void affiche();
+
+    QString ActiviteToXML(QDomDocument& doc, QDomElement& elem);
 };
 
 #endif // ACTIVITE_H

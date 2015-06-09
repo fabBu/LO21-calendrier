@@ -7,6 +7,8 @@
 #include "xmlparsor.h"
 #include "calendar.h"
 #include "evenement.h"
+#include "tachemanager.h"
+
 using namespace std;
 
 
@@ -24,8 +26,10 @@ protected:
 
     Tache* surtache; ///    TODO : il faudrait un TacheComposite*
 
-    Tache(const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline):
-            Evenement(id, desc),disponibilite(dispo),echeance(deadline), surtache(0), termine(false){ if(disponibilite>echeance) throw CalendarException("Echeance < Disponibilité"); }
+    TacheManager* parent;
+
+    Tache(TacheManager* p, const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline):
+            Evenement(id, desc),parent(p),disponibilite(dispo),echeance(deadline), surtache(0), termine(false){ if(disponibilite>echeance) throw CalendarException("Echeance < Disponibilité"); }
 
     friend class TacheManager;
 
@@ -36,7 +40,7 @@ public:
     QDate getDateEcheance() const {  return echeance; }
     void setDatesDisponibiliteEcheance(const QDate& disp, const QDate& e);
     virtual void affiche();
-    const bool estTermine() const { return termine; }
+    estTermine() const { return termine; }
     void setTermine(bool val);
 
     const list<Tache*> getPred() const { return predecesseurs; }
@@ -49,6 +53,7 @@ public:
     const list<Tache*> getSucc() const { return successeurs; }
     Tache* getSurtache() const { return surtache; }
     void setSurtache(Tache* t) { surtache=t; }   // TODO : Doit être TacheComposite*
+    const TacheManager* const getParent() const { return parent; }
 
     bool operator==(const Tache& t) { return titre == t.getTitre(); }
 private:
@@ -71,8 +76,8 @@ class TacheUnaire : public Tache
     Duree duree_restante;
     bool preemptive; /*!< Définit si la tâche peut être effectuée en plusieurs fois */
 
-    TacheUnaire(const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree& dur,const Duree &durestante, bool pree=false):
-            Tache(id, desc, dispo, deadline),duree(dur), preemptive(pree), duree_restante(durestante) {
+    TacheUnaire(TacheManager* p,const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline, const Duree& dur, bool pree=false):
+            Tache(p, id, desc, dispo, deadline),duree(dur), preemptive(pree), duree_restante(dur) {
         if(duree.getDureeEnHeures()>12 && !preemptive)
             throw CalendarException("Une tâche non préemptive ne peut durer plus de 12H");
         if(!verifCoherence(dispo, deadline, dur))
@@ -107,8 +112,8 @@ class TacheComposite : public Tache
 {friend class TacheManager;
     list<Tache*> soustaches; /*!< Ensemble des sous-tâches */
 
-    TacheComposite(const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline):
-            Tache(id, desc, dispo, deadline) {}
+    TacheComposite(TacheManager* p, const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline):
+            Tache(p,id, desc, dispo, deadline) {}
 public:
     void verifTermine();
     const list<Tache*> getSousTaches() const { return soustaches; }

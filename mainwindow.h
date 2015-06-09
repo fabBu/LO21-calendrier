@@ -2,12 +2,14 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QShortcut>
 #include <QInputDialog>
 #include <QWidget>
 #include <QTabWidget>
 #include <QMenuBar>
 #include <QVBoxLayout>
 #include <QString>
+#include <QScrollArea>
 #include "projetediteur.h"
 #include "programmationmanager.h"
 #include "agendaediteur.h"
@@ -30,6 +32,7 @@ class MainWindow : public QMainWindow
 
     void initMenuBar();
     void chargerProjets(const QString &dossier);
+    void chargerAgenda(const QString& dossier);
 
     ProjetEditeur* getProjetEdit(const QString nom);
     bool estOuvert(const QString nom) { return getProjetEdit(nom)!=0;  }
@@ -42,6 +45,7 @@ private slots:
     void ouvrirProjet();
     void fermerProjet(const QString nom);
     void closeTab(int index);
+    void save();
 
 protected:
      void closeEvent(QCloseEvent *event);

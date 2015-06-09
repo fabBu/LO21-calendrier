@@ -4,6 +4,15 @@
 
 
 
+void Duree::writeXmlAttributes(QDomElement elem)
+{
+    elem.setAttribute("jours", getNbJour());
+    elem.setAttribute("heures", getHeure());
+    elem.setAttribute("minutes", getMinute());
+}
+
+
+
 std::ostream& operator<<(std::ostream& f, const Duree & d){ d.afficher(f); return f; }
 
 

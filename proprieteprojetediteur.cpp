@@ -3,9 +3,15 @@
 ProprieteProjetEditeur::ProprieteProjetEditeur(QWidget *pa, const QString& proj):parent(pa), projets(ProjetsManager::getInstance())
 {
     projet=0;
-    if( proj != "") projet=&projets.getProjet(proj);
+    if( proj != "")
+    {
+        projet=&projets.getProjet(proj);
+        setWindowTitle("Propriétés "+proj);
+    }
+    else
+        setWindowTitle("Nouveau Projet");
 
-    setWindowTitle("Propriétés");
+
 
     main_layout = new QGridLayout(this);
 
