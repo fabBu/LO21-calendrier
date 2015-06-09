@@ -26,12 +26,19 @@ void MainWindow::initMenuBar()
 {
     menubar = new QMenuBar(this);
 
+    QMenu* menu_fichier = menubar->addMenu("Fichier");
+    QAction *menu_fichier_save = menu_fichier->addAction("&Sauvegarder");
+    menu_fichier_save->setShortcut(QKeySequence::Save);
+    connect(menu_fichier_save, SIGNAL(triggered(bool)), this, SLOT(save()));
+
     QMenu* menu_agenda = menubar->addMenu("Agenda");
     QAction *menu_agenda_ouvrir = menu_agenda->addAction("Ouvrir l'agenda");
+    menu_agenda_ouvrir->setShortcut(QKeySequence::AddTab);
     connect(menu_agenda_ouvrir, SIGNAL(triggered(bool)), this, SLOT(ouvrirAgenda()));
 
     QMenu* menu_projets = menubar->addMenu("Projets");
     QAction *menu_projets_creer = menu_projets->addAction("Créer projet");
+    menu_projets_creer->setShortcut(QKeySequence::New);
     QAction *menu_projets_ouvrir = menu_projets->addAction("Ouvrir projet");
     connect(menu_projets_creer, SIGNAL(triggered(bool)), this, SLOT(creerProjet()));
     connect(menu_projets_ouvrir, SIGNAL(triggered(bool)), this, SLOT(ouvrirProjet()));
@@ -151,10 +158,17 @@ void MainWindow::closeTab(int index)
     onglets->removeTab(index);
 }
 
+void MainWindow::save()
+{
+    projets.writeXML("Projets");
+    agenda.writeXML("Agenda");
+}
+
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-      projets.writeXML("Projets");
-      agenda.writeXML("Agenda");
+    save();
+      //projets.writeXML("Projets");
+      //agenda.writeXML("Agenda");
 }
 
 void MainWindow::chargerProjets(const QString& dossier)

@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QShortcut>
 #include <QInputDialog>
 #include <QWidget>
 #include <QTabWidget>
@@ -44,6 +45,7 @@ private slots:
     void ouvrirProjet();
     void fermerProjet(const QString nom);
     void closeTab(int index);
+    void save();
 
 protected:
      void closeEvent(QCloseEvent *event);

@@ -2,6 +2,7 @@
 #define AGENDAEDITEUR_H
 
 #include <QObject>
+#include <QShortcut>
 #include <QWidget>
 #include <QGridLayout>
 #include <QLabel>
