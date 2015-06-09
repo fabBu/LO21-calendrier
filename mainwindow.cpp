@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 
 MainWindow::MainWindow()
     :projets(ProjetsManager::getInstance()), agenda(ProgrammationManager::getInstance()), agenda_ouvert(0)
@@ -7,13 +7,19 @@ MainWindow::MainWindow()
     setMinimumHeight(700);
     setMinimumWidth(850);
 
+    // Initialisation de la barre des menus
     initMenuBar();
 
+    // Initialisation du QTabWidget onglet: propriétés et connection signal/slot
     onglets = new QTabWidget(this);
     onglets->setTabsClosable(true);
     onglets->setMovable(true);
     connect( onglets,SIGNAL(tabCloseRequested(int)),this,SLOT(closeTab(int)) );
+
+    // Mettre le QTabWidget comme étant l'élément principal de la fenêtre
     setCentralWidget(onglets);
+
+    QShortcut* shortcut = new QShortcut(QKeySequence("Ctrl+W"),this, SLOT(closeCurrentTab()));
 
     try{
         chargerProjets("Projets");
@@ -62,7 +68,7 @@ ProjetEditeur* MainWindow::getProjetEdit(const QString nom)
 void MainWindow::ouvrirAgenda()
 {
 
-    if(agenda_ouvert)
+    if(agenda_ouvert)               // Passer l'agenda comme onglet courant s'il a déjà été ouvert
         onglets->setCurrentWidget( agenda_ouvert );
     else
     {
@@ -83,6 +89,7 @@ void MainWindow::creerProjet()
 void MainWindow::ouvrirProjet()
 {
     const std::list<TacheManager*> liste_projets = projets.getProjets();
+    // S'il n'existe aucun projet, proposer d'en créer un
     if( liste_projets.size() == 0 )
     {
         QMessageBox::StandardButton reply;
@@ -102,11 +109,14 @@ void MainWindow::ouvrirProjet()
     }
     else
     {
+        // Cas où tous les projets sont ouverts
         if( liste_projets.size() == projets_ouverts.size() )
         {
             QMessageBox::warning(this, "Ouverture projet", "Tous les projets sont ouverts");
             return;
         }
+
+        // Ajout de tous les projets qui ne sont pas encore ouverts dans la liste de choix
         QStringList l_projets;
         for(std::list<TacheManager*>::const_iterator it=liste_projets.begin() ; it!=liste_projets.end() ; ++it)
         {
@@ -140,7 +150,8 @@ void MainWindow::fermerProjet(const QString nom)
     if( pe )
     {
         // Retirer le projet de la liste des ProjetEditeur ouverts puis des onglets
-        projets_ouverts.erase( std::remove(projets_ouverts.begin(), projets_ouverts.end(), pe), projets_ouverts.end() );
+        //projets_ouverts.erase( std::remove(projets_ouverts.begin(), projets_ouverts.end(), pe), projets_ouverts.end() );
+        projets_ouverts.remove(pe);
         onglets->removeTab( onglets->indexOf(pe) );
     }
 }
@@ -160,17 +171,22 @@ void MainWindow::closeTab(int index)
     onglets->removeTab(index);
 }
 
+void MainWindow::closeCurrentTab()
+{
+    closeTab(onglets->currentIndex());
+}
+
 void MainWindow::save()
 {
     projets.writeXML("Projets");
     agenda.writeXML("Agenda");
+    projets.libererInstance();
+    agenda.libererInstance();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     save();
-      //projets.writeXML("Projets");
-      //agenda.writeXML("Agenda");
 }
 
 void MainWindow::chargerProjets(const QString& dossier)

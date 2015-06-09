@@ -1,5 +1,4 @@
 #include "projetediteur.h"
-#include "programmationediteur.h"
 
 #include <QDebug>
 
@@ -16,32 +15,35 @@ ProjetEditeur::ProjetEditeur(TacheManager &tm1, QWidget *p):tm(tm1),parent(p)
 
     /// ---- Arbre des tâches ---- ///
     taches = new QTreeWidget(this);
-    //taches->setFixedSize(450, 300);
     taches->setHeaderLabels(QStringList()<<"Tâches"<<"Prédécesseurs"<<"Description");
     chargerTaches();
     main_layout->addWidget(taches, 1, 0, 4, 1);
-    connect(taches, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(getTacheCourante(QTreeWidgetItem*,int)));
+    connect(taches, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(getTacheCourante(QTreeWidgetItem*)));
 
 
     /// ---- Ajout des boutons de gestion d'une tâche ---- ///
     grp_modification = new QGroupBox("Tâche courante");
     l_existante = new QVBoxLayout();
 
+    // Initialisation du bouton modifier tâche
     modifier_tache = new QPushButton(this);
     modifier_tache->setText("Modifier");
     modifier_tache->setEnabled(false);
     l_existante->addWidget(modifier_tache);
 
+    // Initialisation du bouton supprimer tâche
     supprimer_tache = new QPushButton(this);
     supprimer_tache->setText("Supprimer");
     supprimer_tache->setEnabled(false);
     l_existante->addWidget(supprimer_tache);
 
+    // Initialisation du bouton programmer tâche
     programmer = new QPushButton(this);
     programmer->setText("Programmer");
     programmer->setHidden(true);
     l_existante->addWidget(programmer);
 
+    // Initialisation de l'indicateur "terminé" de la tâche
     termine = new QCheckBox(this);
     termine->setText("Terminée");
     termine->setChecked(false);
@@ -59,10 +61,12 @@ ProjetEditeur::ProjetEditeur(TacheManager &tm1, QWidget *p):tm(tm1),parent(p)
     grp_nouvelle = new QGroupBox("Nouvelle tâche");
     l_nouvelle = new QVBoxLayout();
 
+    // Initialisation du bouton création de tâche unaire
     ajouter_unaire = new QPushButton(this);
     ajouter_unaire->setText("Ajout tâche unaire");
     l_nouvelle->addWidget(ajouter_unaire);
 
+    // Initialisation du bouton création de tâche composite
     ajouter_composite = new QPushButton(this);
     ajouter_composite->setText("Ajout tâche composite");   
     l_nouvelle->addWidget(ajouter_composite);
@@ -112,11 +116,13 @@ void ProjetEditeur::chargerTaches()
     list<Tache*> l = tm.getTaches();
     for( list<Tache*>::const_iterator it = l.begin() ; it != l.end() ; ++it )
     {
+        // Ajout d'un item correspondant à la tâche avec son titre, ses prédécesseurs et le début de sa description
         QTreeWidgetItem* item = new QTreeWidgetItem;
         item->setText(0, (*it)->getTitre());
         item->setText(1, (*it)->getPredString());
         item->setText(2, (*it)->getDescription().mid(0, 100)+"...");
 
+        // Chargement des sous-niveaux dans le cas d'une tâche composite
         TacheComposite* tc = dynamic_cast<TacheComposite*>( (*it) );
         chargerSousTaches(item, &l, tc);
 
@@ -131,12 +137,14 @@ void ProjetEditeur::chargerSousTaches(QTreeWidgetItem* item, list<Tache*> *l, Ta
         const list<Tache*> soust = (tc)->getSousTaches();
         for( list<Tache*>::const_iterator it_soust = soust.begin() ; it_soust != soust.end() ; ++it_soust )
         {
+            // Ajout d'un item correspondant à la tâche avec son titre, ses prédécesseurs et le début de sa description
             QTreeWidgetItem* sous_item = new QTreeWidgetItem;
             sous_item->setText(0, (*it_soust)->getTitre());
             sous_item->setText(1, (*it_soust)->getPredString());
             sous_item->setText(2, (*it_soust)->getDescription().mid(0, 100)+"...");
             item->addChild(sous_item);
 
+            // Chargement des sous-niveaux dans le cas d'une tâche composite
             TacheComposite* tc2 = dynamic_cast<TacheComposite*>( (*it_soust) );
             chargerSousTaches(sous_item, l, tc2);
 
@@ -167,6 +175,7 @@ void ProjetEditeur::modifierProjet()
 
 void ProjetEditeur::supprimerProjet()
 {
+    // Demande de confirmation
     QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, "Suppression",
                                   "Voulez-vous vraiment supprimer le projet "+tm.getNom()+" ?\n\nToutes ses tâches seront également perdues",
@@ -211,7 +220,7 @@ void ProjetEditeur::ajouterTache()
     te->show();
 }
 
-void ProjetEditeur::getTacheCourante(QTreeWidgetItem* item,int c)
+void ProjetEditeur::getTacheCourante(QTreeWidgetItem* item)//,int c)
 {
     tache_courante = item->text(0);
     modifier_tache->setEnabled(true);
