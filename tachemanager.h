@@ -7,7 +7,7 @@
 #include <QDebug>
 #include "xmlparsor.h"
 #include "calendar.h"
-//#include "taches.h"
+
 class Tache; //Cyclic Dependency
 using namespace std;
 

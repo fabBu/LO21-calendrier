@@ -1,6 +1,6 @@
 #include "programmationmanager.h"
 
-ProgrammationManager::Handler ProgrammationManager::handler=ProgrammationManager::Handler();
+Handler<ProgrammationManager> ProgrammationManager::handler=Handler<ProgrammationManager>();
 
 void ProgrammationManager::addItem(Programmation* p){
     if (!isFree(p->getDate(),p->getDuree()))

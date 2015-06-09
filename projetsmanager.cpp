@@ -1,6 +1,6 @@
 #include "projetsmanager.h"
 
-ProjetsManager::Handler ProjetsManager::handler=ProjetsManager::Handler();
+Handler<ProjetsManager> ProjetsManager::handler=Handler<ProjetsManager>();
 
 ProjetsManager& ProjetsManager::getInstance()
 {
