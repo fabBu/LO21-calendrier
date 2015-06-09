@@ -1,5 +1,5 @@
 ﻿#include "taches.h"
-
+#include <typeinfo>
 
 
 //              ---------   Tache   ---------              //
@@ -27,16 +27,18 @@ void Tache::affiche()
 
 void Tache::setTermine(bool val)
 {
+    termine=val;
+
     if( !val )
     {
         for( list<Tache*>::const_iterator it = successeurs.begin() ; it != successeurs.end() ; ++it )
-            setTermine(false);
+            (*it)->setTermine(false);
     }
 
-    if(surtache)
-        dynamic_cast<TacheComposite*>(surtache)->verifTermine();
-
-    termine=val;
+    if(surtache!=0)
+    {
+        surtache->verifTermine();
+    }
 }
 
 const Tache* Tache::getLastPredecesseur() const
@@ -225,6 +227,7 @@ void TacheComposite::verifTermine()
             break;
         }
     }
+
     setTermine(tmp);
 }
 

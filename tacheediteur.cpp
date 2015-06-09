@@ -496,7 +496,6 @@ void TacheEditeur::sauvegarder()
                     {
                         tu->setPreemptive(preemp->isChecked());
                         tu->setDuree(dur);
-                        tu->setDureeRestante(dur);
                     }
                 }
             }

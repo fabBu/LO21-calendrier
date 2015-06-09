@@ -14,6 +14,7 @@ using namespace std;
 
 enum Statut { enCours, pause, fini };
 
+class TacheComposite;
 class Tache : public Evenement {
 protected:
     QDate disponibilite; /*!< Date à laquelle la tâche peut commencer */
@@ -24,7 +25,7 @@ protected:
     list<Tache*> predecesseurs; /*!< Liste des tâches devant être² effectuées avant la tâche */
     list<Tache*> successeurs;
 
-    Tache* surtache; ///    TODO : il faudrait un TacheComposite*
+    TacheComposite* surtache; ///    TODO : il faudrait un TacheComposite*
 
     TacheManager* parent;
 
@@ -51,8 +52,8 @@ public:
     void ajouterPredecesseur(Tache& t);
     void retirerPredecesseur(Tache& t);
     const list<Tache*> getSucc() const { return successeurs; }
-    Tache* getSurtache() const { return surtache; }
-    void setSurtache(Tache* t) { surtache=t; }   // TODO : Doit être TacheComposite*
+    TacheComposite* getSurtache() const { return surtache; }
+    void setSurtache(TacheComposite* t) { surtache=t; }   // TODO : Doit être TacheComposite*
     const TacheManager* const getParent() const { return parent; }
 
     bool operator==(const Tache& t) { return titre == t.getTitre(); }
