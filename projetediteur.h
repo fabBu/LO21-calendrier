@@ -11,6 +11,7 @@
 #include "projetsmanager.h"
 #include "proprieteprojetediteur.h"
 #include "tacheediteur.h"
+#include "programmationediteur.h"
 
 class ProjetEditeur : public QWidget {
 private:
@@ -25,30 +26,108 @@ private:
     QHBoxLayout *l_proprietes;
     QLabel *debut_label, *debut_date, *fin_label, *fin_date;
 
-    QWidget* parent;
-    TacheManager& tm;
-    QString tache_courante;
+    QWidget* parent; /**< QWidget parent de l'éditeur */
+    TacheManager& tm; /**< Référence sur le projet en cours d'édition */
+    QString tache_courante; /**< Titre de la tâche courante dans l'arbre des tâches du projet */
 
-    QGroupBox* initProprietes();
+
+    QGroupBox* initProprietes(); /**< Initialise la vue des propriétés du projet */
+
+    /*!
+     * \brief Chargement de l'arbre des tâches du projet
+     *
+     * Remplit le QTreeWidget \a taches avec l'ensemble des tâches du projet.
+     * A chacune des tâches sont rattachés l'ensemble de ses prédécesseurs et le début de sa description.
+     */
     void chargerTaches();
+    /*!
+     * \brief Permet l'affichage des sous-tâches dans des sous-niveaux
+     *
+     * Est utilisée par chargerTaches()
+     *
+     * \param item Item de l'arbre dans lequel ajouter des sous-éléments
+     * \param l Liste des tâches du projet. Permet d'éviter les doublons dans l'arbre
+     * \param tc Tâche pour laquelle charger les sous-tâches
+     */
     void chargerSousTaches(QTreeWidgetItem* item, list<Tache *> *l, TacheComposite* tc );
 public:
+    /*!
+     * \brief Editeur de projet premettant la gestion d'un projet ainsi que ses tâches
+     *
+     *  ProjetEditeur permet l'affichage et la gestion d'un projet et de ses tâches.
+     * Une ligne est dédiée aux informations du projet (nom et intervalle de dates) avec possibilité de modifier ou supprimer le projet.
+     * Vue en arbre via QTreeWidget pour la visualisation de l'ensemble des tâches et boutons d'ajout/modification/suppression d'une tâche.
+     *
+     * \param tm1 projet à éditer
+     * \param p QWidget parent
+     */
     ProjetEditeur(TacheManager& tm1, QWidget* p=0);
+    /*!
+     * \brief Getter nom du projet
+     * \return nom du projet
+     */
     const QString& getNom() const { return tm.getNom(); }
 
 private slots:
+    /*!
+     * \brief Permet la modification des propriétés du projet
+     *
+     * Ouvre un ProprieteProjetEditeur avec le TacheManager courant.
+     */
     void modifierProjet();
+    /*!
+     * \brief Permet la suppression du projet
+     */
     void supprimerProjet();
-    void getTacheCourante(QTreeWidgetItem *item, int c);
+    /*!
+     * \brief Récupère la tâche courante selon le clic sur le QTreeWidget
+     *
+     * Permet de récupérer le titre de la tâche choisie dans le QTreeWidget afin de modifier l'interface en conséquence.
+     *
+     * \param item Element cliqué sur le QTreeWidget
+     */
+    void getTacheCourante(QTreeWidgetItem *item);
+    /*!
+     * \brief Demande d'ajout d'une nouvelle tâche dans le projet
+     *
+     * Ouvre un TacheEditeur vide afin de créer une tâche pour le projet.
+     */
     void ajouterTache();
+    /*!
+     * \brief Demande de modification d'une tâche du projet
+     *
+     * Ouvre un TacheEditeur avec la tâche courante afin de modifier ses propriétés.
+     */
     void modifierTache();
+    /*!
+     * \brief Suppression de la tâche courante
+     */
     void supprimerTache();
+    /*!
+     * \brief Demande de programmation de la tâche courante
+     *
+     * Ouvre un ProgrammationEditeur avec la tâche courante afin de la programmer dans l'agenda.
+     */
     void programmerTache();
+    /*!
+     * \brief Refresh de la vue des tâches
+     *
+     * Appelle chargerTaches()
+     */
     void refresh_taches();
+    /*!
+     * \brief Refresh des propriétés du projet
+     *
+     * Utilise initProprietes()
+     */
     void refresh_projet();
 
 signals:
-    void fermeture(const QString);
+    /*!
+     * \brief Signal de fermeture de l'éditeur
+     * \param nom Nom du projet
+     */
+    void fermeture(const QString nom);
 };
 
 

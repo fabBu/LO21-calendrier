@@ -18,8 +18,9 @@ ProprieteProjetEditeur::ProprieteProjetEditeur(QWidget *pa, const QString& proj)
     /// ---- NOM DU PROJET ---- ///
     nom_label = new QLabel("Nom: ");
     nom_edit = new QLineEdit(this);
-    if( projet )
-        nom_edit->setText(projet->getNom());
+    // Initialisation du champ nom_edit avec le nom du projet dans le cas d'une édition
+    if( projet ) nom_edit->setText(projet->getNom());
+
     main_layout->addWidget(nom_label,0,0);
     main_layout->addWidget(nom_edit, 0,1);
 
@@ -27,9 +28,9 @@ ProprieteProjetEditeur::ProprieteProjetEditeur(QWidget *pa, const QString& proj)
     debut_label= new QLabel("Début: ");
     debut_date = new QDateEdit(this);
     if(projet)
-        debut_date->setDate(projet->getDebut());
+        debut_date->setDate(projet->getDebut());    // Initialisation du champ avec le début du projet dans le cas d'une édition
     else
-        debut_date->setDate(QDate::currentDate());
+        debut_date->setDate(QDate::currentDate());  // Initialisation avec la date courante sinon
     debut_date->setCalendarPopup(true);
     main_layout->addWidget(debut_label, 1,0);
     main_layout->addWidget(debut_date, 1,1);
@@ -38,9 +39,9 @@ ProprieteProjetEditeur::ProprieteProjetEditeur(QWidget *pa, const QString& proj)
     fin_label= new QLabel("Fin: ");
     fin_date = new QDateEdit(this);
     if(projet)
-        fin_date->setDate(projet->getFin());
+        fin_date->setDate(projet->getFin());   // Initialisation du champ avec la fin du projet dans le cas d'une édition
     else
-        fin_date->setDate(QDate::currentDate());
+        fin_date->setDate(QDate::currentDate()); // Initialisation avec la date courante sinon
     fin_date->setCalendarPopup(true);
     main_layout->addWidget(fin_label, 2,0);
     main_layout->addWidget(fin_date, 2,1);
@@ -51,8 +52,8 @@ ProprieteProjetEditeur::ProprieteProjetEditeur(QWidget *pa, const QString& proj)
     main_layout->addWidget(sauvegarder, 3,0);
     main_layout->addWidget(annuler, 3,1);
 
-    if(projet) connect(sauvegarder, SIGNAL(clicked(bool)), this, SLOT(modifierProjet()));
-    else        connect(sauvegarder, SIGNAL(clicked(bool)), this, SLOT(creerProjet()));
+    if(projet) connect(sauvegarder, SIGNAL(clicked(bool)), this, SLOT(modifierProjet()));  // Appel de modifierProjet() sur clic de "OK" si édition de projet
+    else        connect(sauvegarder, SIGNAL(clicked(bool)), this, SLOT(creerProjet()));  // Appel de creerProjet() sur clic de "OK" si nouveau projet
     connect(annuler, SIGNAL(clicked(bool)), this, SLOT(refresh()));
 
 }
@@ -88,7 +89,7 @@ void ProprieteProjetEditeur::modifierProjet()
         close();
     }
     catch(CalendarException e)
-    { QMessageBox::warning(this, "Création de projet", e.getInfo()); }
+    { QMessageBox::warning(this, "Modification de projet", e.getInfo()); }
 }
 
 void ProprieteProjetEditeur::refresh()
