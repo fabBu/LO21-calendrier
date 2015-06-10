@@ -169,7 +169,7 @@ void TacheEditeur::initDates(bool unaire)
         duree_h->setMinimum(0);
         duree_m->setMinimum(0);
         duree_h->setMaximum(1000);
-        duree_m->setMaximum(59);
+        duree_m->setMaximum(45);
         duree_m->setSingleStep(15);
 
         unsigned int heures;
