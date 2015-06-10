@@ -15,7 +15,9 @@ using namespace std;
 enum Statut { enCours, pause, fini };
 
 class TacheComposite;
+
 class Tache : public Evenement {
+    Q_OBJECT
 protected:
     QDate disponibilite; /*!< Date à laquelle la tâche peut commencer */
     QDate echeance; /*!< Date à laquelle la tâche doit être finie */
@@ -57,9 +59,19 @@ public:
     const TacheManager* const getParent() const { return parent; }
 
     bool operator==(const Tache& t) { return titre == t.getTitre(); }
+
+    virtual ~Tache();
 private:
     Tache(const Tache& t);
     Tache& operator=(const Tache&);
+
+signals:
+    /*!
+     * \brief Signal de suppression de la tâche
+     * \param t Pointeur sur la tâche
+     */
+    void estSupprime(const Tache& t);
+
 };
 
 QTextStream& operator<<(QTextStream& f, const Tache& t);
@@ -71,7 +83,8 @@ QTextStream& operator<<(QTextStream& f, const Tache& t);
    *  Elle est une tâche concrète et possède une durée
    */
 class TacheUnaire : public Tache
-{
+{Q_OBJECT
+
     friend class TacheManager;
     Duree duree; /*!< Duree de la tâche */
     Duree duree_restante;
@@ -95,6 +108,7 @@ public:
     bool isPreemptive() const { return preemptive; }
     void setPreemptive(const bool value);
     virtual void affiche();
+    virtual ~TacheUnaire();
 private:
     TacheUnaire(const TacheUnaire& t);
     TacheUnaire& operator=(const TacheUnaire&);
@@ -110,7 +124,8 @@ private:
    *  Elle est une sur-tâche : elle est un ensemble de tâches (unaires ou composites)
    */
 class TacheComposite : public Tache
-{friend class TacheManager;
+{Q_OBJECT
+    friend class TacheManager;
     list<Tache*> soustaches; /*!< Ensemble des sous-tâches */
 
     TacheComposite(TacheManager* p, const QString& id, const QString& desc, const QDate& dispo, const QDate& deadline):
@@ -122,6 +137,8 @@ public:
     void ajouterSousTache(Tache& t);
     void retirerSousTache(Tache& t);
     virtual void affiche();
+
+    virtual ~TacheComposite( );
 private:
     TacheComposite(const TacheComposite& t);
     TacheComposite& operator=(const TacheComposite&);
