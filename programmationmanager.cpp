@@ -45,6 +45,18 @@ bool ProgrammationManager::isFree(const QDateTime& d, const Duree& h) const{
     return true;
 }
 
+bool ProgrammationManager::isFree(const Programmation* pr, const QDateTime& d, const Duree& h) const{
+    QDateTime fin = d + h;
+    for (list<Programmation*>::const_iterator it = programmations.begin(); it != programmations.end(); it++){
+        if ((*it) != pr) {
+            if ((*it)->getDate() >= d && (*it)->getDate() < fin ) return false;
+            if ((*it)->getDateFin() > d && (*it)->getDateFin() <= fin ) return false;
+            if ((*it)->getDate() < d && (*it)->getDateFin() > fin ) return false;
+        }
+    }
+    return true;
+}
+
 Programmation& ProgrammationManager::getProgrammation(const QDateTime& d){
     Programmation* p = findProgrammation(d);
     if (!p) throw CalendarException("ERREUR: Activité inexistante");
@@ -66,7 +78,15 @@ void ProgrammationManager::addProgrammation(const QDateTime& da, const Duree& du
 void ProgrammationManager::removeProgrammation(const QDateTime& d){
     Programmation* p = findProgrammation(d);
     if (!p) throw CalendarException("ERREUR: retrait d'un événement inexistant impossible.");
-    programmations.remove(p);
+    removeProgrammation(p);
+}
+
+void ProgrammationManager::removeProgrammation(Programmation* pr){
+    TacheUnaire* tache = dynamic_cast<TacheUnaire*>(&(pr->getEvenement()));
+    if (tache && tache->estTermine()) {
+
+    }
+    programmations.remove(pr);
 }
 
 ProgrammationManager& ProgrammationManager::getInstance()
