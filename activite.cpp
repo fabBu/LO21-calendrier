@@ -4,6 +4,10 @@ void Activite::setType(const MetaEnum::Type& t){
     this->type = t;
 }
 
+void Activite::setLieu(const QString& l){
+    this->lieu = l;
+}
+
 void Activite::affiche(){
     Evenement::affiche();
     std::cout<< "type: " << type << std::endl;
