@@ -257,19 +257,15 @@ void ProgrammationEditeur::initDureeRestante(){
     dureeRestante_m = new QSpinBox(this);
     dureeRestante_m->setSuffix("minute(s)");
 
+    dureeRestante_h->setValue(tache->getDureeRestante().getDureeEnHeures());
+    dureeRestante_m->setValue(tache->getDureeRestante().getDureeEnMinutes() - 60*tache->getDureeRestante().getDureeEnHeures());
 
     if (tache && tache->isPreemptive()) {
         dureeRestante_label = new QLabel("Duree restante",this);
         l_dureeRestante->addWidget(dureeRestante_label);
-
-        dureeRestante_h->setValue(tache->getDureeRestante().getDureeEnHeures());
         dureeRestante_h->setEnabled(false);
-
-        dureeRestante_m->setValue(tache->getDureeRestante().getDureeEnMinutes() - 60*tache->getDureeRestante().getDureeEnHeures());
         dureeRestante_m->setEnabled(false);
     } else {
-        dureeRestante_h->setValue(0);
-        dureeRestante_m->setValue(0);
         dureeRestante_h->hide();
         dureeRestante_m->hide();
     }
@@ -310,6 +306,8 @@ void ProgrammationEditeur::initProgrammation(Programmation *pr){
     }
 
     if (tache && !(tache->isPreemptive())) {
+        duree_h->setValue(tache->getDuree().getDureeEnMinutes()/60);
+        duree_m->setValue(tache->getDuree().getDureeEnMinutes()%60);
         duree_h->setEnabled(false);
         duree_m->setEnabled(false);
     }

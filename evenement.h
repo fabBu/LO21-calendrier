@@ -19,9 +19,11 @@
  *
  *  La classe représente un événement
  */
-class Evenement
+class Evenement : public QObject
 {
+    Q_OBJECT
 protected:
+
     QString titre; /*!< Nom de l'événement*/
     QString description; /*!< Description de l'événement*/
 public:
@@ -65,6 +67,13 @@ public:
      * \brief Affichage en mode console
      */
     virtual void affiche()=0;
+
+signals:
+    /*!
+     * \brief Signal de suppression de l'événement
+     * \param t Pointeur sur l'événement
+     */
+     void estSupprime(Evenement* t);
 };
 
 #endif // EVENEMENT_H

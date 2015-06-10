@@ -17,12 +17,12 @@ class ProjetEditeur : public QWidget {
 private:
     Q_OBJECT
 
-    QGroupBox *grp_proprietes, *grp_modification, *grp_nouvelle;
-    QPushButton *modifier_projet, *supprimer_projet, *modifier_tache, *supprimer_tache, *ajouter_unaire, *ajouter_composite, *programmer;
+    QGroupBox *grp_proprietes, *grp_modification,*grp_recherche, *grp_nouvelle;
+    QPushButton *modifier_projet, *supprimer_projet, *modifier_tache, *supprimer_tache,*a_programmer, *toutes_taches, *ajouter_unaire, *ajouter_composite, *programmer;
     QCheckBox *termine;
     QTreeWidget *taches;
     QGridLayout *main_layout;
-    QVBoxLayout *l_existante, *l_nouvelle;
+    QVBoxLayout *l_existante, *l_recherche, *l_nouvelle;
     QHBoxLayout *l_proprietes;
     QLabel *debut_label, *debut_date, *fin_label, *fin_date;
 
@@ -39,7 +39,7 @@ private:
      * Remplit le QTreeWidget \a taches avec l'ensemble des tâches du projet.
      * A chacune des tâches sont rattachés l'ensemble de ses prédécesseurs et le début de sa description.
      */
-    void chargerTaches();
+    void chargerTaches(list<Tache *> l);
     /*!
      * \brief Permet l'affichage des sous-tâches dans des sous-niveaux
      *
@@ -112,9 +112,15 @@ private slots:
     /*!
      * \brief Refresh de la vue des tâches
      *
-     * Appelle chargerTaches()
+     * Appelle chargerTaches() avec toutes les tâches
      */
     void refresh_taches();
+    /*!
+     * \brief L'arbre des tâches n'affiche maintenant que les tâches à programmer
+     *
+     * Appelle chargerTaches() avec les tâches qui ne sont pas encore programmées
+     */
+    void taches_a_programmer();
     /*!
      * \brief Refresh des propriétés du projet
      *

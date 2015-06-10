@@ -1,12 +1,20 @@
 ﻿#include "taches.h"
-#include <typeinfo>
 
 
-//              ---------   Tache   ---------              //
-//Tache::~Tache()
-//{
 
-//}
+//              ---------   Destructeurs   ---------              //
+Tache::~Tache()
+{
+    //emit estSupprimee(*this);
+}
+TacheUnaire::~TacheUnaire()
+{
+    //emit estSupprimee(this);
+}
+TacheComposite::~TacheComposite()
+{
+    //emit estSupprimee(this);
+}
 
 
 void Tache::affiche()
@@ -28,12 +36,6 @@ void Tache::affiche()
 void Tache::setTermine(bool val)
 {
     termine=val;
-
-    if( !val )
-    {
-        for( list<Tache*>::const_iterator it = successeurs.begin() ; it != successeurs.end() ; ++it )
-            (*it)->setTermine(false);
-    }
 
     if(surtache!=0)
     {

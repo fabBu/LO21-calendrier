@@ -2,7 +2,7 @@
 #include <ctime>
 #include "calendar.h"
 
-
+#include <QDebug>
 
 void Duree::writeXmlAttributes(QDomElement elem)
 {
@@ -43,4 +43,21 @@ QDateTime operator+(const QDateTime& da, const Duree& du){
     QDateTime ti(d.addDays(du.getNbJour()), t);
     QDateTime tmp = ti.addSecs(du.getDureeEnSeconde());
     return tmp;
+}
+
+Duree operator+(const Duree& d1, const Duree& d2)
+{
+    unsigned int nb_Jour=d1.getNbJour()+d2.getNbJour();
+    unsigned int h=d1.getHeure()+d2.getHeure()+(nb_Jour*24);
+    unsigned int m=d1.getMinute()+d2.getMinute();
+
+    if(m>59)
+    {
+        h+=m/60;
+        m=m%60;
+    }
+
+    Duree res(h, m);
+    qDebug()<<"Nouvelle duree restante: "<<h<<"H"<<m;
+    return res;
 }

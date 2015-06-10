@@ -99,6 +99,7 @@ void TacheManager::retirerTache(const QString& id)
     }
 
     taches.remove(t);
+    delete t;
 }
 
 Tache& TacheManager::getTache(const QString& titre){
