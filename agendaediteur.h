@@ -2,47 +2,49 @@
 #define AGENDAEDITEUR_H
 
 #include <QObject>
-#include <QShortcut>
-#include <QWidget>
-#include <QGridLayout>
-#include <QLabel>
-#include <QDate>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QPushButton>
-#include <QScrollArea>
-#include <QList>
-#include "programmationediteur.h"
+#include <QLabel>
+#include <QDateTime>
+#include <QTableWidget>
 #include "programmationmanager.h"
+#include "programmationediteur.h"
+
 
 class AgendaEditeur : public QWidget
 {
     Q_OBJECT
 private:
-    ProgrammationManager& manager;
-    int jourSemaine, semaine;
-    QGridLayout *semaine_layout, *horaire_layout;
-    QDate dateJour;
-    QFrame **verticalLinesSemaine, **horizontalLinesSemaine, **verticalLinesHoraire, **horizontalLinesHoraire;
-    QLabel *lundi_label, *mardi_label, *mercredi_label, *jeudi_label, *vendredi_label, *samedi_label, *dimanche_label, *semaine_label, **horaires;
-    QDate lundi, mardi, mercredi, jeudi, vendredi, samedi, dimanche;
+    QVBoxLayout *main_layout, *calendar_layout;
+    QHBoxLayout *semaine_layout;
     QPushButton *precedent, *suivant, *ajoutProgrammation;
-    QList<QPushButton*> programmations;
+    QLabel *semaine_label;
+    QTableWidget *calendar;
+    QList<QTableWidgetItem*> programmations;
+
+
+    QDate dateJour;
+    int jourSemaine, semaine;
+    QDate lundi, mardi, mercredi, jeudi, vendredi, samedi, dimanche;
+    QStringList liste_semaine;
 
     void setProgrammation();
-    void setBouttonSemaine();
     void setBouttonProgrammation();
-    void setLinesSemaine();
-    void setSizeColumn();
-    void setLinesHoraire();
-    void setDateLabel();
-    void setHoraireLabel();
+    void setSemaine();
+    void setSemaineList();
+    void setHoraireList();
+    void setCalendar();
+
+
 public:
-    AgendaEditeur(QWidget *parent = 0);
+    AgendaEditeur();
 
 signals:
 
 private slots:
     void refresh();
-    void editerProgrammation();
+    void editerProgrammation(QTableWidgetItem* button);
     void ajouterProgrammation();
     void modifDate();
     void modifDateLabel();
