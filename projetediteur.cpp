@@ -16,7 +16,7 @@ ProjetEditeur::ProjetEditeur(TacheManager &tm1, QWidget *p):tm(tm1),parent(p)
     /// ---- Arbre des tâches ---- ///
     taches = new QTreeWidget(this);
     taches->setHeaderLabels(QStringList()<<"Tâches"<<"Prédécesseurs"<<"Description");
-    chargerTaches();
+    chargerTaches(tm.getTaches());
     main_layout->addWidget(taches, 1, 0, 4, 1);
     connect(taches, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(getTacheCourante(QTreeWidgetItem*)));
 
@@ -56,6 +56,27 @@ ProjetEditeur::ProjetEditeur(TacheManager &tm1, QWidget *p):tm(tm1),parent(p)
     connect(modifier_tache, SIGNAL(clicked(bool)), this, SLOT(modifierTache()));
     connect(supprimer_tache, SIGNAL(clicked(bool)), this, SLOT(supprimerTache()));
     connect(programmer, SIGNAL(clicked(bool)), this, SLOT(programmerTache()));
+
+    /// ---- Ajout des boutons de visualisation/recherche ---- ///
+    grp_recherche = new QGroupBox("Recherche");
+    l_recherche = new QVBoxLayout();
+
+    // Initialisation du bouton Afficher toutes les tâches
+    toutes_taches = new QPushButton(this);
+    toutes_taches->setText("Toutes les tâches");
+    l_recherche->addWidget(toutes_taches);
+
+    // Initialisation du bouton supprimer tâche
+    a_programmer = new QPushButton(this);
+    a_programmer->setText("A programmer");
+    l_recherche->addWidget(a_programmer);
+
+    grp_recherche->setLayout(l_recherche);
+    main_layout->addWidget(grp_recherche, 2, 1);
+
+    connect(toutes_taches, SIGNAL(clicked(bool)), this, SLOT(refresh_taches()));
+    connect(a_programmer, SIGNAL(clicked(bool)), this, SLOT(taches_a_programmer()));
+
 
     /// ---- Ajout des boutons d'ajout de tâche ---- ///
     grp_nouvelle = new QGroupBox("Nouvelle tâche");
@@ -109,11 +130,10 @@ QGroupBox* ProjetEditeur::initProprietes()
     return tmp;
 }
 
-void ProjetEditeur::chargerTaches()
+void ProjetEditeur::chargerTaches(list<Tache*> l)
 {
     taches->clear();
 
-    list<Tache*> l = tm.getTaches();
     for( list<Tache*>::const_iterator it = l.begin() ; it != l.end() ; ++it )
     {
         // Ajout d'un item correspondant à la tâche avec son titre, ses prédécesseurs et le début de sa description
@@ -202,7 +222,19 @@ void ProjetEditeur::refresh_projet()
 
 void ProjetEditeur::refresh_taches()
 {
-    chargerTaches();
+    chargerTaches(tm.getTaches());
+}
+
+void ProjetEditeur::taches_a_programmer()
+{
+    list<Tache*> l = tm.getTaches();
+    for( list<Tache*>::iterator it=l.begin() ; it!=l.end() ; )
+    {
+        if( (*it)->estTermine() ) it = l.erase(it);
+        else ++it;
+    }
+
+    chargerTaches(l);
 }
 
 void ProjetEditeur::ajouterTache()

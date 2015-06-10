@@ -7,13 +7,12 @@ void ProgrammationManager::addItem(Programmation* p){
         throw CalendarException("ERREUR: Un événement est déjà programmé à cette date.");
     TacheUnaire* tache = dynamic_cast<TacheUnaire*>(&(p->getEvenement()));
     if (tache) {
-        qDebug() << tache->estTermine();
         if (tache->estTermine() == true)
             throw CalendarException("ERREUR: La totalité de la tâche a déjà été programmé.");
         if (!(tache->isPreemptive()) && tache->getDuree().getDureeEnMinutes() != p->getDuree().getDureeEnMinutes())
             throw CalendarException("ERREUR: La tache n'est pas préemptive et elle n'est pas effectuée totalement.");
 
-        int minuteRestante = tache->getDureeRestante().getDureeEnMinutes()-p->getDuree().getDureeEnMinutes();
+        int minuteRestante = tache->getDureeRestante().getDureeEnMinutes() - p->getDuree().getDureeEnMinutes();
         if (minuteRestante>=0){
             tache->setDureeRestante(Duree(minuteRestante/60,minuteRestante%60));
             if (minuteRestante == 0) {
@@ -83,8 +82,12 @@ void ProgrammationManager::removeProgrammation(const QDateTime& d){
 
 void ProgrammationManager::removeProgrammation(Programmation* pr){
     TacheUnaire* tache = dynamic_cast<TacheUnaire*>(&(pr->getEvenement()));
-    if (tache && tache->estTermine()) {
-
+    if (tache) {
+        qDebug()<<"COUCOU: "<<tache->getTitre();
+        //int minuteRestante = tache->getDureeRestante().getDureeEnMinutes() + pr->getDuree().getDureeEnMinutes();
+        //tache->setDureeRestante(Duree(minuteRestante/60,minuteRestante%60));
+        tache->setDureeRestante( tache->getDureeRestante()+pr->getDuree() );
+        tache->setTermine(false);
     }
     programmations.remove(pr);
 }

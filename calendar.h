@@ -106,4 +106,6 @@ std::istream& operator>>(std::istream&, Duree&); //lecture format hhHmm
 
 QDateTime operator+(const QDateTime& da, const Duree& du);
 
+Duree operator+(const Duree& d1, const Duree& d2);
+
 #endif // CALENDAR_H

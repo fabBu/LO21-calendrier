@@ -13,8 +13,8 @@ void Programmation::setEvenement(Evenement& e){
 }
 
 Programmation::~Programmation(){
-    Activite* ac = dynamic_cast<Activite*>(evenement);
 
+    Activite* ac = dynamic_cast<Activite*>(evenement);
     if (ac){
         delete evenement;
     }

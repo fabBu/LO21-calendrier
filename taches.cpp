@@ -28,13 +28,13 @@ void Tache::affiche()
 void Tache::setTermine(bool val)
 {
     termine=val;
-
+/*
     if( !val )
     {
         for( list<Tache*>::const_iterator it = successeurs.begin() ; it != successeurs.end() ; ++it )
             (*it)->setTermine(false);
     }
-
+*/
     if(surtache!=0)
     {
         surtache->verifTermine();
