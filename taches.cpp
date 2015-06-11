@@ -3,18 +3,6 @@
 
 
 //              ---------   Destructeurs   ---------              //
-Tache::~Tache()
-{
-    //emit estSupprimee(*this);
-}
-TacheUnaire::~TacheUnaire()
-{
-    //emit estSupprimee(this);
-}
-TacheComposite::~TacheComposite()
-{
-    //emit estSupprimee(this);
-}
 
 
 void Tache::affiche()
@@ -207,9 +195,6 @@ void TacheUnaire::setDuree(const Duree& dur)
 
 void TacheUnaire::setDureeRestante(const Duree& dur)
 {
-    if( dur.getDureeEnHeures() > duree.getDureeEnHeures() )
-        throw CalendarException("Durée restante supérieure à la durée actuelle");
-
     if(dur.getDureeEnHeures()> duree.getDureeEnHeures())
         throw CalendarException("La tâche dure moins longtemps que la durée restante souhaitée...");
     duree_restante.setDuree(dur.getDureeEnHeures(), dur.getDureeEnMinutes()%60);
@@ -342,9 +327,6 @@ QString TacheUnaire::TacheToXML(QDomDocument& doc, QDomElement& elem)
 
     QDomElement dureeElement = addXmlElement( doc, tacheUnaireElement, "duree" );
     duree.writeXmlAttributes(dureeElement);
-
-    //QDomElement dureeRestanteElement = addXmlElement( doc, tacheUnaireElement, "duree_restante" );
-    //duree_restante.writeXmlAttributes(dureeRestanteElement);
 
     return doc.toString();
 }
