@@ -113,14 +113,7 @@ bool Tache::estPredecesseur(const Tache& t)
     else return false;
 }
 
-/*!
- *\brief Ajout d'une précédence
- *
- * Permet d'ajouter la tache t comme étant un prédécesseur
- *  de la tâche courante
- *
- *\param t : tache précédente
- */
+
 void Tache::ajouterPredecesseur(Tache& t)
 {
     // Verification que la tâche t ne fait pas déjà partie des prédécesseurs
@@ -137,13 +130,7 @@ void Tache::ajouterPredecesseur(Tache& t)
         throw CalendarException(t.getTitre()+" se termine apres "+getTitre());
 }
 
-/*!
- *\brief Suppression d'une précédence
- *
- * Permet de retirer la tâche t précédant la tâche courante
- *
- *\param t : tache à retirer
- */
+
 void Tache::retirerPredecesseur(Tache& t)
 {
     // Verification que la tâche t fait bien partie des prédécesseurs
@@ -252,14 +239,7 @@ void TacheComposite::ajouterSousTache(Tache& t)
     soustaches.push_back(&t);
 }
 
-/*!
- *\brief Retrait d'une sous-tâche
- *
- * Retire la tâche t du sous-ensemble de tâches
- * de la tâche composite
- *
- *\param t : sous-tâche
- */
+
 void TacheComposite::retirerSousTache(Tache& t)
 {
     // Verification que la tâche t fait bien partie des sous-tâches

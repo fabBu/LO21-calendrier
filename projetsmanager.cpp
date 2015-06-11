@@ -55,6 +55,7 @@ void ProjetsManager::retirerProjet(const QString& nom)
     if( !tm )
         throw CalendarException("Le projet "+nom+" n'existe pas");
     projets.remove(tm);
+    delete tm;
 }
 
 void ProjetsManager::setNom(const QString& nom, const QString& nouveau)
@@ -87,6 +88,7 @@ void ProjetsManager::setFin(const QString &nom, const QDate &fin)
 
 void ProjetsManager::setDates(const QString& nom, const QDate &debut, const QDate &fin)
 {
+    if(debut > fin) throw CalendarException("La date de début dépasse la date de fin");
     setDebut(nom, debut);
     setFin(nom, fin);
 }
