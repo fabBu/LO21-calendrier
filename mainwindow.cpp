@@ -192,7 +192,16 @@ void MainWindow::save()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    save();
+    try
+    {
+        QMessageBox::StandardButton reply = QMessageBox::question(this, "Fermeture",
+                                                                 "Voulez-vous sauvegarder les dernières modifications ?",
+                                                                 QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::Yes)
+                save();
+    }
+    catch(CalendarException e)
+    { QMessageBox::warning(this, "Suppression tâche", e.getInfo()); }
 }
 
 void MainWindow::chargerProjets(const QString& dossier)

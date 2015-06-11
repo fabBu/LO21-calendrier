@@ -53,7 +53,7 @@ public:
      * \param nouveau Nouveau nom à donner au projet
      * \throw <CalendarException> { Si aucun projet 'nom' n'existe ou si 'nouveau' est déjà utilisé par un autre projet }
      */
-    void setNom(const QString& nom, const QString& nouveau);
+    void setNom(const QString nom, const QString& nouveau);
     /*!
      * \brief Modifier la date de début d'un projet
      * \param nom Nom du projet à modifier

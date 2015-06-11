@@ -294,8 +294,13 @@ void ProjetEditeur::supprimerTache()
 {
     try
     {
-        tm.retirerTache(tache_courante);
-        refresh_taches();
+        QMessageBox::StandardButton reply = QMessageBox::question(this, "Suppression",
+                                                                 "Êtes-vous sûr de vouloir supprimer la tâche ?",
+                                                                 QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::Yes) {
+            tm.retirerTache(tache_courante);
+            refresh_taches();
+        }
     }
     catch(CalendarException e)
     { QMessageBox::warning(this, "Suppression tâche", e.getInfo()); }

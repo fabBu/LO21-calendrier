@@ -55,10 +55,11 @@ void ProjetsManager::retirerProjet(const QString& nom)
     if( !tm )
         throw CalendarException("Le projet "+nom+" n'existe pas");
     projets.remove(tm);
-    delete tm;
+    delete tm;  
+    QFile::remove("Projets\\"+nom+".xml");
 }
 
-void ProjetsManager::setNom(const QString& nom, const QString& nouveau)
+void ProjetsManager::setNom(const QString nom, const QString& nouveau)
 {
     TacheManager* tm=trouverProjet(nouveau);
     if( tm )
@@ -68,6 +69,7 @@ void ProjetsManager::setNom(const QString& nom, const QString& nouveau)
         throw CalendarException(nom+" n'existe pas encore");
 
     tm->setNom(nouveau);
+    QFile::rename("Projets\\"+nom+".xml", "Projets\\"+nouveau+".xml");
 }
 
 void ProjetsManager::setDebut(const QString &nom, const QDate &debut)
@@ -134,6 +136,8 @@ void ProjetsManager::readXML(QFile& file)
 
     QString nomProjet;
     QDate debut, fin;
+    int r=255, g=255, b=255;
+    QColor couleur=QColor(r, g, b);
 
     QDomNode nd = projetElement.firstChild();
     for ( ; !nd.isNull(); nd = nd.nextSibling() )
@@ -150,10 +154,17 @@ void ProjetsManager::readXML(QFile& file)
                 debut= QDate::fromString(proprietes.toElement().text(), "dd-MM-yyyy");
             if ( proprietes.isElement() && proprietes.toElement().tagName() == "fin" )
                 fin= QDate::fromString(proprietes.toElement().text(), "dd-MM-yyyy");
+            if ( proprietes.isElement() && proprietes.toElement().tagName() == "couleur" )
+            {
+                if( proprietes.toElement().hasAttribute("r") ) r= proprietes.toElement().attribute("r").toInt();
+                if( proprietes.toElement().hasAttribute("g") ) g= proprietes.toElement().attribute("g").toInt();
+                if( proprietes.toElement().hasAttribute("b") ) b= proprietes.toElement().attribute("b").toInt();
+                couleur.setRgb(r,g,b);
+            }
         }
         try
         {
-            ajouterProjet(nomProjet,debut, fin);
+            ajouterProjet(nomProjet,debut, fin, couleur);
         }
         catch(CalendarException e)
         { qDebug()<<e.getInfo().toStdString().c_str(); }
