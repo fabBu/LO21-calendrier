@@ -25,7 +25,7 @@ public:
      * \param fin Date de fin du projet à partir de laquelle les tâches doivent toutes être terminées
      * \throw <CalendarException> { Le nom est déjà pris par un projet existant }
      */
-    void ajouterProjet(const QString& nom, const QDate& debut, const QDate& fin);
+    void ajouterProjet(const QString& nom, const QDate& debut, const QDate& fin, const QColor &coul=Qt::white);
     /*!
      * \brief Suppression d'un projet
      * \param nom Nom du projet à supprimer

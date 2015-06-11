@@ -46,11 +46,31 @@ ProprieteProjetEditeur::ProprieteProjetEditeur(QWidget *pa, const QString& proj)
     main_layout->addWidget(fin_label, 2,0);
     main_layout->addWidget(fin_date, 2,1);
 
+    /// ---- Choix de la couleur ---- ///
+    couleur_label= new QLabel("Couleur: ");
+    couleur_choix= new QPushButton();
+
+    // Paramétrer le boutton pour pouvoir modifier sa couleur
+    couleur_choix->setBackgroundRole(QPalette::Button);
+    couleur_choix->setForegroundRole(QPalette::NoRole);
+    couleur_choix->setAutoFillBackground(true);
+    couleur_choix->setFlat(true);
+
+    connect(couleur_choix, SIGNAL(clicked(bool)), this, SLOT(choixCouleur()));
+
+    QPalette palette;
+    if( projet)     palette.setColor(QPalette::Button, projet->getCouleur());
+    else    palette.setColor(QPalette::Button, Qt::white);
+    couleur_choix->setPalette(palette);
+
+    main_layout->addWidget(couleur_label, 3,0);
+    main_layout->addWidget(couleur_choix, 3,1);
+
     /// ---- BOUTONS ---- ///
     sauvegarder = new QPushButton("OK");
     annuler = new QPushButton("Réinitialiser");
-    main_layout->addWidget(sauvegarder, 3,0);
-    main_layout->addWidget(annuler, 3,1);
+    main_layout->addWidget(sauvegarder, 4,0);
+    main_layout->addWidget(annuler, 4,1);
 
     if(projet) connect(sauvegarder, SIGNAL(clicked(bool)), this, SLOT(modifierProjet()));  // Appel de modifierProjet() sur clic de "OK" si édition de projet
     else        connect(sauvegarder, SIGNAL(clicked(bool)), this, SLOT(creerProjet()));  // Appel de creerProjet() sur clic de "OK" si nouveau projet
@@ -58,11 +78,20 @@ ProprieteProjetEditeur::ProprieteProjetEditeur(QWidget *pa, const QString& proj)
 
 }
 
+void ProprieteProjetEditeur::choixCouleur()
+{
+    QColor couleur = QColorDialog::getColor(Qt::white, this);
+
+    QPalette palette;
+    palette.setColor(QPalette::Button, couleur);
+    couleur_choix->setPalette(palette);
+}
+
 void ProprieteProjetEditeur::creerProjet()
 {
     try
     {
-        projets.ajouterProjet(nom_edit->text(), debut_date->date(), fin_date->date());
+        projets.ajouterProjet(nom_edit->text(), debut_date->date(), fin_date->date(), couleur_choix->palette().color(QPalette::Button));
         emit fermeture(nom_edit->text());
         close();
     }
@@ -84,6 +113,8 @@ void ProprieteProjetEditeur::modifierProjet()
             projets.setDebut(projet->getNom(), debut_date->date());
         if( projet->getFin() != fin_date->date() )
             projets.setFin(projet->getNom(), fin_date->date());
+
+        projet->setCouleur(couleur_choix->palette().color(QPalette::Button));
 
         emit fermeture(nom);
         close();

@@ -367,12 +367,10 @@ void TacheEditeur::modifListePred()
         if( pred_list->currentText() == "" )
         {
             pred_list->setHidden(true);
-            //laucun->setHidden(false);
             btn_retirerpred->setHidden(true);
         }
         else
         {
-            //laucun->setHidden(true);
             pred_list->setHidden(false);
             btn_retirerpred->setHidden(false);
         }
@@ -385,12 +383,10 @@ void TacheEditeur::modifListePred()
         if( nonpred_list->currentText() == "" )
         {
             nonpred_list->setHidden(true);
-            //laucune->setHidden(false);
             btn_ajouterpred->setHidden(true);
         }
         else
         {
-            //laucune->setHidden(true);
             nonpred_list->setHidden(false);
             btn_ajouterpred->setHidden(false);
         }

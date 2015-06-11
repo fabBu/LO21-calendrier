@@ -2,6 +2,7 @@
 #define TACHEMANAGER_H
 #include <QString>
 #include <QDate>
+#include <QColor>
 #include <QTextStream>
 #include <QMessageBox>
 #include <QDebug>
@@ -11,12 +12,14 @@
 class Tache; //Cyclic Dependency
 using namespace std;
 
-class TacheManager {
+class TacheManager : public QObject {
+    Q_OBJECT
 private:
     friend class TacheEditeur;
     QString nom;
     QDate debut;
     QDate fin;
+    QColor couleur;
 
     list<Tache*> taches;
     void addItem(Tache* t);
@@ -24,8 +27,8 @@ private:
     QString file;
 
 public:
-    TacheManager(const QString& name, const QDate& dispo, const QDate& deadline);
-    ~TacheManager();
+    TacheManager(const QString& name, const QDate& dispo, const QDate& deadline, const QColor& coul=Qt::white);
+    //~TacheManager();
 
     const QString& getNom() const { return nom; }
     void setNom(const QString& name) { nom=name; }
@@ -33,6 +36,8 @@ public:
     QDate getFin() const {  return fin; }
     void setDebut(const QDate& d);
     void setFin(const QDate& f);
+    QColor getCouleur() { return couleur;}
+    void setCouleur(QColor c) { couleur=c; emit colorHasChanged(); }
     list<Tache*> getTaches() { return taches; }
     const list<Tache*> getTaches() const { return taches; }
     Tache& getTache(const QString& titre);
@@ -49,5 +54,8 @@ public:
 private:
     TacheManager(const TacheManager& um);
     TacheManager& operator=(const TacheManager& um);
+
+signals:
+    void colorHasChanged();
 };
 #endif // TACHEMANAGER_H

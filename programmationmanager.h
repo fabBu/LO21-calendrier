@@ -27,7 +27,7 @@ public:
     const Programmation& getProgrammation(const QDateTime& d)const;
 private:
     static Handler<ProgrammationManager> handler;
-    friend class Handler<ProgrammationManager>;
+    friend Handler<ProgrammationManager>::~Handler();
 
     list<Programmation*> programmations;
     void addItem(Programmation* p);

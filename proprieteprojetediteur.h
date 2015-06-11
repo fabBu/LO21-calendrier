@@ -2,6 +2,7 @@
 #define PROPRIETEPROJETEDITEUR_H
 
 #include <QDialog>
+#include <QColorDialog>
 #include <QGridLayout>
 #include <QLabel>
 #include <QLineEdit>
@@ -15,10 +16,10 @@ class ProprieteProjetEditeur : public QWidget
 
     QWidget *parent;
     QGridLayout *main_layout;
-    QLabel *nom_label, *debut_label, *fin_label;
+    QLabel *nom_label, *debut_label, *fin_label, *couleur_label;
     QLineEdit *nom_edit;
     QDateEdit *debut_date, *fin_date;
-    QPushButton *sauvegarder, *annuler;
+    QPushButton *couleur_choix, *sauvegarder, *annuler;
 
     ProjetsManager& projets; /**< Ensemble des projets chargés lors de l'exécution */
     TacheManager* projet; /**< Projet courant. Est nul lors de l'ajout d'un projet */
@@ -34,6 +35,7 @@ public:
      */
     ProprieteProjetEditeur(QWidget* pa, const QString& proj="");
 private slots:
+    void choixCouleur();
     /*!
      * \brief Demande de création du projet
      */

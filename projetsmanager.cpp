@@ -39,13 +39,13 @@ const TacheManager& ProjetsManager::getProjet(const QString& nom)const{
     return tm;
 }
 
-void ProjetsManager::ajouterProjet(const QString& nom, const QDate& debut, const QDate& fin)
+void ProjetsManager::ajouterProjet(const QString& nom, const QDate& debut, const QDate& fin, const QColor& coul)
 {
     TacheManager* tmp=trouverProjet(nom);
     if( tmp )
         throw CalendarException("Le nom "+nom+" est déjà pris pour un autre projet");
 
-    TacheManager* tm = new TacheManager(nom, debut, fin);
+    TacheManager* tm = new TacheManager(nom, debut, fin, coul);
     projets.push_back(tm);
 }
 

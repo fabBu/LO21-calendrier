@@ -82,8 +82,14 @@ void MainWindow::ouvrirAgenda()
 
 void MainWindow::creerProjet()
 {
-    ProprieteProjetEditeur *ppe = new ProprieteProjetEditeur(this);
-    ppe->show();
+    try
+    {
+        ProprieteProjetEditeur *ppe = new ProprieteProjetEditeur(this);
+        ppe->show();
+    }
+    catch(CalendarException e)
+    { QMessageBox::information(this, "Création projet", e.getInfo().toStdString().c_str()); }
+
 }
 
 void MainWindow::ouvrirProjet()

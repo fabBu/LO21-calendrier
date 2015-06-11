@@ -1,13 +1,14 @@
 #include "tachemanager.h"
 #include "taches.h"
 
-TacheManager::TacheManager(const QString &name, const QDate& dispo, const QDate& deadline):nom(name), debut(dispo), fin(deadline){
+TacheManager::TacheManager(const QString &name, const QDate& dispo, const QDate& deadline, const QColor &coul):nom(name), debut(dispo), fin(deadline), couleur(coul){
     if( nom == "" ) throw CalendarException("Le projet doit avoir un nom !");
     if(debut > fin) throw CalendarException("La date de début dépasse la date de fin");
 }
 
 void TacheManager::setDebut(const QDate& d)
 {
+    if(d > fin) throw CalendarException("La date de début dépasse la date de fin");
     for (std::list<Tache*>::const_iterator it = taches.begin(); it != taches.end(); it++)
     {
         if( (*it)->getDateDisponibilite() < d )
@@ -17,6 +18,7 @@ void TacheManager::setDebut(const QDate& d)
 }
 void TacheManager::setFin(const QDate& f)
 {
+    if(debut > f) throw CalendarException("La date de début dépasse la date de fin");
     for (std::list<Tache*>::const_iterator it = taches.begin(); it != taches.end(); it++)
     {
         if( (*it)->getDateEcheance() > f )
