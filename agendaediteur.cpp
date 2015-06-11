@@ -1,4 +1,6 @@
 #include "agendaediteur.h"
+#include <QHeaderView>
+#include <QScrollBar>
 
 AgendaEditeur::AgendaEditeur()
 {
@@ -89,10 +91,15 @@ void AgendaEditeur::modifDateLabelPrecedent(){
 void AgendaEditeur::setCalendar() {
     calendar->setRowCount(24*4);
     calendar->setColumnCount(7);
+    calendar->verticalScrollBar()->setSliderPosition(7*4);
     setSemaineList();
     setHoraireList();
     calendar->setEditTriggers(QAbstractItemView::NoEditTriggers);
     calendar_layout->addWidget(calendar);
+    calendar->horizontalHeader()->setStretchLastSection(true);
+    calendar->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    calendar->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    calendar->verticalHeader()->setDefaultSectionSize(17);
     connect(calendar, SIGNAL(itemDoubleClicked(QTableWidgetItem*)), this, SLOT(editerProgrammation(QTableWidgetItem*)) );
 }
 
@@ -119,9 +126,6 @@ void AgendaEditeur::setHoraireList() {
         liste_horaire << "";
         liste_horaire << "";
         liste_horaire << "";
-//        liste_horaire << QString::number(i)+":15";
-//        liste_horaire << QString::number(i)+":30";
-//        liste_horaire << QString::number(i)+":45";
     }
 
     calendar->setVerticalHeaderLabels(liste_horaire);
@@ -138,10 +142,13 @@ void AgendaEditeur::setProgrammation() {
         }
 
         if (nbJours == 0) {
-
-            QTableWidgetItem* temp = new QTableWidgetItem((*it)->getEvenement().getTitre());
+            QString texte = (*it)->getDate().time().toString("hh:mm") + " - " + (*it)->getDateFin().time().toString("hh:mm") + ": " + (*it)->getEvenement().getTitre();
+            QTableWidgetItem* temp = new QTableWidgetItem(texte);
+            QFont font;
+            font.setBold(true);
+            temp->setFont(font);
             temp->setTextAlignment(Qt::AlignTop);
-
+            temp->setData(Qt::BackgroundRole, QVariant(QColor(Qt::yellow)));
             int nbLignes = (*it)->getDuree().getDureeEnMinutes()/15;
             int debutLigne = ((*it)->getDate().time().minute() + ((*it)->getDate().time().hour()*60))/15;
             calendar->setItem(debutLigne, ((*it)->getDate().date().dayOfWeek())-1, temp);
@@ -151,8 +158,13 @@ void AgendaEditeur::setProgrammation() {
             for (int i=0; i<nbJours+1;i++){
                QDate date = (*it)->getDate().date().addDays(i);
                if (!(date<lundi || date>dimanche)){
-                   QTableWidgetItem* temp = new QTableWidgetItem((*it)->getEvenement().getTitre());
+                   QString texte = (*it)->getDate().time().toString("hh:mm") + " - " + (*it)->getDateFin().time().toString("hh:mm") + ": " + (*it)->getEvenement().getTitre();
+                   QTableWidgetItem* temp = new QTableWidgetItem(texte);
+                   QFont font;
+                   font.setBold(true);
+                   temp->setFont(font);
                    temp->setTextAlignment(Qt::AlignTop);
+                   temp->setData(Qt::BackgroundRole, QVariant(QColor(Qt::red)));
 
                    int nbLignes;
                    int debutLigne;
@@ -231,4 +243,16 @@ void AgendaEditeur::ajouterProgrammation(){
 
    }catch(CalendarException e)
    { QMessageBox::warning(this, "Ajout de programmation", e.getInfo()); }
+}
+
+void AgendaEditeur::resizeEvent(QResizeEvent *event) {
+    calendar->setColumnWidth(0, (this->width()-80)/7);
+    calendar->setColumnWidth(1, (this->width()-80)/7);
+    calendar->setColumnWidth(2, (this->width()-80)/7);
+    calendar->setColumnWidth(3, (this->width()-80)/7);
+    calendar->setColumnWidth(4, (this->width()-80)/7);
+    calendar->setColumnWidth(5, (this->width()-80)/7);
+    calendar->setColumnWidth(6, (this->width()-80)/7);
+
+//    AgendaEditeur::resizeEvent(event);
 }

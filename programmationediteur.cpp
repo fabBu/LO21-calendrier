@@ -60,10 +60,6 @@ ProgrammationEditeur::ProgrammationEditeur(Programmation* pr, QWidget *p): progr
 
     initCancelSave();
 
-    btn_supprimer = new QPushButton("Suppression",this);
-    connect(btn_supprimer, SIGNAL(clicked(bool)), this, SLOT(supprimer()));
-    l_cancelsave->addWidget(btn_supprimer);
-
     connect(btn_save, SIGNAL(clicked(bool)), this, SLOT(modifier()));
     main_layout->addLayout(attributs_layout);
     main_layout->addLayout(l_cancelsave);
@@ -153,6 +149,10 @@ void ProgrammationEditeur::initTitre(){
     if (tache) {
         titre->setText(tache->getTitre());
         titre->setEnabled(false);
+        QPalette palette = titre->palette();
+        palette.setColor(QPalette::Base, QColor(255,255,255));
+        titre->setPalette(palette);
+        titre->setStyleSheet("color: black;");
     }
 
     l_titre->addWidget(titre_label);
@@ -169,6 +169,10 @@ void ProgrammationEditeur::initDesc(){
     if (tache){
         desc->setText(tache->getDescription());
         desc->setEnabled(false);
+        QPalette palette = titre->palette();
+        palette.setColor(QPalette::Base, QColor(255,255,255));
+        desc->setPalette(palette);
+        desc->setStyleSheet("color: black;");
     }
 
     l_desc->addWidget(desc_label);
@@ -196,6 +200,13 @@ void ProgrammationEditeur::initCancelSave(){
     btn_cancel = new QPushButton("Annuler",this);
     btn_save = new QPushButton("Sauver",this);
     l_cancelsave->addWidget(btn_cancel);
+
+    if (programmation) {
+        btn_supprimer = new QPushButton("Suppression",this);
+        connect(btn_supprimer, SIGNAL(clicked(bool)), this, SLOT(supprimer()));
+        l_cancelsave->addWidget(btn_supprimer);
+    }
+
     l_cancelsave->addWidget(btn_save);
 
     connect(btn_cancel, SIGNAL(clicked(bool)), this, SLOT(close()) );
