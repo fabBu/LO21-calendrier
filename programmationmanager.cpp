@@ -111,8 +111,6 @@ void ProgrammationManager::libererInstance()
 const list<Programmation*> ProgrammationManager::getProgrammation(const QDate& debut, const QDate& fin)const{
     list<Programmation*> res;
     for (list<Programmation*>::const_iterator it = programmations.begin(); it != programmations.end(); it++){
-        QString toto = (*it)->getDate().date().toString("yyyy.MM.dd");
-        qDebug() << toto;
         if ((*it)->getDate().date() >= debut && (*it)->getDate().date() <= fin){
             res.push_back(*it);
         } else if ((*it)->getDateFin().date() >= debut && (*it)->getDateFin().date() <= fin){
@@ -124,6 +122,16 @@ const list<Programmation*> ProgrammationManager::getProgrammation(const QDate& d
     return res;
 }
 
+const list<Programmation*> ProgrammationManager::getProgrammation(const TacheUnaire* t)const{
+    list<Programmation*> res;
+    for (list<Programmation*>::const_iterator it = programmations.begin(); it != programmations.end(); it++){
+        TacheUnaire* test = dynamic_cast<TacheUnaire*>(&((*it)->getEvenement()));
+        if (test && test == t) {
+                res.push_back(*it);
+        }
+    }
+    return res;
+}
 
 void ProgrammationManager::writeXML(const QString& dossier)
 {

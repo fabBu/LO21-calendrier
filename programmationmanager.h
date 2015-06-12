@@ -23,6 +23,7 @@ public:
     void removeProgrammation(Programmation *pr);
 
     const list<Programmation*> getProgrammation(const QDate& debut, const QDate& fin)const;
+    const list<Programmation*> getProgrammation(const TacheUnaire *t)const;
     Programmation& getProgrammation(const QDateTime& d);
     const Programmation& getProgrammation(const QDateTime& d)const;
 private:

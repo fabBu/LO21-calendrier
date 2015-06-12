@@ -143,6 +143,10 @@ public:
      */
     bool operator==(const Tache& t) { return titre == t.getTitre(); }
 
+    QColor getCouleur() {
+        return parent->getCouleur();
+    }
+
 private:
     Tache(const Tache& t);
     Tache& operator=(const Tache&);

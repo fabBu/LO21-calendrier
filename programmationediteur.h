@@ -15,6 +15,7 @@
 #include <QCheckBox>
 #include <QGroupBox>
 #include <QSpinBox>
+#include <QListWidgetItem>
 #include "activite.h"
 #include "calendar.h"
 #include "evenement.h"
@@ -37,8 +38,9 @@ private:
     QTimeEdit *horaire;
     QPushButton *btn_cancel, *btn_save, *btn_supprimer;
     QGroupBox *groupBoxEvenement, *groupBoxProgrammation;
+    QListWidget *listesProgrammation;
 
-    QHBoxLayout *l_main, *l_titre, *l_desc, *l_type, *l_lieu, *l_horaires, *l_cancelsave, *attributs_layout, *l_calendar, *l_dates, *l_dureeTotale, *l_dureeRestante;
+    QHBoxLayout *l_main, *l_titre, *l_desc, *l_type, *l_lieu, *l_horaires, *l_cancelsave, *attributs_layout, *l_calendar, *l_dates, *l_dureeTotale, *l_dureeRestante, *programmations;
     QVBoxLayout *calendar_layout, *main_layout, *param_layout, *evenement_layout, *programmation_layout;
 
     QWidget* parent;
@@ -55,6 +57,7 @@ private:
     void initCancelSave();
     void initDureeTotale();
     void initDureeRestante();
+    void initListeProgrammation();
     void initCalendar(Programmation* pr = 0);
     void initProgrammation(Programmation* pr = 0);
 

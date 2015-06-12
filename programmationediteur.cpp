@@ -2,7 +2,7 @@
 
 ProgrammationEditeur::ProgrammationEditeur(Programmation* pr, QWidget *p): programmationmanager(ProgrammationManager::getInstance()) {
     setWindowTitle("Programmation d'un événement");
-    setFixedSize(650,300);
+//    setFixedSize(650,300);
 
     groupBoxEvenement = new QGroupBox("Evenement");
     groupBoxProgrammation = new QGroupBox("Programmation");
@@ -62,13 +62,19 @@ ProgrammationEditeur::ProgrammationEditeur(Programmation* pr, QWidget *p): progr
 
     connect(btn_save, SIGNAL(clicked(bool)), this, SLOT(modifier()));
     main_layout->addLayout(attributs_layout);
+
+    if (tache && tache->isPreemptive()) {
+        initListeProgrammation();
+        main_layout->addLayout(programmations);
+    }
+
     main_layout->addLayout(l_cancelsave);
     this->setLayout(main_layout);
 }
 
 ProgrammationEditeur::ProgrammationEditeur(Evenement* ev, QWidget *p): programmationmanager(ProgrammationManager::getInstance()) {
     setWindowTitle("Programmation d'un événement");
-    setFixedSize(650,300);
+//    setFixedSize(650,400);
 
     activite = dynamic_cast<Activite*>(ev);
     tache = dynamic_cast<TacheUnaire*>(ev);
@@ -135,6 +141,12 @@ ProgrammationEditeur::ProgrammationEditeur(Evenement* ev, QWidget *p): programma
     initCancelSave();
     connect(btn_save, SIGNAL(clicked(bool)), this, SLOT(sauvegarder()) );
     main_layout->addLayout(attributs_layout);
+
+    if (tache && tache->isPreemptive()) {
+        initListeProgrammation();
+        main_layout->addLayout(programmations);
+    }
+
     main_layout->addLayout(l_cancelsave);
     this->setLayout(main_layout);
 }
@@ -268,12 +280,12 @@ void ProgrammationEditeur::initDureeRestante(){
     dureeRestante_m = new QSpinBox(this);
     dureeRestante_m->setSuffix("minute(s)");
 
-    dureeRestante_h->setValue(tache->getDureeRestante().getDureeEnHeures());
-    dureeRestante_m->setValue(tache->getDureeRestante().getDureeEnMinutes() - 60*tache->getDureeRestante().getDureeEnHeures());
 
     if (tache && tache->isPreemptive()) {
         dureeRestante_label = new QLabel("Duree restante",this);
         l_dureeRestante->addWidget(dureeRestante_label);
+        dureeRestante_h->setValue(tache->getDureeRestante().getDureeEnHeures());
+        dureeRestante_m->setValue(tache->getDureeRestante().getDureeEnMinutes()%60);
         dureeRestante_h->setEnabled(false);
         dureeRestante_m->setEnabled(false);
     } else {
@@ -313,6 +325,7 @@ void ProgrammationEditeur::initProgrammation(Programmation *pr){
         if (dureeMax < (12*60)) {
             duree_h->setMaximum(dureeMax/60);
             duree_m->setMaximum(dureeMax%60);
+
         }
     }
 
@@ -343,8 +356,6 @@ void ProgrammationEditeur::sauvegarder(){
         if (duree_h->value() == 0 && duree_m->value() == 0) throw CalendarException("Attention: Il faut une durée supérieur à 0!");
         if (tache){
             Duree d = Duree(duree_h->value(),duree_m->value());
-//            if (tache->isPreemptive() && tache->getDuree().getDureeEnMinutes() == d.getDureeEnMinutes())
-//                throw CalendarException("La tache suivante est préemptive et il n'y a qu'une seule programmation.");
             programmationmanager.addProgrammation(QDateTime(calendar->selectedDate(),horaire->time()),d,tache);
             QString message = "La programmation suivante a été ajouté :" + programmationmanager.getProgrammation(QDateTime(calendar->selectedDate(),horaire->time())).getEvenement().getTitre();
             QMessageBox::warning(this,"Ajout programmation", message);
@@ -368,8 +379,6 @@ void ProgrammationEditeur::modifier(){
         if (tache){
             Duree d = Duree(duree_h->value(),duree_m->value());
             Duree dRestante = Duree(dureeRestante_h->value(),dureeRestante_m->value());
-//            if (tache->isPreemptive() && tache->getDuree().getDureeEnMinutes() == d.getDureeEnMinutes())
-//                throw CalendarException("La tache suivante est préemptive et il n'y a qu'une seule programmation.");
             if (programmationmanager.isFree(programmation, QDateTime(calendar->selectedDate(),horaire->time()), Duree(duree_h->value(),duree_m->value()))) {
                 programmation->setDate(QDateTime(calendar->selectedDate(),horaire->time()));
                 programmation->setDuree(Duree(duree_h->value(),duree_m->value()));
@@ -442,6 +451,7 @@ void ProgrammationEditeur::modifDureeRestante(){
     if (test>(12*60)) {
         duree_h->setValue(12);
         duree_m->setValue(0);
+        test = Duree(12, 0).getDureeEnMinutes();
     }
     if (tache && tache->isPreemptive()) {
         int dureeMax = tache->getDureeRestante().getDureeEnMinutes();
@@ -476,6 +486,32 @@ void ProgrammationEditeur::supprimer(){
         {
             QMessageBox::warning(this,"Suppression programmation", e.getInfo());
         }
+    }
+}
+
+void ProgrammationEditeur::initListeProgrammation(){
+    programmations = new QHBoxLayout;
+    listesProgrammation = new QListWidget();
+
+    list<Programmation*> listes = ProgrammationManager::getInstance().getProgrammation(tache);
+    int i=0;
+    qDebug() << "je suis là";
+    for (list<Programmation*>::const_iterator it = listes.begin(); it != listes.end(); it++){
+        if ((*it) != programmation) {
+            QString texte = "Programmé le "+(*it)->getDate().date().toString("dddd d/M/yyyy") + " à " +
+                    (*it)->getDate().time().toString("hh:mm") + " pour une durée de " + QString::number((*it)->getDuree().getDureeEnMinutes()/60) + "h";
+            int minutes = (*it)->getDuree().getDureeEnMinutes()%60;
+            if (minutes != 0) {
+                texte+= " et " + QString::number(minutes) + " min";
+            }
+            texte+=".";
+            qDebug() << texte;
+            listesProgrammation->insertItem(i,new QListWidgetItem(texte));
+            i++;
+        }
+    }
+    if (listes.size() == 0) {
+        programmations->addWidget(listesProgrammation);
     }
 }
 

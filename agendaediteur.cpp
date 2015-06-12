@@ -148,7 +148,13 @@ void AgendaEditeur::setProgrammation() {
             font.setBold(true);
             temp->setFont(font);
             temp->setTextAlignment(Qt::AlignTop);
-            temp->setData(Qt::BackgroundRole, QVariant(QColor(Qt::yellow)));
+            TacheUnaire* test = dynamic_cast<TacheUnaire*>(&((*it)->getEvenement()));
+            if (test) {
+                temp->setData(Qt::BackgroundRole, QVariant(test->getCouleur()));
+            } else {
+                temp->setData(Qt::BackgroundRole, QVariant(QColor(Qt::lightGray)));
+            }
+
             int nbLignes = (*it)->getDuree().getDureeEnMinutes()/15;
             int debutLigne = ((*it)->getDate().time().minute() + ((*it)->getDate().time().hour()*60))/15;
             calendar->setItem(debutLigne, ((*it)->getDate().date().dayOfWeek())-1, temp);
@@ -164,7 +170,14 @@ void AgendaEditeur::setProgrammation() {
                    font.setBold(true);
                    temp->setFont(font);
                    temp->setTextAlignment(Qt::AlignTop);
-                   temp->setData(Qt::BackgroundRole, QVariant(QColor(Qt::red)));
+
+                   TacheUnaire* test = dynamic_cast<TacheUnaire*>(&((*it)->getEvenement()));
+                   if (test) {
+                       temp->setData(Qt::BackgroundRole, QVariant(test->getCouleur()));
+                   } else {
+                       temp->setData(Qt::BackgroundRole, QVariant(QColor(Qt::lightGray)));
+                   }
+
 
                    int nbLignes;
                    int debutLigne;
@@ -253,6 +266,4 @@ void AgendaEditeur::resizeEvent(QResizeEvent *event) {
     calendar->setColumnWidth(4, (this->width()-80)/7);
     calendar->setColumnWidth(5, (this->width()-80)/7);
     calendar->setColumnWidth(6, (this->width()-80)/7);
-
-//    AgendaEditeur::resizeEvent(event);
 }
