@@ -467,6 +467,11 @@ void TacheEditeur::modifierListeSoust()
 
 void TacheEditeur::sauvegarder()
 {
+    if(unaire && (duree_h->value()+duree_m->value() == 0) )
+    {
+        QMessageBox::warning(this,"Sauvegarde tâche unaire", "Une tâche unaire doit avoir une durée non nulle");
+        return;
+    }
     // Lors de la modification d'une tâche existante
     if(t!=0)
     {

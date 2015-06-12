@@ -19,7 +19,8 @@ MainWindow::MainWindow()
     // Mettre le QTabWidget comme étant l'élément principal de la fenêtre
     setCentralWidget(onglets);
 
-    QShortcut* shortcut = new QShortcut(QKeySequence("Ctrl+W"),this, SLOT(closeCurrentTab()));
+    QShortcut* closeTab = new QShortcut(QKeySequence("Ctrl+W"),this, SLOT(closeCurrentTab()));
+    QShortcut* refreshAg = new QShortcut(QKeySequence(QKeySequence::Refresh),this, SLOT(refreshAgenda()));
 
     try{
         chargerProjets("Projets");
@@ -180,6 +181,11 @@ void MainWindow::closeTab(int index)
 void MainWindow::closeCurrentTab()
 {
     closeTab(onglets->currentIndex());
+}
+
+void MainWindow::refreshAgenda()
+{
+    if( agenda_ouvert ) agenda_ouvert->refresh();
 }
 
 void MainWindow::save()

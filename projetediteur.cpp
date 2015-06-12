@@ -311,12 +311,39 @@ void ProjetEditeur::programmerTache()
     try
     {
         Tache& t =tm.getTache(tache_courante);
-        ProgrammationEditeur* pe = new ProgrammationEditeur(&t, this);
-        pe->show();
+        if( dynamic_cast<TacheComposite*>(&t) )
+            throw CalendarException("Impossible de programmer une tâche composite");
 
-        modifier_tache->setEnabled(false);
-        supprimer_tache->setEnabled(false);
-        programmer->setHidden(true);
+        if( !t.estTermine() )
+        {
+            if(t.getPred().size()!=0)
+            {
+                for( std::list<Tache*>::const_iterator pred=t.getPred().begin() ; pred!=t.getPred().end() ; ++pred )
+                {
+                    qDebug()<<(*pred)->getTitre();
+                    if( !(*pred)->estTermine() )
+                        throw CalendarException("Un prédécesseur n'a pas été programmé : "+(*pred)->getTitre());
+                }
+            }
+
+            ProgrammationEditeur* pe = new ProgrammationEditeur(&t, this);
+            pe->show();
+
+            modifier_tache->setEnabled(false);
+            supprimer_tache->setEnabled(false);
+            programmer->setHidden(true);
+        }
+        else
+        {
+            QString programmations="La tâche est déjà programmée :\n";
+            list<Programmation*> progs = ProgrammationManager::getInstance().getProgrammation(dynamic_cast<TacheUnaire*>(&t));
+            for (list<Programmation*>::const_iterator it = progs.begin(); it != progs.end(); it++)
+            {
+                programmations+= "- "+(*it)->getDate().date().toString("dd/MM/yyyy")+" à "+(*it)->getDate().time().toString("hh:mm")+"\n";
+            }
+
+            throw CalendarException(programmations);
+         }
     }
     catch(CalendarException e)
     { QMessageBox::warning(this, "Programmation tâche", e.getInfo()); }

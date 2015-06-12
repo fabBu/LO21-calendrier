@@ -89,6 +89,10 @@ private slots:
      */
     void closeCurrentTab();
     /*!
+     * \brief Rafraîchit l'agenda s'il est ouvert
+     */
+    void refreshAgenda();
+    /*!
      * \brief Sauvegarde des données avant fermeture de la fenêtre
      */
     void save();

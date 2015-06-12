@@ -42,9 +42,10 @@ public:
 
 signals:
 
-private slots:
-    void refresh();
+public slots:
     void resizeEvent(QResizeEvent *event);
+    void refresh();
+private slots:
     void editerProgrammation(QTableWidgetItem* button);
     void ajouterProgrammation();
     void modifDate();
