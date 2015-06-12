@@ -16,6 +16,7 @@
 
 #include "taches.h"
 #include "tachemanager.h"
+#include "programmationmanager.h"
 
 
 class TacheEditeur : public QWidget {

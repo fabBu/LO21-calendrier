@@ -479,14 +479,15 @@ void TacheEditeur::sauvegarder()
         {
             t->setTitre(titre->text());
             t->setDescription(desc->toPlainText());
-            t->setDatesDisponibiliteEcheance(dispo->date(), echeance->date());
 
             TacheUnaire* tu = dynamic_cast<TacheUnaire*>(t);
             if( tu )
             {
                 Duree dur(duree_h->value(), duree_m->value());
                 if(preemp->isChecked()!= tu->isPreemptive()
-                        || dur.getDureeEnMinutes() != tu->getDuree().getDureeEnMinutes() )
+                        || dur.getDureeEnMinutes() != tu->getDuree().getDureeEnMinutes()
+                        || dispo->date() != tu->getDateDisponibilite()
+                        || echeance->date() != tu->getDateEcheance())
                 {
                     QMessageBox::StandardButton reply;
                     reply = QMessageBox::question(this, "Modification tâche",
@@ -495,6 +496,9 @@ void TacheEditeur::sauvegarder()
                                                   QMessageBox::Yes|QMessageBox::No);
                     if (reply == QMessageBox::Yes)
                     {
+                        ProgrammationManager::getInstance().removeProgrammation(tu);
+
+                        t->setDatesDisponibiliteEcheance(dispo->date(), echeance->date());
                         tu->setPreemptive(preemp->isChecked());
                         tu->setDuree(dur);
                     }

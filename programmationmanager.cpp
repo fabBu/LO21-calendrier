@@ -83,9 +83,9 @@ void ProgrammationManager::removeProgrammation(const QDateTime& d){
 void ProgrammationManager::removeProgrammation(Programmation* pr){
     TacheUnaire* tache = dynamic_cast<TacheUnaire*>(&(pr->getEvenement()));
     if (tache) {
-        qDebug()<<"COUCOU: "<<tache->getTitre();
-        //int minuteRestante = tache->getDureeRestante().getDureeEnMinutes() + pr->getDuree().getDureeEnMinutes();
-        //tache->setDureeRestante(Duree(minuteRestante/60,minuteRestante%60));
+        if (isSuccesseurProgramme(tache)) {
+            removeProgrammationSuccesseur(tache);
+        }
         tache->setDureeRestante( tache->getDureeRestante()+pr->getDuree() );
         tache->setTermine(false);
     }
@@ -160,9 +160,31 @@ void ProgrammationManager::writeXML(const QString& dossier)
 }
 
 void ProgrammationManager::removeProgrammationSuccesseur(const TacheUnaire* t){
+    list<Tache*> listeSuccesseurs = t->getSucc();
+    for (list<Tache*>::const_iterator its = listeSuccesseurs.begin(); its != listeSuccesseurs.end(); its++) {
+        TacheUnaire* tache = dynamic_cast<TacheUnaire*>(*its);
+        list<Programmation*> listeProgrammations = getProgrammation(tache);
+        if (!(listeProgrammations.empty())) {
+            for (list<Programmation*>::const_iterator itp = listeProgrammations.begin(); itp != listeProgrammations.end(); itp++) {
+                programmations.remove((*itp));
+            }
+            tache->setTermine(false);
+            tache->setDureeRestante(tache->getDuree());
+        }
+    }
+}
 
+void ProgrammationManager::removeProgrammation(const TacheUnaire* t){
+    list<Programmation*> listeProgrammations = getProgrammation(t);
+    for (list<Programmation*>::const_iterator itp = listeProgrammations.begin(); itp != listeProgrammations.end(); itp++) {
+        removeProgrammation((*itp));
+    }
 }
 
 bool ProgrammationManager::isSuccesseurProgramme(const TacheUnaire* t){
-
+    if (t->getFirstSuccesseur() == 0) {
+        return false;
+    } else {
+        return t->getFirstSuccesseur()->estTermine();
+    }
 }

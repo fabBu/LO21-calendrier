@@ -407,6 +407,9 @@ void ProgrammationEditeur::modifier(){
                         tache->setTermine(false);
                     }
                 }
+                if (tache->getDureeRestante().getDureeEnMinutes() != 0){
+                    ProgrammationManager::getInstance().removeProgrammationSuccesseur(tache);
+                }
             } else {
                 throw CalendarException("ERREUR: Une tâche est déjà programmé à cette date");
             }
