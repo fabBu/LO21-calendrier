@@ -27,7 +27,7 @@ void ProgrammationManager::addItem(Programmation* p){
 
 Programmation* ProgrammationManager::findProgrammation(const QDateTime& d) const{
     for (list<Programmation*>::const_iterator it = programmations.begin(); it != programmations.end(); it++){
-        if (d >= (*it)->getDate() && d <= (*it)->getDateFin()){
+        if (d >= (*it)->getDate() && d < (*it)->getDateFin()){
             return *it;
         }
     }
@@ -159,3 +159,10 @@ void ProgrammationManager::writeXML(const QString& dossier)
     file.close();
 }
 
+void ProgrammationManager::removeProgrammationSuccesseur(const TacheUnaire* t){
+
+}
+
+bool ProgrammationManager::isSuccesseurProgramme(const TacheUnaire* t){
+
+}

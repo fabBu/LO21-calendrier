@@ -1,8 +1,6 @@
 #include "programmationediteur.h"
 
 ProgrammationEditeur::ProgrammationEditeur(Programmation* pr, QWidget *p): programmationmanager(ProgrammationManager::getInstance()) {
-    setWindowTitle("Programmation d'un événement");
-//    setFixedSize(650,300);
 
     groupBoxEvenement = new QGroupBox("Evenement");
     groupBoxProgrammation = new QGroupBox("Programmation");
@@ -10,6 +8,16 @@ ProgrammationEditeur::ProgrammationEditeur(Programmation* pr, QWidget *p): progr
     activite = dynamic_cast<Activite*>(&(pr->getEvenement()));
     tache = dynamic_cast<TacheUnaire*>(&(pr->getEvenement()));
     programmation = pr;
+
+    if (tache) {
+        if (tache->isPreemptive()) {
+            setWindowTitle("Programmation d'une tache préemptive");
+        } else {
+            setWindowTitle("Programmation d'une tache non préemptive");
+        }
+    } else {
+        setWindowTitle("Programmation d'une activité");
+    }
 
     main_layout = new QVBoxLayout;
     param_layout = new QVBoxLayout;
@@ -73,12 +81,20 @@ ProgrammationEditeur::ProgrammationEditeur(Programmation* pr, QWidget *p): progr
 }
 
 ProgrammationEditeur::ProgrammationEditeur(Evenement* ev, QWidget *p): programmationmanager(ProgrammationManager::getInstance()) {
-    setWindowTitle("Programmation d'un événement");
-//    setFixedSize(650,400);
 
     activite = dynamic_cast<Activite*>(ev);
     tache = dynamic_cast<TacheUnaire*>(ev);
     programmation = 0;
+
+    if (tache) {
+        if (tache->isPreemptive()) {
+            setWindowTitle("Programmation d'une tache préemptive");
+        } else {
+            setWindowTitle("Programmation d'une tache non préemptive");
+        }
+    } else {
+        setWindowTitle("Programmation d'une activité");
+    }
 
     if (tache) {
         if (tache->estTermine())
@@ -143,6 +159,7 @@ ProgrammationEditeur::ProgrammationEditeur(Evenement* ev, QWidget *p): programma
     main_layout->addLayout(attributs_layout);
 
     if (tache && tache->isPreemptive()) {
+        qDebug() << "yyololoaloalaol";
         initListeProgrammation();
         main_layout->addLayout(programmations);
     }
@@ -510,7 +527,10 @@ void ProgrammationEditeur::initListeProgrammation(){
             i++;
         }
     }
-    if (listes.size() == 0) {
+
+    if (programmation == 0 && listes.size()!=0) {
+        programmations->addWidget(listesProgrammation);
+    } else if (listes.size()-1 != 0) {
         programmations->addWidget(listesProgrammation);
     }
 }

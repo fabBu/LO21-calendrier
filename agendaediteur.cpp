@@ -5,7 +5,6 @@
 AgendaEditeur::AgendaEditeur()
 {
     setWindowTitle("Programmation d'un événement");
-//    setMinimumSize(1334,800);
 
     semaine_layout = new QHBoxLayout;
     calendar_layout = new QVBoxLayout;
@@ -143,12 +142,17 @@ void AgendaEditeur::setProgrammation() {
 
         if (nbJours == 0) {
             QString texte = (*it)->getDate().time().toString("hh:mm") + " - " + (*it)->getDateFin().time().toString("hh:mm") + ": " + (*it)->getEvenement().getTitre();
+            TacheUnaire* test = dynamic_cast<TacheUnaire*>(&((*it)->getEvenement()));
+            if (test) {
+                texte += "\n(" + test->getParent()->getNom() + ")";
+            }
+
             QTableWidgetItem* temp = new QTableWidgetItem(texte);
             QFont font;
             font.setBold(true);
             temp->setFont(font);
             temp->setTextAlignment(Qt::AlignTop);
-            TacheUnaire* test = dynamic_cast<TacheUnaire*>(&((*it)->getEvenement()));
+
             if (test) {
                 temp->setData(Qt::BackgroundRole, QVariant(test->getCouleur()));
             } else {
@@ -165,13 +169,17 @@ void AgendaEditeur::setProgrammation() {
                QDate date = (*it)->getDate().date().addDays(i);
                if (!(date<lundi || date>dimanche)){
                    QString texte = (*it)->getDate().time().toString("hh:mm") + " - " + (*it)->getDateFin().time().toString("hh:mm") + ": " + (*it)->getEvenement().getTitre();
+                   TacheUnaire* test = dynamic_cast<TacheUnaire*>(&((*it)->getEvenement()));
+
+                   if (test) {
+                       texte += "\n(" + test->getParent()->getNom() + ")";
+                   }
                    QTableWidgetItem* temp = new QTableWidgetItem(texte);
                    QFont font;
                    font.setBold(true);
                    temp->setFont(font);
                    temp->setTextAlignment(Qt::AlignTop);
 
-                   TacheUnaire* test = dynamic_cast<TacheUnaire*>(&((*it)->getEvenement()));
                    if (test) {
                        temp->setData(Qt::BackgroundRole, QVariant(test->getCouleur()));
                    } else {

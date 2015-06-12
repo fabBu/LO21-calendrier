@@ -21,6 +21,8 @@ public:
     void addProgrammation(const QDateTime& da, const Duree& du, Evenement *e);
     void removeProgrammation(const QDateTime& d);
     void removeProgrammation(Programmation *pr);
+    void removeProgrammationSuccesseur(const TacheUnaire* t);
+    bool isSuccesseurProgramme(const TacheUnaire *t);
 
     const list<Programmation*> getProgrammation(const QDate& debut, const QDate& fin)const;
     const list<Programmation*> getProgrammation(const TacheUnaire *t)const;
