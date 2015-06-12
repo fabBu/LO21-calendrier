@@ -142,6 +142,12 @@ public:
      * \return True si les tâches possèdent le même titre
      */
     bool operator==(const Tache& t) { return titre == t.getTitre(); }
+    /*!
+     * \brief Comparaison entre deux tâches
+     * \param t Tâche à comparer
+     * \return True si les tâches possèdent un titre différent
+     */
+    bool operator!=(const Tache& t) { return titre != t.getTitre(); }
 
     QColor getCouleur() {
         return parent->getCouleur();

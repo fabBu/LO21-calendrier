@@ -182,6 +182,12 @@ QDomDocument TacheManager::projetToXML()
     addXmlElement( doc, proprietesElement, "debut", debut.toString("dd-MM-yyyy") );
     addXmlElement( doc, proprietesElement, "fin", fin.toString("dd-MM-yyyy") );
 
+    QDomElement couleurElement= addXmlElement(doc, proprietesElement, "couleur");
+    couleurElement.setAttribute("r", couleur.red());
+    couleurElement.setAttribute("g", couleur.green());
+    couleurElement.setAttribute("b", couleur.blue());
+
+
     //   Tâches appartenant au projet
     QDomElement tachesElement = addXmlElement(doc, projetElement, "taches");
     std::list<Tache*>::iterator it;

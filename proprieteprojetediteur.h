@@ -35,6 +35,9 @@ public:
      */
     ProprieteProjetEditeur(QWidget* pa, const QString& proj="");
 private slots:
+    /*!
+     * \brief Ouvre un QColorDialog permettant de modifier la couleur pour le projet
+     */
     void choixCouleur();
     /*!
      * \brief Demande de création du projet
