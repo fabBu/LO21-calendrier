@@ -213,14 +213,6 @@ bool TacheComposite::estSousTache(const Tache& t)
         return false;
 }
 
-/*!
- *\brief Ajout d'une sous-tâche
- *
- * Ajoute la tâche t comme étant une sous-tâche de
- * la tâche composite
- *
- *\param t : sous-tâche
- */
 void TacheComposite::ajouterSousTache(Tache& t)
 {
     // Verification que la tâche t n'est pas déjà une sous-tâche
