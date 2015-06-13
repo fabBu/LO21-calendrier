@@ -159,7 +159,6 @@ ProgrammationEditeur::ProgrammationEditeur(Evenement* ev, QWidget *p): programma
     main_layout->addLayout(attributs_layout);
 
     if (tache && tache->isPreemptive()) {
-        qDebug() << "yyololoaloalaol";
         initListeProgrammation();
         main_layout->addLayout(programmations);
     }
@@ -396,7 +395,7 @@ void ProgrammationEditeur::modifier(){
         if (tache){
             Duree d = Duree(duree_h->value(),duree_m->value());
             Duree dRestante = Duree(dureeRestante_h->value(),dureeRestante_m->value());
-            if (programmationmanager.isFree(programmation, QDateTime(calendar->selectedDate(),horaire->time()), Duree(duree_h->value(),duree_m->value()))) {
+            if (programmationmanager.isFree(QDateTime(calendar->selectedDate(),horaire->time()), Duree(duree_h->value(),duree_m->value()),programmation)) {
                 programmation->setDate(QDateTime(calendar->selectedDate(),horaire->time()));
                 programmation->setDuree(Duree(duree_h->value(),duree_m->value()));
                 if (dRestante.getDureeEnMinutes() != tache->getDureeRestante().getDureeEnMinutes()) {
@@ -416,7 +415,7 @@ void ProgrammationEditeur::modifier(){
             QString message = "La programmation suivante a été ajouté :" + programmationmanager.getProgrammation(QDateTime(calendar->selectedDate(),horaire->time())).getEvenement().getTitre();
             QMessageBox::warning(this,"Ajout programmation", message);
         } else {
-            if (programmationmanager.isFree(programmation, QDateTime(calendar->selectedDate(),horaire->time()), Duree(duree_h->value(),duree_m->value()))) {
+            if (programmationmanager.isFree(QDateTime(calendar->selectedDate(),horaire->time()), Duree(duree_h->value(),duree_m->value()),programmation)) {
                 programmation->setDate(QDateTime(calendar->selectedDate(),horaire->time()));
                 programmation->setDuree(Duree(duree_h->value(),duree_m->value()));
             } else {
@@ -515,7 +514,6 @@ void ProgrammationEditeur::initListeProgrammation(){
 
     list<Programmation*> listes = ProgrammationManager::getInstance().getProgrammation(tache);
     int i=0;
-    qDebug() << "je suis là";
     for (list<Programmation*>::const_iterator it = listes.begin(); it != listes.end(); it++){
         if ((*it) != programmation) {
             QString texte = "Programmé le "+(*it)->getDate().date().toString("dddd d/M/yyyy") + " à " +
@@ -525,7 +523,6 @@ void ProgrammationEditeur::initListeProgrammation(){
                 texte+= " et " + QString::number(minutes) + " min";
             }
             texte+=".";
-            qDebug() << texte;
             listesProgrammation->insertItem(i,new QListWidgetItem(texte));
             i++;
         }
@@ -539,14 +536,19 @@ void ProgrammationEditeur::initListeProgrammation(){
 }
 
 ProgrammationEditeur::~ProgrammationEditeur(){
-    delete titre_label, desc_label, type_label, lieu_label, horaire_label, duree_label, disponibilite_label, echeance_label;
+    delete titre_label, desc_label, type_label, lieu_label, horaire_label, duree_label, disponibilite_label, echeance_label, dureeTotal_label, dureeRestante_label;
     delete titre, lieu;
     delete desc;
-    delete calendar;
+    delete type;
     delete termine;
     delete disponibilite, echeance;
+    delete calendar;
+    delete dureeTotal_h, dureeTotal_m, dureeRestante_h, dureeRestante_m, duree_h, duree_m;
     delete horaire;
-    delete btn_cancel, btn_save;
-    delete l_main, l_titre, l_desc, l_type, l_lieu, l_horaires, l_cancelsave, attributs_layout, l_calendar, l_dates, l_dureeTotale, l_dureeRestante;
-    delete calendar_layout, main_layout, param_layout;
+    delete btn_cancel, btn_save, btn_supprimer;
+    delete groupBoxEvenement, groupBoxProgrammation;
+    delete listesProgrammation;
+
+    delete l_main, l_titre, l_desc, l_type, l_lieu, l_horaires, l_cancelsave, attributs_layout, l_calendar, l_dates, l_dureeTotale, l_dureeRestante, programmations;
+    delete calendar_layout, main_layout, param_layout, evenement_layout, programmation_layout;
 }

@@ -23,6 +23,10 @@
 #include "programmationmanager.h"
 #include "taches.h"
 
+/*!
+ * \class ProgrammationEditeur
+ * \brief Classe représentant une vue d'édition de programmation
+ */
 class ProgrammationEditeur : public QWidget
 {
 private:
@@ -49,30 +53,76 @@ private:
     Activite* activite;
     TacheUnaire* tache;
 
+    /*!
+     * \brief Initialisation du titre de l'événement
+     */
     void initTitre();
+    /*!
+     * \brief Initialisation du titre de l'événement
+     */
     void initDates();
+    /*!
+     * \brief Initialisation de la description de l'événement
+     */
     void initDesc();
+    /*!
+     * \brief Initialisation du lieu de l'événement
+     */
     void initLieu();
+    /*!
+     * \brief Initialisation du type d'événement
+     */
     void initType();
+    /*!
+     * \brief Initialisation des bouttons d'annulation, de suppression et de sauvegarde
+     */
     void initCancelSave();
+    /*!
+     * \brief Initialisation de la partie durée totale d'une tache
+     */
     void initDureeTotale();
+    /*!
+     * \brief Initialisation la partie durée restante d'une programmation
+     */
     void initDureeRestante();
+    /*!
+     * \brief Initialisation de la liste des programmations pour une tache préemptive
+     */
     void initListeProgrammation();
+    /*!
+     * \brief Initialisation de la partie calendrier pour choisir la date de la programmation
+     */
     void initCalendar(Programmation* pr = 0);
+    /*!
+     * \brief Initialisation de la partie programmation pour choisir l'horaire et la durée de la programmation
+     */
     void initProgrammation(Programmation* pr = 0);
 
 public:
+    /*!
+     * \brief Constructeur de la classe ProgrammationEditeur pour l'édition d'une programmation
+     * \param pr : programmation
+     * \param p : widget parent
+     */
     ProgrammationEditeur(Programmation* pr, QWidget *p = 0);
+    /*!
+     * \brief Constructeur de la classe ProgrammationEditeur pour l'ajout d'une programmation
+     * \param pr : programmation
+     * \param p : widget parent
+     */
     ProgrammationEditeur(Evenement* ev = 0, QWidget *p = 0);
+    /*!
+     * \brief Destructeur de la classe ProgrammationEditeur
+     */
     ~ProgrammationEditeur();
 
 signals:
-    void fermeture();
+    void fermeture(); /*!< Signal de fermeture*/
 private slots:
-    void sauvegarder();
-    void supprimer();
-    void modifier();
-    void modifDureeRestante();
+    void sauvegarder(); /*!< Slot appelé pour sauvegarder l'ajout d'une programmation */
+    void supprimer(); /*!< Slot appelé pour supprimer une programmation*/
+    void modifier(); /*!< Slot appelé pour sauvegarder la modification d'une programmation */
+    void modifDureeRestante(); /*!< Slot appelé lorsque l'on modifie la durée de la tache */
 };
 
 #endif // ACTIVITEEDITEUR_H

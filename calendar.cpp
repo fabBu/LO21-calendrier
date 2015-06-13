@@ -2,8 +2,6 @@
 #include <ctime>
 #include "calendar.h"
 
-#include <QDebug>
-
 void Duree::writeXmlAttributes(QDomElement elem)
 {
     elem.setAttribute("jours", getNbJour());
@@ -58,6 +56,5 @@ Duree operator+(const Duree& d1, const Duree& d2)
     }
 
     Duree res(h, m);
-    qDebug()<<"Nouvelle duree restante: "<<h<<"H"<<m;
     return res;
 }

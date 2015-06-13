@@ -134,7 +134,6 @@ void AgendaEditeur::setProgrammation() {
     std::list<Programmation*> listes = ProgrammationManager::getInstance().getProgrammation(lundi,dimanche);
     programmations =  QList<QTableWidgetItem*>();
     for(std::list<Programmation*>::const_iterator it = listes.begin(); it != listes.end(); ++it) {
-        qDebug() << (*it)->getEvenement().getTitre();
         int nbJours = (*it)->getDateFin().date().dayOfWeek() - (*it)->getDate().date().dayOfWeek();
         if (((*it)->getDateFin().date().dayOfWeek() == 7 || (*it)->getDateFin().date().dayOfWeek() == 1) && nbJours != 0){
             nbJours = 1;

@@ -1,12 +1,6 @@
 #ifndef EVENEMENT_H
 #define EVENEMENT_H
 
-/*!
-  * \file evenement.h
-  * \brief Création des événements
-  * \author Fabrice De Régibus
-  * \version 0.1
-  */
 #include <string.h>
 #include <iostream>
 #include <QString>

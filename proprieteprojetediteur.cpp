@@ -109,10 +109,10 @@ void ProprieteProjetEditeur::modifierProjet()
             projets.setNom(projet->getNom(), nom_edit->text());
             nom=nom_edit->text();
         }
-        if( projet->getDebut() != debut_date->date())
-            projets.setDebut(projet->getNom(), debut_date->date());
         if( projet->getFin() != fin_date->date() )
             projets.setFin(projet->getNom(), fin_date->date());
+        if( projet->getDebut() != debut_date->date())
+            projets.setDebut(projet->getNom(), debut_date->date());
 
         projet->setCouleur(couleur_choix->palette().color(QPalette::Button));
 

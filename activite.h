@@ -7,26 +7,42 @@
 #include <QMetaEnum>
 
 /*!
- * \file activite.h
- * \brief Création des activités
- * \author Fabrice De Régibus
- * \version 1.0
+ * \class MetaEnum
+ * \brief Classe représentant un enum de type
+ *
+ * La classe représente un enum de type
  */
-
 class MetaEnum : public QObject
 {
     Q_OBJECT
 
     Q_ENUMS(Type)
 public:
+
     enum Type{
         Rendez_vous, /*!< Rendez-vous */
         Reunion, /*!< Réunion */
         Autre /*!< Autre */
     };
+    /*!
+     * \brief Méthode pour passer d'un type à un QString
+     * \param t : Type
+     */
     QString typeToString(Type t);
+    /*!
+     * \brief Méthode pour passer d'un int à un type
+     * \param i : int
+     */
     QString typeToString(int i);
+    /*!
+     * \brief Méthode pour passer d'un QString à un type
+     * \param type : QString
+     */
     Type stringToType(const QString& type);
+    /*!
+     * \brief Getter sur le nombre de type
+     * \return int
+     */
     int getNbEnum();
 };
 
@@ -80,6 +96,11 @@ public:
      */
     void affiche();
 
+    /*!
+     * \brief Méthode pour stocker une activité en XML
+     * \param doc : QDomDocument
+     * \param elem : QDomElement
+     */
     QString ActiviteToXML(QDomDocument& doc, QDomElement& elem);
 };
 

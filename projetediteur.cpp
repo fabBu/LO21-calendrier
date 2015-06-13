@@ -1,7 +1,5 @@
 #include "projetediteur.h"
 
-#include <QDebug>
-
 ProjetEditeur::ProjetEditeur(TacheManager &tm1, QWidget *p):tm(tm1),parent(p)
 {
     setWindowTitle(tm.getNom());
@@ -320,7 +318,6 @@ void ProjetEditeur::programmerTache()
             {
                 for( std::list<Tache*>::const_iterator pred=t.getPred().begin() ; pred!=t.getPred().end() ; ++pred )
                 {
-                    qDebug()<<(*pred)->getTitre();
                     if( !(*pred)->estTermine() )
                         throw CalendarException("Un prédécesseur n'a pas été programmé : "+(*pred)->getTitre());
                 }
