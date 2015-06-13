@@ -10,7 +10,6 @@ void Duree::writeXmlAttributes(QDomElement elem)
 }
 
 
-
 std::ostream& operator<<(std::ostream& f, const Duree & d){ d.afficher(f); return f; }
 
 
