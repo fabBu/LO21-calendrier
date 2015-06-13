@@ -138,6 +138,10 @@ void AgendaEditeur::setProgrammation() {
         if (((*it)->getDateFin().date().dayOfWeek() == 7 || (*it)->getDateFin().date().dayOfWeek() == 1) && nbJours != 0){
             nbJours = 1;
         }
+        if (((*it)->getDateFin().date().dayOfWeek() != (*it)->getDate().date().dayOfWeek() == 1)
+                && (*it)->getDateFin().time() == QTime(0,0) ){
+            nbJours = 0;
+        }
 
         if (nbJours == 0) {
             QString texte = (*it)->getDate().time().toString("hh:mm") + " - " + (*it)->getDateFin().time().toString("hh:mm") + ": " + (*it)->getEvenement().getTitre();

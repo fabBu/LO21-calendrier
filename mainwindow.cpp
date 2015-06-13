@@ -3,7 +3,7 @@
 MainWindow::MainWindow()
     :projets(ProjetsManager::getInstance()), agenda(ProgrammationManager::getInstance()), agenda_ouvert(0)
 {
-    setWindowTitle("Le super logiciel");
+    setWindowTitle("Gestionnaire de projets avec agenda");
     setMinimumHeight(700);
     setMinimumWidth(850);
 
@@ -192,8 +192,6 @@ void MainWindow::save()
 {
     projets.writeXML("Projets");
     agenda.writeXML("Agenda");
-    projets.libererInstance();
-    agenda.libererInstance();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -204,7 +202,12 @@ void MainWindow::closeEvent(QCloseEvent *event)
                                                                  "Voulez-vous sauvegarder les dernières modifications ?",
                                                                  QMessageBox::Yes|QMessageBox::No);
         if (reply == QMessageBox::Yes)
+        {
                 save();
+
+                projets.libererInstance();
+                agenda.libererInstance();
+        }
     }
     catch(CalendarException e)
     { QMessageBox::warning(this, "Suppression tâche", e.getInfo()); }

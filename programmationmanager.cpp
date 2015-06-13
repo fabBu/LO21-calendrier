@@ -72,7 +72,8 @@ void ProgrammationManager::removeProgrammation(const QDateTime& d){
 
 void ProgrammationManager::removeProgrammation(Programmation* pr){
     TacheUnaire* tache = dynamic_cast<TacheUnaire*>(&(pr->getEvenement()));
-    if (tache) {
+    if (tache)
+    {
         if (isSuccesseurProgramme(tache)) {
             removeProgrammationSuccesseur(tache);
         }
@@ -156,7 +157,7 @@ void ProgrammationManager::removeProgrammationSuccesseur(const TacheUnaire* t){
         list<Programmation*> listeProgrammations = getProgrammation(tache);
         if (!(listeProgrammations.empty())) {
             for (list<Programmation*>::const_iterator itp = listeProgrammations.begin(); itp != listeProgrammations.end(); itp++) {
-                programmations.remove((*itp));
+                removeProgrammation((*itp));
             }
             tache->setTermine(false);
             tache->setDureeRestante(tache->getDuree());
@@ -175,6 +176,14 @@ bool ProgrammationManager::isSuccesseurProgramme(const TacheUnaire* t){
     if (t->getFirstSuccesseur() == 0) {
         return false;
     } else {
-        return t->getFirstSuccesseur()->estTermine();
+        try
+        {
+            Tache* tache = const_cast<Tache*>(t->getFirstSuccesseur());
+            TacheUnaire* test= dynamic_cast<TacheUnaire*>(tache);
+            getProgrammation( test );
+            return true;
+        }
+        catch(CalendarException e)
+        { return false; }
     }
 }

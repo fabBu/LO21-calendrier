@@ -318,6 +318,7 @@ void ProgrammationEditeur::initProgrammation(Programmation *pr){
     horaire_label = new QLabel("Horaire",this);
     horaire = new QTimeEdit(this);
     if (pr) horaire->setTime(pr->getDate().time());
+    connect(horaire, SIGNAL(timeChanged(QTime)), this, SLOT(verifierMinute(QTime)));
     l_horaires->addWidget(horaire_label);
     l_horaires->addWidget(horaire);
 
@@ -530,8 +531,20 @@ void ProgrammationEditeur::initListeProgrammation(){
 
     if (programmation == 0 && listes.size()!=0) {
         programmations->addWidget(listesProgrammation);
-    } else if (listes.size()-1 != 0) {
+    } else if (listes.size() > 1) {
         programmations->addWidget(listesProgrammation);
+    }
+}
+
+void ProgrammationEditeur::verifierMinute(QTime t){
+    if (t.minute() > 0 && t.minute() <= 15) {
+        horaire->setTime(QTime(horaire->time().hour(),15));
+    } else if (t.minute() > 15  && t.minute() <= 30) {
+        horaire->setTime(QTime(horaire->time().hour(),30));
+    } else if (t.minute() > 30 && t.minute() <= 45) {
+        horaire->setTime(QTime(horaire->time().hour(),45));
+    } else {
+        horaire->setTime(QTime(horaire->time().hour(),0));
     }
 }
 

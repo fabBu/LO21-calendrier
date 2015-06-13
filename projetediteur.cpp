@@ -293,7 +293,8 @@ void ProjetEditeur::supprimerTache()
     try
     {
         QMessageBox::StandardButton reply = QMessageBox::question(this, "Suppression",
-                                                                 "Êtes-vous sûr de vouloir supprimer la tâche ?",
+                                                                 "Êtes-vous sûr de vouloir supprimer la tâche ?\n"
+                                                                  "Cela supprimera ces programmations ainsi que celles de ses successeurs",
                                                                  QMessageBox::Yes|QMessageBox::No);
         if (reply == QMessageBox::Yes) {
             tm.retirerTache(tache_courante);
@@ -316,9 +317,10 @@ void ProjetEditeur::programmerTache()
         {
             if(t.getPred().size()!=0)
             {
-                for( std::list<Tache*>::const_iterator pred=t.getPred().begin() ; pred!=t.getPred().end() ; ++pred )
+                std::list<Tache*> l=t.getPred();
+                for( std::list<Tache*>::const_iterator pred=l.begin() ; pred!=l.end() ; ++pred )
                 {
-                    if( !(*pred)->estTermine() )
+                    if( !((*pred)->estTermine()) )
                         throw CalendarException("Un prédécesseur n'a pas été programmé : "+(*pred)->getTitre());
                 }
             }

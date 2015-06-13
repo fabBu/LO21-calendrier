@@ -123,6 +123,7 @@ private slots:
     void supprimer(); /*!< Slot appelé pour supprimer une programmation*/
     void modifier(); /*!< Slot appelé pour sauvegarder la modification d'une programmation */
     void modifDureeRestante(); /*!< Slot appelé lorsque l'on modifie la durée de la tache */
+    void verifierMinute(QTime t); /*!< Slot appelé lorsque l'on modifie l'horaire d'une tache pour fixer les minutes avec des quarts d'heure */
 };
 
 #endif // ACTIVITEEDITEUR_H

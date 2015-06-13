@@ -1,5 +1,7 @@
+#include "programmationmanager.h"
 #include "tachemanager.h"
 #include "taches.h"
+
 
 TacheManager::TacheManager(const QString &name, const QDate& dispo, const QDate& deadline, const QColor &coul):nom(name), debut(dispo), fin(deadline), couleur(coul){
     if( nom == "" ) throw CalendarException("Le projet doit avoir un nom !");
@@ -71,8 +73,12 @@ Tache& TacheManager::ajouterTacheComposite(const QString& t, const QString& desc
 
 void TacheManager::retirerTache(const QString& id)
 {
+
     Tache* t=trouverTache(id);
     if( !t ) throw CalendarException("TM : Retrait d'une tache inexistante");
+
+    TacheUnaire* tu = dynamic_cast<TacheUnaire*>(t);
+    ProgrammationManager::getInstance().removeProgrammation(tu);
 
     const list<Tache*> l = t->getSucc();
     list<Tache*>::const_iterator it;

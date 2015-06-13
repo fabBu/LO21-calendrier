@@ -492,7 +492,8 @@ void TacheEditeur::sauvegarder()
                     QMessageBox::StandardButton reply;
                     reply = QMessageBox::question(this, "Modification tâche",
                                                   "La modification des dates/durée engendrera la suppression"
-                                                  "des programmations de la tâche.\nVoulez-vous continuer ?",
+                                                  " des programmations de la tâche ainsi que celle de ses successeurs\n"
+                                                  "Voulez-vous continuer ?",
                                                   QMessageBox::Yes|QMessageBox::No);
                     if (reply == QMessageBox::Yes)
                     {
@@ -501,6 +502,7 @@ void TacheEditeur::sauvegarder()
                         t->setDatesDisponibiliteEcheance(dispo->date(), echeance->date());
                         tu->setPreemptive(preemp->isChecked());
                         tu->setDuree(dur);
+                        tu->setDureeRestante(dur);
                     }
                 }
             }
