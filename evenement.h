@@ -10,8 +10,6 @@
 /*!
  * \class Evenement
  * \brief Classe abstraite représentant un événement
- *
- *  La classe représente un événement
  */
 class Evenement : public QObject
 {
@@ -22,38 +20,35 @@ protected:
     QString description; /*!< Description de l'événement*/
 public:
     /*!
-     * \brief Constructeur
-     *
-     * Constructeur de la classe Evenement
-     *
-     * \param t : titre
-     * \param d : description
+     * \brief Constructeur de la classe Evenement
+     * \param t : \a titre
+     * \param d : \a description
      */
     Evenement(const QString& t, const QString& d):titre(t), description(d) {
         if( titre == "") throw CalendarException("Tout événement doit posséder un nom !");
     }
 
     /*!
-     * \brief Getter sur titre
-     * \return titre
+     * \brief Getter sur \a titre
+     * \return \a titre
      */
     const QString& getTitre() const { return titre;}
 
     /*!
-     * \brief Setter sur titre
-     * \param t : titre
+     * \brief Setter sur \a titre
+     * \param t : \a titre
      */
     void setTitre(const QString& t);
 
     /*!
-     * \brief Getter sur description
-     * \return description
+     * \brief Getter sur \a description
+     * \return \a description
      */
     const QString& getDescription() const { return description;}
 
     /*!
-     * \brief Setter sur description
-     * \param d : description
+     * \brief Setter sur \a description
+     * \param d : \a description
      */
     void setDescription(const QString& d);
 
@@ -65,7 +60,7 @@ public:
 signals:
     /*!
      * \brief Signal de suppression de l'événement
-     * \param t Pointeur sur l'événement
+     * \param t : Pointeur sur l'événement
      */
      void estSupprime(Evenement* t);
 };

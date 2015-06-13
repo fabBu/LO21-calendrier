@@ -14,8 +14,6 @@
 /*!
  * \class AgendaEditeur
  * \brief Classe de création d'une vue agenda
- *
- * La classe représente une vue d'agenda
  */
 class AgendaEditeur : public QWidget
 {
@@ -60,10 +58,7 @@ private:
 
 public:
     /*!
-     * \brief Constructeur
-     *
-     * Constructeur de la classe AgendaEditeur
-     *
+     * \brief Constructeur de la classe AgendaEditeur
      */
     AgendaEditeur();
 

@@ -9,8 +9,6 @@
 /*!
  * \class MetaEnum
  * \brief Classe représentant un enum de type
- *
- * La classe représente un enum de type
  */
 class MetaEnum : public QObject
 {
@@ -72,23 +70,23 @@ public:
     Activite(const QString& ti, const QString& de, const MetaEnum::Type& ty, const QString& l):Evenement(ti,de), type(ty), lieu(l) {}
 
     /*!
-     * \brief Getter sur type
-     * \return type
+     * \brief Getter sur \a type
+     * \return \a type
      */
     const MetaEnum::Type& getType() const{return type;}
     /*!
-     * \brief Setter sur type
-     * \param t : type
+     * \brief Setter sur \a type
+     * \param t : nouveau type
      */
     void setType(const MetaEnum::Type& t);
     /*!
      * \brief Getter sur lieu
-     * \return lieu
+     * \return \a lieu
      */
     const QString& getLieu() const { return lieu;}
     /*!
-     * \brief Setter sur lieu
-     * \param l : lieu
+     * \brief Setter sur \a lieu
+     * \param l : nouveau lieu
      */
     void setLieu(const QString& l);
     /*!
@@ -97,9 +95,10 @@ public:
     void affiche();
 
     /*!
-     * \brief Méthode pour stocker une activité en XML
-     * \param doc : QDomDocument
-     * \param elem : QDomElement
+     * \brief Création de code XML à partir des informations de l'activité
+     * \param doc Document XML dans lequel générer le code
+     * \param elem Element sous lequel insérer le code
+     * \return Chaîne de caractère généré et introduite dans le document XML
      */
     QString ActiviteToXML(QDomDocument& doc, QDomElement& elem);
 };

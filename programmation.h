@@ -10,8 +10,6 @@
 /*!
  * \class Programmation
  * \brief Classe représentant une programmation
- *
- * La classe représente une programmation
  */
 class Programmation
 {

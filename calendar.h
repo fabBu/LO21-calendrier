@@ -14,23 +14,18 @@ using namespace std;
 /*!
  * \class CalendarException
  * \brief Classe représentant une exception de type CALENDAR
- *
- * La classe représente un enum de type
  */
 class CalendarException{
 public:
     /*!
-     * \brief Constructeur
-     *
-     * Constructeur de la classe CalendarException
-     *
+     * \brief Constructeur de la classe CalendarException
      * \param message : message d'erreur
      */
     CalendarException(const QString& message):info(message){}
 
     /*!
      * \brief Getter sur le message d'erreur
-     * \return info : message d'erreur
+     * \return \a info : message d'erreur
      */
     QString getInfo() const { return info; }
 private:
@@ -45,25 +40,23 @@ class TimeException{
 public:
     /*!
      * \brief Constructeur
-     *
-     * Constructeur de la classe TimeException
-     *
      * \param m : message d'erreur
      */
     TimeException(const std::string& m):info(m){}
     /*!
      * \brief Getter sur le message d'erreur
-     * \return info : message d'erreur
+     * \return \a info : message d'erreur
      */
     const std::string& GetInfo() const { return info; }
 private:
     std::string info; /*!< Message d'erreur*/
 };
 
-/*! \class Duree
-        \brief Classe permettant de manipuler des durees
-        L'utilisation de cette classe nécessite des dates valides au sens commun du terme.
-        Déclenchement d'exception dans le cas contraire
+/*!
+ * \class Duree
+ * \brief Classe permettant de manipuler des durees
+ * L'utilisation de cette classe nécessite des dates valides au sens commun du terme.
+ * Déclenchement d'exception dans le cas contraire
 */
 class Duree{
     unsigned int nb_jour; /*!< Nombre de jours*/
@@ -71,30 +64,20 @@ class Duree{
 
 public:
     /*!
-     * \brief Constructeur par défaut
-     *
-     * Constructeur de la classe Duree
-     *
+     * \brief Constructeur par défaut de la classe Durée
      */
     Duree(){nb_jour=0; time=QTime(0,0);}
     /*!
-     * \brief Constructeur
-     *
-     * Constructeur de la classe Duree
-     *
+     * \brief Constructeur de la classe Duree
      * \param h : nombre d'heures
      * \param m : nombre de minutes
-     *
      */
     Duree(int h, int m=0):nb_jour(h/24), time(h%24,m) {
         verifCoherence(h,m);
     }
 
     /*!
-     * \brief Constructeur par recopie
-     *
-     * Constructeur par recopie de la classe Duree
-     *
+     * \brief Constructeur par recopie de la classe Durée
      * \param d : durée à recopier
      *
      */
@@ -115,6 +98,7 @@ public:
      * \brief Vérificateur de cohérence pour les minutes et les heures
      * \param h : nombre d'heures
      * \param m : nombre de minutes
+     * \throw <TimeException>["Il faut que les minutes soient comprises entre 0 et 59 et les heures doivent être supérieurs à 0."]
      */
     void verifCoherence(int h, int m) {
         if (m>59) throw TimeException("ERREUR: initialisation duree invalide, m supérieur à 59");
@@ -124,7 +108,7 @@ public:
 
     /*!
      * \brief Getter sur le nombre d'heure et minute restante
-     * \return time
+     * \return \a time
      */
     const QTime& getTime() const{ return time; }
     /*!
@@ -139,7 +123,7 @@ public:
     unsigned int getMinute() const{ return time.minute(); }
     /*!
      * \brief Getter sur le nombre de jour
-     * \return nb_jour
+     * \return \a nb_jour
      */
     unsigned int getNbJour() const{ return nb_jour; }
 
@@ -152,20 +136,22 @@ public:
     /*!
      * \brief Setter sur le nombre de minute
      * \param m : minutes
+     * \throw <TimeException>["Les minutes ne peuvent pas être supérieurs à 59."]
      */
     void setMinute(unsigned int m){
         if (m>59)
-            throw TimeException("erreur: les minutes ne peuvent pas être supérieurs à 59");
+            throw TimeException("ERREUR: les minutes ne peuvent pas être supérieurs à 59");
         time = QTime(time.hour(),m);
     }
 
     /*!
      * \brief Setter sur le nombre d'heure
      * \param h : heures
+     * \throw <TimeException>["Les heures ne peuvent pas être supérieurs à 23."]
      */
     void setHeure(unsigned int h){
         if(h>23)
-            throw TimeException("erreur: les heures ne peuvent pas être supérieur à 23");
+            throw TimeException("ERREUR: les heures ne peuvent pas être supérieur à 23");
         time = QTime(h,time.minute());
     }
 
@@ -184,7 +170,7 @@ public:
         res += time.hour();
         res += double(time.minute())/60;
         return res;
-    } //<!Retourne la duree en heures
+    }
 
     /*!
      * \brief Getter sur la durée en secondes
@@ -203,8 +189,8 @@ public:
         f<<std::setfill('0')<<std::setw(2)<<nb_jour*24+time.hour()<<"H"<<std::setw(2)<<time.minute()<<std::setfill(' '); } //<!Affiche la duree sous le format hhHmm
 
     /*!
-     * \brief Méthode pour l'écriture en xml
-     * \param element
+     * \brief Création de code XML à partir des informations de durée
+     * \param elem Element sous lequel insérer le code
      */
     void writeXmlAttributes(QDomElement elem);
 };
@@ -213,8 +199,19 @@ std::ostream& operator<<(std::ostream& f, const Duree & d);
 
 std::istream& operator>>(std::istream&, Duree&); //lecture format hhHmm
 
+/*!
+ * \brief Opérateur + pour additionner une date et une durée
+ * \param da : date et horaire
+ * \param du : durée
+ * \return la nouvelle date et horaire
+ */
 QDateTime operator+(const QDateTime& da, const Duree& du);
-
+/*!
+ * \brief Opérateur + pour additionner deux durées
+ * \param d1 : durée 1
+ * \param d2 : durée 2
+ * \return la nouvelle durée
+ */
 Duree operator+(const Duree& d1, const Duree& d2);
 
 #endif // CALENDAR_H

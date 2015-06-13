@@ -13,6 +13,7 @@ using namespace std;
 /*!
  * \class ProgrammationManager
  * \brief Classe représentant le gestionnaire de programmations
+ * Cette classe utilise le pattern singleton
  */
 class ProgrammationManager
 {
@@ -40,11 +41,13 @@ public:
     void addProgrammation(const QDateTime& da, const Duree& du, Evenement *e);
     /*!
      * \brief Méthode de suppression d'une programmation à partir d'une date et un horaire
+     * \throw <CalendarException>["On ne peut pas programmer d'une durée supérieur à 12."];
      * \param d : jourdate et horaire
      */
     void removeProgrammation(const QDateTime& d);
     /*!
      * \brief Méthode de suppression d'une programmation à partir d'une programmation
+     * \throw <CalendarException>["Il faut que la programmation existe."];
      * \param da : date et horaire
      */
     void removeProgrammation(Programmation *pr);
@@ -65,16 +68,16 @@ public:
     bool isSuccesseurProgramme(const TacheUnaire *t);
 
     /*!
-     * \brief Méthode pour récupérer toutes les programmations dans un intervalle donné
+     * \brief Méthode pour récupérer toutes les programmations dans un intervalle de temps donné
      * \param debut : date de début de l'intervalle
      * \param fin : date de fin de l'intervalle
-     * \return list de pointeur de programmation
+     * \return liste de pointeur de programmation
      */
     const list<Programmation*> getProgrammation(const QDate& debut, const QDate& fin)const;
     /*!
      * \brief Méthode pour récupérer toutes les programmations d'une tache (préemptive)
      * \param t : tache unaire
-     * \return list de pointeur de programmation
+     * \return liste de pointeur de programmation
      */
     const list<Programmation*> getProgrammation(const TacheUnaire *t)const;
     /*!
@@ -86,6 +89,7 @@ public:
     /*!
      * \brief Méthode pour récupérer une programmation à partir d'une date et d'un horaire avec un objet constant
      * \param d : date et horaire
+     * \throw <CalendarException>["Il faut que la programmation existe."];
      * \return programmation constant
      */
     const Programmation& getProgrammation(const QDateTime& d)const;
@@ -102,6 +106,9 @@ private:
     /*!
      * \brief Méthode pour récupérer un pointeur sur programmation à partir d'une date et un horaire
      * \param d : date et horaire
+     * \throw <CalendarException>["On ne peut pas programmer : s'il y a déjà une programmation à cette date,
+     * si la totalité de la tache est programmée, si la tache est préemptive et qu'elle n'est pas effecutée totalement
+     * et si la durée de la programmation est supérieur à la durée restante de la tache."];
      * \return pointeur de programmation
      */
     Programmation* findProgrammation(const QDateTime& d) const;
@@ -129,12 +136,12 @@ private:
 
 public:
     /*!
-     * \brief Méthode qui permet de récupérer l'instance d'une programmation
+     * \brief Méthode qui permet de récupérer l'instance de programmation manager
      * \param p : Programmation Manager
      */
     static ProgrammationManager& getInstance();
     /*!
-     * \brief Méthode qui permet de libérer/supprimer l'instance d'une programmation
+     * \brief Méthode qui permet de libérer/supprimer l'instance de programmation manager
      */
     static void libererInstance();
 

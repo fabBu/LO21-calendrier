@@ -101,13 +101,13 @@ private:
 public:
     /*!
      * \brief Constructeur de la classe ProgrammationEditeur pour l'édition d'une programmation
-     * \param pr : programmation
+     * \param pr : \a programmation
      * \param p : widget parent
      */
     ProgrammationEditeur(Programmation* pr, QWidget *p = 0);
     /*!
      * \brief Constructeur de la classe ProgrammationEditeur pour l'ajout d'une programmation
-     * \param pr : programmation
+     * \param pr : \a programmation
      * \param p : widget parent
      */
     ProgrammationEditeur(Evenement* ev = 0, QWidget *p = 0);
